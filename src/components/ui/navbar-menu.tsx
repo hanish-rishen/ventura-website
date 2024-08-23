@@ -11,6 +11,8 @@ interface MenuItemProps {
   active: string | null;
   item: string;
   children: React.ReactNode;
+  onClick?: () => void;
+  isMobile: boolean;
 }
 
 interface HoveredLinkProps {
@@ -25,42 +27,49 @@ export const MenuItem = ({
   children,
   onClick,
   isMobile
-}: MenuItemProps & { onClick: () => void, isMobile: boolean }) => {
+}: MenuItemProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleClick = () => {
+    if (isMobile) {
+      setIsOpen(!isOpen);
+    }
+    if (onClick) {
+      onClick();
+    }
+  };
+
   return (
-    <div 
-      className={`relative ${isMobile ? 'w-full' : ''}`}
-      onMouseEnter={() => !isMobile && setActive(item)}
-      onMouseLeave={() => !isMobile && setActive(null)}
-      onClick={onClick}
-    >
-      <motion.p
-        className="cursor-pointer text-black hover:opacity-[0.9] dark:text-white py-2"
+    <div className={`w-full relative`}>
+      <motion.button
+        onClick={handleClick}
+        className="flex items-center justify-between w-full py-2 text-left text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white"
+        whileTap={{ scale: 0.97 }}
+        onMouseEnter={() => !isMobile && setActive(item)}
+        onMouseLeave={() => !isMobile && setActive(null)}
       >
-        {item}
-      </motion.p>
-      <AnimatePresence>
-        {(active === item || (isMobile && active === item)) && (
+        <span>{item}</span>
+      </motion.button>
+      <AnimatePresence initial={false}>
+        {((isMobile && isOpen) || (!isMobile && active === item)) && (
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.2 }}
-            className={`${
-              isMobile ? 'relative w-full mt-2' : 'absolute top-full left-0 mt-2'
-            } bg-white dark:bg-gray-800 rounded-md shadow-lg overflow-hidden`}
-            style={{ 
-              width: isMobile ? '100%' : '200px',
-              zIndex: 50
+            initial="collapsed"
+            animate="open"
+            exit="collapsed"
+            variants={{
+              open: { opacity: 1, height: "auto" },
+              collapsed: { opacity: 0, height: 0 }
             }}
+            transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
+            className={`overflow-hidden ${!isMobile ? "absolute top-full left-0 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg" : ""}`}
+            style={{ minWidth: '200px' }}
           >
-            <div className={`py-2 ${isMobile ? 'px-4' : ''}`}>
+            <div className={`py-2 ${!isMobile ? "px-4" : "pl-4"}`}>
               {React.Children.map(children, (child, index) => (
                 <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2, delay: index * 0.05 }}
-                  className={`py-2 ${!isMobile ? 'px-4' : ''}`}
                 >
                   {child}
                 </motion.div>
@@ -76,12 +85,12 @@ export const MenuItem = ({
 export const HoveredLink = ({ href, children }: HoveredLinkProps) => {
   return (
     <motion.div
-      whileHover={{ scale: 1.05 }}
+      whileHover={{ x: 5 }}
       whileTap={{ scale: 0.95 }}
     >
       <Link
         href={href}
-        className="block w-full text-neutral-700 dark:text-neutral-200 hover:text-black dark:hover:text-white"
+        className="block py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors duration-200"
       >
         {children}
       </Link>
@@ -103,8 +112,8 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 pt-4">
-      <nav className="max-w-[98%] mx-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full shadow-lg px-6 py-4">
+    <div className="fixed top-0 left-0 right-0 z-50">
+      <nav className="max-w-[98%] mx-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-full shadow-lg px-6 py-4 mt-4">
         <div className="flex items-center justify-between">
           <div className="flex-shrink-0">
             <Image src="/images/ventura.png" alt="Ventura Logo" width={100} height={40} />
@@ -127,9 +136,9 @@ export default function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="md:hidden mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg overflow-hidden"
+            className="md:hidden mt-2 mx-6 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl overflow-hidden"
           >
-            <div className="p-4 max-h-[60vh] overflow-y-auto">
+            <div className="p-6 max-h-[70vh] overflow-y-auto">
               <NavbarContent isMobile={true} />
             </div>
           </motion.div>
@@ -149,7 +158,7 @@ function NavbarContent({ isMobile = false }) {
   };
 
   return (
-    <div className={`flex ${isMobile ? 'flex-col w-full space-y-2' : 'flex-row items-center space-x-4'}`}>
+    <div className={`flex ${isMobile ? 'flex-col w-full space-y-4' : 'flex-row items-center space-x-4'}`}>
       <Menu setActive={setActive}>
         {[
           { item: "About", links: [
@@ -192,7 +201,7 @@ function NavbarContent({ isMobile = false }) {
             onClick={() => handleItemClick(menuItem.item)}
             isMobile={isMobile}
           >
-            <div className={`flex flex-col ${isMobile ? 'space-y-2' : 'space-y-3'} text-sm`}>
+            <div className={`flex flex-col ${isMobile ? 'space-y-2' : 'space-y-1'}`}>
               {menuItem.links.map((link, linkIndex) => (
                 <HoveredLink key={linkIndex} href={link.href}>{link.text}</HoveredLink>
               ))}

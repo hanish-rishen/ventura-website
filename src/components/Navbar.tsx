@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { HoveredLink, Menu, MenuItem } from "./ui/navbar-menu";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { Menu as MenuIcon, X } from "lucide-react";
+import { Menu as MenuIcon, X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
@@ -45,9 +45,9 @@ export default function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="md:hidden mt-2 bg-white/30 dark:bg-gray-800/30 backdrop-blur-xl border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg overflow-hidden"
+            className="md:hidden mt-2 mx-6 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl overflow-hidden"
           >
-            <div className="p-4 max-h-[60vh] overflow-y-auto">
+            <div className="p-6 max-h-[70vh] overflow-y-auto">
               <NavbarContent isMobile={true} />
             </div>
           </motion.div>
@@ -67,7 +67,7 @@ function NavbarContent({ isMobile = false }) {
   };
 
   return (
-    <div className={`flex ${isMobile ? 'flex-col w-full' : 'flex-row items-center space-x-4'}`}>
+    <div className={`flex ${isMobile ? 'flex-col w-full space-y-2' : 'flex-row items-center space-x-4'}`}>
       <Menu setActive={setActive}>
         {[
           { item: "About", links: [
@@ -110,7 +110,7 @@ function NavbarContent({ isMobile = false }) {
             onClick={() => handleItemClick(menuItem.item)}
             isMobile={isMobile}
           >
-            <div className={`flex flex-col ${isMobile ? 'space-y-2' : 'space-y-3'} text-sm`}>
+            <div className={`flex flex-col ${isMobile ? 'space-y-2' : 'space-y-1'}`}>
               {menuItem.links.map((link, linkIndex) => (
                 <HoveredLink key={linkIndex} href={link.href}>{link.text}</HoveredLink>
               ))}

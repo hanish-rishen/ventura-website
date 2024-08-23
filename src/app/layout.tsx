@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-gradient-to-b from-gray-900 to-gray-600 min-h-screen`}>
+      <body className={`${inter.className} bg-gray-50 min-h-screen`}>
         <Navbar />
         <main>{children}</main>
       </body>

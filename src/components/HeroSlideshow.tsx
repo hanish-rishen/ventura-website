@@ -57,46 +57,43 @@ export default function HeroSlideshow() {
 
   return (
     <div className="relative w-full mx-auto text-gray-800 pt-20">
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-100 via-blue-200 to-blue-100 animate-flowing-gradient bg-[length:400%_400%]"></div>
-      <div className="relative z-10">
-        <Carousel
-          setApi={setApi}
-          className="w-full mx-auto"
-          plugins={[
-            Autoplay({
-              delay: 5000,
-            }),
-          ]}
-        >
-          <CarouselContent>
-            {slides.map((slide, index) => (
-              <CarouselItem key={index}>
-                <div className="relative h-[calc(100vh-8rem)] w-full p-8">
-                  <div className="relative h-full w-full">
-                    <Image
-                      src={slide.image}
-                      alt={slide.title}
-                      fill
-                      style={{ objectFit: "cover" }}
-                      priority={index === 0}
-                      className="rounded-lg"
-                      sizes="100vw"
-                    />
-                    <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-center items-center text-white p-4 rounded-lg">
-                      <h2 className="text-5xl font-bold mb-4 text-center">{slide.title}</h2>
-                      <p className="text-2xl text-center max-w-3xl">{slide.description}</p>
-                    </div>
+      <Carousel
+        setApi={setApi}
+        className="w-full mx-auto"
+        plugins={[
+          Autoplay({
+            delay: 5000,
+          }),
+        ]}
+      >
+        <CarouselContent>
+          {slides.map((slide, index) => (
+            <CarouselItem key={index}>
+              <div className="relative h-[calc(100vh-8rem)] w-full p-8">
+                <div className="relative h-full w-full">
+                  <Image
+                    src={slide.image}
+                    alt={slide.title}
+                    fill
+                    style={{ objectFit: "cover" }}
+                    priority={index === 0}
+                    className="rounded-lg"
+                    sizes="100vw"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-center items-center text-white p-4 rounded-lg">
+                    <h2 className="text-5xl font-bold mb-4 text-center">{slide.title}</h2>
+                    <p className="text-2xl text-center max-w-3xl">{slide.description}</p>
                   </div>
                 </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10" />
-          <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10" />
-        </Carousel>
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white bg-opacity-70 px-4 py-2 rounded-full">
-          {current} / {count}
-        </div>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10" />
+        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10" />
+      </Carousel>
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white bg-opacity-70 px-4 py-2 rounded-full">
+        {current} / {count}
       </div>
     </div>
   );
