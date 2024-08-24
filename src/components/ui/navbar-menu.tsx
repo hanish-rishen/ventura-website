@@ -29,6 +29,21 @@ export const MenuItem = ({
   isMobile
 }: MenuItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseEnter = () => {
+    if (!isMobile) {
+      setActive(item);
+      setIsOpen(true);
+    }
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent) => {
+    if (!isMobile && menuRef.current && !menuRef.current.contains(e.relatedTarget as Node)) {
+      setActive(null);
+      setIsOpen(false);
+    }
+  };
 
   const handleClick = () => {
     if (isMobile) {
@@ -39,45 +54,44 @@ export const MenuItem = ({
     }
   };
 
+  useEffect(() => {
+    if (!isMobile) {
+      setIsOpen(active === item);
+    }
+  }, [active, item, isMobile]);
+
   return (
-    <div className={`w-full relative`}>
+    <div 
+      ref={menuRef}
+      className="w-full relative" 
+      onMouseEnter={handleMouseEnter} 
+      onMouseLeave={handleMouseLeave}
+    >
       <motion.button
         onClick={handleClick}
         className="flex items-center justify-between w-full py-2 text-left text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white"
         whileTap={{ scale: 0.97 }}
-        onMouseEnter={() => !isMobile && setActive(item)}
-        onMouseLeave={() => !isMobile && setActive(null)}
       >
         <span>{item}</span>
       </motion.button>
-      <AnimatePresence initial={false}>
-        {((isMobile && isOpen) || (!isMobile && active === item)) && (
-          <motion.div
-            initial="collapsed"
-            animate="open"
-            exit="collapsed"
-            variants={{
-              open: { opacity: 1, height: "auto" },
-              collapsed: { opacity: 0, height: 0 }
-            }}
-            transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
-            className={`overflow-hidden ${!isMobile ? "absolute top-full left-0 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg" : ""}`}
-            style={{ minWidth: '200px' }}
-          >
-            <div className={`py-2 ${!isMobile ? "px-4" : "pl-4"}`}>
-              {React.Children.map(children, (child, index) => (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2, delay: index * 0.05 }}
-                >
-                  {child}
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+      <div
+        className={cn(
+          "overflow-hidden transition-all duration-300 ease-in-out",
+          !isMobile ? "absolute top-full left-0 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg" : "",
+          isOpen ? "opacity-100 max-h-96" : "opacity-0 max-h-0"
         )}
-      </AnimatePresence>
+        style={{ minWidth: '200px' }}
+      >
+        <div className={cn(
+          "py-2 transition-all duration-300 ease-in-out",
+          !isMobile ? "px-4" : "pl-4",
+          isOpen ? "translate-y-0" : "-translate-y-2"
+        )}>
+          {React.Children.map(children, (child) => (
+            <div className="transition-all duration-300 ease-in-out">{child}</div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
@@ -113,7 +127,10 @@ export default function Navbar() {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50">
-      <nav className="max-w-[98%] mx-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-full shadow-lg px-6 py-4 mt-4">
+      <nav className={cn(
+        "max-w-[98%] mx-auto border border-gray-200 dark:border-gray-700 rounded-full shadow-lg px-6 py-4 mt-4 transition-all duration-300",
+        isMenuOpen ? "bg-white/50 dark:bg-gray-800/50 backdrop-blur-md" : "bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
+      )}>
         <div className="flex items-center justify-between">
           <div className="flex-shrink-0">
             <Image src="/images/ventura.png" alt="Ventura Logo" width={100} height={40} />
