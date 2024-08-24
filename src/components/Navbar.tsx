@@ -30,9 +30,9 @@ export default function Navbar() {
         "max-w-[98%] mx-auto rounded-full px-6 py-4 mt-4 transition-all duration-300",
         pathname === '/' 
           ? isScrolled 
-            ? "bg-white/70 backdrop-blur-md shadow-lg" 
-            : "bg-white"
-          : "bg-white/50 dark:bg-gray-800/50 backdrop-blur-md border border-gray-200 dark:border-gray-700 shadow-lg"
+            ? "bg-white/70 dark:bg-gray-800/70 backdrop-blur-md shadow-lg" 
+            : "bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+          : "bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 shadow-lg"
       )}>
         <div className="flex items-center justify-between">
           <div className="flex-shrink-0">
@@ -51,18 +51,29 @@ export default function Navbar() {
           </button>
         </div>
       </nav>
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {isMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            transition={{ 
+              duration: 0.5,
+              ease: "easeInOut",
+              opacity: { duration: 0.3 },
+              height: { duration: 0.5 }
+            }}
             className="md:hidden mt-2 mx-6 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl overflow-hidden"
           >
-            <div className="p-6 max-h-[70vh] overflow-y-auto">
-              <NavbarContent isMobile={true} pathname={pathname} isScrolled={isScrolled} />
-            </div>
+            <motion.div 
+              className="p-6 max-h-[70vh] overflow-y-auto"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <NavbarContent isMobile={true} pathname={pathname} isScrolled={isScrolled} setIsMenuOpen={setIsMenuOpen} />
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -70,12 +81,20 @@ export default function Navbar() {
   );
 }
 
-function NavbarContent({ isMobile = false, pathname, isScrolled }: { isMobile?: boolean; pathname: string; isScrolled: boolean }) {
+function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }: { isMobile?: boolean; pathname: string; isScrolled: boolean; setIsMenuOpen?: React.Dispatch<React.SetStateAction<boolean>> }) {
   const [active, setActive] = useState<string | null>(null);
 
   const handleItemClick = (item: string) => {
     if (isMobile) {
       setActive(active === item ? null : item);
+    }
+  };
+
+  const handleLinkClick = () => {
+    if (isMobile && setIsMenuOpen) {
+      setTimeout(() => {
+        setIsMenuOpen(false);
+      }, 150);
     }
   };
 
@@ -130,7 +149,13 @@ function NavbarContent({ isMobile = false, pathname, isScrolled }: { isMobile?: 
           >
             <div className={`flex flex-col ${isMobile ? 'space-y-2' : 'space-y-1'}`}>
               {menuItem.links.map((link, linkIndex) => (
-                <HoveredLink key={linkIndex} href={link.href}>{link.text}</HoveredLink>
+                <HoveredLink 
+                  key={linkIndex} 
+                  href={link.href} 
+                  onClick={handleLinkClick}
+                >
+                  {link.text}
+                </HoveredLink>
               ))}
             </div>
           </MenuItem>

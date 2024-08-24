@@ -18,6 +18,7 @@ interface MenuItemProps {
 interface HoveredLinkProps {
   href: string;
   children: React.ReactNode;
+  onClick?: () => void;
 }
 
 export const MenuItem = ({ 
@@ -87,8 +88,13 @@ export const MenuItem = ({
           !isMobile ? "px-4" : "pl-4",
           isOpen ? "translate-y-0" : "-translate-y-2"
         )}>
-          {React.Children.map(children, (child) => (
-            <div className="transition-all duration-300 ease-in-out">{child}</div>
+          {React.Children.map(children, (child, index) => (
+            <React.Fragment key={index}>
+              {index > 0 && !isMobile && (
+                <div className="my-1 border-t border-gray-200 dark:border-gray-700" />
+              )}
+              <div className="py-1">{child}</div>
+            </React.Fragment>
           ))}
         </div>
       </div>
@@ -96,19 +102,17 @@ export const MenuItem = ({
   );
 };
 
-export const HoveredLink = ({ href, children }: HoveredLinkProps) => {
+export const HoveredLink = ({ href, children, onClick }: HoveredLinkProps) => {
   return (
-    <motion.div
-      whileHover={{ x: 5 }}
-      whileTap={{ scale: 0.95 }}
-    >
-      <Link
-        href={href}
-        className="block py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors duration-200"
+    <Link href={href} onClick={onClick}>
+      <motion.span
+        className="block w-full text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white transition-colors duration-300"
+        whileHover={{ x: 5 }}
+        whileTap={{ scale: 0.95 }}
       >
         {children}
-      </Link>
-    </motion.div>
+      </motion.span>
+    </Link>
   );
 };
 
@@ -152,12 +156,18 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            transition={{ duration: 0.5, ease: "easeInOut", opacity: { duration: 0.3 }, height: { duration: 0.5 } }}
             className="md:hidden mt-2 mx-6 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl overflow-hidden"
           >
-            <div className="p-6 max-h-[70vh] overflow-y-auto">
-              <NavbarContent isMobile={true} />
-            </div>
+            <motion.div 
+              className="p-6 max-h-[70vh] overflow-y-auto"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <NavbarContent isMobile={true} setIsMenuOpen={setIsMenuOpen} />
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -165,7 +175,7 @@ export default function Navbar() {
   );
 }
 
-function NavbarContent({ isMobile = false }) {
+function NavbarContent({ isMobile = false, setIsMenuOpen }: { isMobile?: boolean; setIsMenuOpen?: React.Dispatch<React.SetStateAction<boolean>> }) {
   const [active, setActive] = useState<string | null>(null);
 
   const handleItemClick = (item: string) => {
@@ -174,8 +184,18 @@ function NavbarContent({ isMobile = false }) {
     }
   };
 
+  const handleLinkClick = () => {
+    if (isMobile && setIsMenuOpen) {
+      setTimeout(() => {
+        setIsMenuOpen(false);
+      }, 150);
+    }
+  };
+
+  const textColorClass = isMobile ? 'text-gray-800 dark:text-gray-200' : 'text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white';
+
   return (
-    <div className={`flex ${isMobile ? 'flex-col w-full space-y-4' : 'flex-row items-center space-x-4'}`}>
+    <div className={`flex ${isMobile ? 'flex-col w-full space-y-2' : 'flex-row items-center space-x-4'} ${textColorClass}`}>
       <Menu setActive={setActive}>
         {[
           { item: "About", links: [
@@ -220,7 +240,17 @@ function NavbarContent({ isMobile = false }) {
           >
             <div className={`flex flex-col ${isMobile ? 'space-y-2' : 'space-y-1'}`}>
               {menuItem.links.map((link, linkIndex) => (
-                <HoveredLink key={linkIndex} href={link.href}>{link.text}</HoveredLink>
+                <React.Fragment key={linkIndex}>
+                  {linkIndex > 0 && (
+                    <div className="my-1 border-t border-gray-200 dark:border-gray-700" />
+                  )}
+                  <HoveredLink 
+                    href={link.href} 
+                    onClick={handleLinkClick}
+                  >
+                    {link.text}
+                  </HoveredLink>
+                </React.Fragment>
               ))}
             </div>
           </MenuItem>
