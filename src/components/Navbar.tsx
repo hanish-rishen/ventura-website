@@ -28,7 +28,7 @@ export default function Navbar() {
       )}>
         <div className="flex items-center justify-between">
           <div className="flex-shrink-0">
-            <Image src="/images/ventura.png" alt="Ventura Logo" width={100} height={40} />
+            <Image src="/images/Ventura.png" alt="Ventura Logo" width={100} height={40} />
           </div>
           <div className="hidden md:block">
             <NavbarContent />
