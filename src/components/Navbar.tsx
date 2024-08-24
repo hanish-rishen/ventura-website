@@ -94,13 +94,13 @@ function NavbarContent({ isMobile = false, pathname, isScrolled }: { isMobile?: 
           ]},
           { item: "Products", links: [
             { href: "/products/software", text: "Associated Software Products" },
-            { href: "/products/technologies", text: "Technologies" }
+            { href: "/products/technologies", text: "Technologies" },
+            { href: "/products/hardware", text: "Hardware Products" }
           ]},
           { item: "Services", links: [
             { href: "/services/how-it-works", text: "How Does It Work" },
             { href: "/services/implementation", text: "Implementation Methodology" },
-            { href: "/services/benefits", text: "Benefits of FIDAS" },
-            { href: "/services/hardware", text: "Hardware" }
+            { href: "/services/benefits", text: "Benefits of FIDAS" }
           ]},
           { item: "Customers", links: [
             { href: "/customers/success", text: "Customer Success" },
