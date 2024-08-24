@@ -71,14 +71,15 @@ export default function FidasContent() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <section className="py-16 space-y-16">
           <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-            <div className="w-full md:w-1/2 h-96 relative mb-8 md:mb-0 order-1 md:order-2">
-              {/* Placeholder for animated image */}
-              <div className="absolute inset-0 bg-gray-300 flex items-center justify-center text-gray-500">
-                Animated Image Placeholder
-              </div>
+            <div className="w-full md:w-1/2 h-96 relative mb-8 md:mb-0 order-1 md:order-1">
+              <iframe 
+                src="https://lottie.host/embed/88cd69c5-a546-498e-91d6-04d91fe3c78b/Bzh8iDIoca.json"
+                className="w-full h-full"
+                style={{ border: 'none' }}
+              ></iframe>
             </div>
 
-            <div className="w-full md:w-1/2 space-y-8 order-2 md:order-1">
+            <div className="w-full md:w-1/2 space-y-8 order-2 md:order-2">
               <ScrollAnimationWrapper>
                 <motion.h1 
                   className="text-4xl font-bold mb-4 text-center md:text-left tracking-tight"
@@ -87,16 +88,16 @@ export default function FidasContent() {
                   <TypeAnimation
                     sequence={[
                       'About FIDAS',
-                      1000,
+                      1500,
                       'Fabric Inspection',
-                      1000,
+                      1500,
                       'Defect Analysis',
-                      1000,
+                      1500,
                       'About FIDAS',
-                      1000
+                      1500
                     ]}
                     wrapper="span"
-                    speed={50}
+                    speed={40}
                     repeat={Infinity}
                   />
                 </motion.h1>
@@ -119,23 +120,16 @@ export default function FidasContent() {
           </div>
         </section>
 
-        <section className="py-16 space-y-16">
+        <section className="py-16 space-y-8">
           <ScrollAnimationWrapper>
             <h2 className="text-3xl font-bold mb-8 text-center">
               Automotive Seating Fabric Inspection Software
             </h2>
           </ScrollAnimationWrapper>
 
-          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-            <div className="w-full md:w-1/2 h-96 relative mb-8 md:mb-0 order-1 md:order-2">
-              {/* Placeholder for animated image */}
-              <div className="absolute inset-0 bg-gray-300 flex items-center justify-center text-gray-500">
-                Animated Image Placeholder
-              </div>
-            </div>
-
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <motion.div 
-              className="w-full md:w-1/2 space-y-8 order-2 md:order-1"
+              className="w-full md:w-1/2 space-y-6 order-2 md:order-1"
               variants={staggerChildren}
             >
               <ScrollAnimationWrapper>
@@ -144,10 +138,10 @@ export default function FidasContent() {
                   <TypeAnimation
                     sequence={[
                       'We monitor fabric quality in real-time and suggest cutting decisions to inspectors, maximizing fresh realization and avoiding wastage.',
-                      5000,
+                      7000,
                     ]}
                     wrapper="p"
-                    speed={50}
+                    speed={40}
                     repeat={Infinity}
                     className="text-base leading-relaxed"
                     cursor={false}
@@ -176,6 +170,14 @@ export default function FidasContent() {
                 </div>
               </ScrollAnimationWrapper>
             </motion.div>
+
+            <div className="w-full md:w-1/2 h-96 relative mb-8 md:mb-0 order-1 md:order-2">
+              <iframe 
+                src="https://lottie.host/embed/4cee5214-6537-4dc1-8e94-cdfbd52d0dc5/YOV0UPWFZq.json"
+                className="w-full h-full"
+                style={{ border: 'none' }}
+              ></iframe>
+            </div>
           </div>
         </section>
 
@@ -192,11 +194,12 @@ export default function FidasContent() {
           </ScrollAnimationWrapper>
 
           <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-            <div className="w-full md:w-1/2 h-96 relative mb-8 md:mb-0 order-1 md:order-1">
-              {/* Placeholder for animated image */}
-              <div className="absolute inset-0 bg-gray-300 flex items-center justify-center text-gray-500">
-                Animated Image Placeholder
-              </div>
+            <div className="w-full md:w-1/2 h-[400px] md:h-[500px] relative mb-8 md:mb-0 order-1 md:order-1">
+              <iframe 
+                src="https://lottie.host/embed/19d23eb1-283b-463a-8592-fd61cb863cc0/lIIvvuIRkT.json"
+                className="w-full h-full"
+                style={{ border: 'none' }}
+              ></iframe>
             </div>
 
             <motion.ul 
@@ -282,11 +285,12 @@ export default function FidasContent() {
               ))}
             </motion.div>
 
-            <div className="w-full md:w-1/3 h-96 relative mb-8 md:mb-0 order-1 md:order-2">
-              {/* Placeholder for animated image */}
-              <div className="absolute inset-0 bg-gray-300 flex items-center justify-center text-gray-500">
-                Animated Image Placeholder
-              </div>
+            <div className="w-full md:w-1/3 h-full relative mb-8 md:mb-0 order-1 md:order-2">
+              <iframe 
+                src="https://lottie.host/embed/e85a08cc-83ac-4334-a01a-f814336117d8/mteqh6RjoZ.json"
+                className="w-full h-[400px] md:h-[600px]"
+                style={{ border: 'none' }}
+              ></iframe>
             </div>
           </div>
         </section>
