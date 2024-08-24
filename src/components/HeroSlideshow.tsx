@@ -6,8 +6,8 @@ import Autoplay from "embla-carousel-autoplay";
 
 const slides = [
   {
-    image: "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-    title: "Revolutionizing Fabric Inspection",
+    image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    title: "Fabric Inspection",
     description: "FIDAS: Achieving 99.9% defect detection accuracy",
   },
   {
@@ -16,12 +16,12 @@ const slides = [
     description: "Reducing inspection time by 75% with our cutting-edge AI",
   },
   {
-    image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2074&q=80",
+    image: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
     title: "Global Support Network",
     description: "97% customer satisfaction rate with our 24/7 expert assistance",
   },
   {
-    image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2083&q=80",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
     title: "Automotive Textile Excellence",
     description: "Improving quality standards by 40% in automotive seating fabrics",
   },
@@ -31,8 +31,8 @@ const slides = [
     description: "Providing 360° actionable insights with 99.5% data accuracy",
   },
   {
-    image: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-    title: "Sustainable Manufacturing",
+    image: "https://images.unsplash.com/photo-1518623489648-a173ef7824f3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2039&q=80",
+    title: "Sustainabile",
     description: "Reducing waste by 30% and improving efficiency by 50%",
   },
 ];
@@ -70,29 +70,29 @@ export default function HeroSlideshow() {
           {slides.map((slide, index) => (
             <CarouselItem key={index}>
               <div className="relative h-[calc(100vh-8rem)] w-full p-8">
-                <div className="relative h-full w-full">
+                <div className="relative h-full w-full overflow-hidden rounded-lg">
                   <Image
                     src={slide.image}
                     alt={slide.title}
                     fill
                     style={{ objectFit: "cover" }}
                     priority={index === 0}
-                    className="rounded-lg"
+                    className="rounded-lg transition-transform duration-300 hover:scale-110"
                     sizes="100vw"
                   />
-                  <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-center items-center text-white p-4 rounded-lg">
-                    <h2 className="text-5xl font-bold mb-4 text-center">{slide.title}</h2>
-                    <p className="text-2xl text-center max-w-3xl">{slide.description}</p>
+                  <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black bg-opacity-50 flex flex-col justify-center items-center text-white p-4 rounded-lg">
+                    <h2 className="text-6xl font-bold mb-4 text-center text-white">{slide.title}</h2>
+                    <p className="text-2xl text-center max-w-3xl backdrop-blur-sm bg-white bg-opacity-10 p-4 rounded-lg text-white">{slide.description}</p>
                   </div>
                 </div>
               </div>
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10" />
-        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10" />
+        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white text-gray-800 hover:bg-gray-200 transition-all duration-300" />
+        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white text-gray-800 hover:bg-gray-200 transition-all duration-300" />
       </Carousel>
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white bg-opacity-70 px-4 py-2 rounded-full">
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white bg-opacity-20 backdrop-blur-md px-6 py-3 rounded-full text-white font-semibold">
         {current} / {count}
       </div>
     </div>

@@ -1,0 +1,67 @@
+import Link from 'next/link';
+import { Phone, Mail, MapPin, Twitter, Facebook, Instagram, Linkedin } from 'lucide-react';
+
+export default function Footer() {
+  return (
+    <footer className="bg-gray-900 text-gray-300">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="col-span-1 md:col-span-2">
+            <h2 className="text-xl font-semibold text-white mb-4">About Us</h2>
+            <p className="text-sm">
+              Professional grade fabric inspection software with successful track record with rich 17 years
+              of domain experience. Thanks to our R&D efforts, we have successfully developed
+              almost every IOT devices which automatically fetches fabric quality related data to our
+              software.
+            </p>
+          </div>
+          <div>
+            <h3 className="text-lg font-medium text-white mb-4">Quick Links</h3>
+            <ul className="space-y-2 text-sm">
+              <li><Link href="/" className="hover:text-blue-400">Home</Link></li>
+              <li><Link href="/about" className="hover:text-blue-400">About Us</Link></li>
+              <li><Link href="/automation" className="hover:text-blue-400">Automation Devices</Link></li>
+              <li><Link href="/solutions" className="hover:text-blue-400">Fabric Inspection Solutions</Link></li>
+              <li><Link href="/contact" className="hover:text-blue-400">Contact Us</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-lg font-medium text-white mb-4">Our Services</h3>
+            <ul className="space-y-2 text-sm">
+              <li>Grey Inspection</li>
+              <li>Finish Fabric</li>
+              <li>Denim Fabric</li>
+              <li>RMG</li>
+              <li>Process</li>
+            </ul>
+          </div>
+        </div>
+        <div className="mt-8 pt-8 border-t border-gray-700 flex flex-wrap justify-between items-center">
+          <div className="flex items-center space-x-4">
+            <Link href="mailto:regi@fidas.in" className="flex items-center hover:text-blue-400">
+              <Mail size={18} className="mr-2" />
+              <span>regi@fidas.in</span>
+            </Link>
+            <Link href="tel:+919962936356" className="flex items-center hover:text-blue-400">
+              <Phone size={18} className="mr-2" />
+              <span>+91 9962936356</span>
+            </Link>
+            <Link href="#" className="flex items-center hover:text-blue-400">
+              <MapPin size={18} className="mr-2" />
+              <span>Chennai</span>
+            </Link>
+          </div>
+          <div className="flex space-x-4 mt-4 md:mt-0">
+            <Link href="#" className="hover:text-blue-400"><Twitter size={20} /></Link>
+            <Link href="#" className="hover:text-blue-400"><Facebook size={20} /></Link>
+            <Link href="#" className="hover:text-blue-400"><Instagram size={20} /></Link>
+            <Link href="#" className="hover:text-blue-400"><Linkedin size={20} /></Link>
+          </div>
+        </div>
+        <div className="mt-8 text-center text-sm">
+          <p>&copy; {new Date().getFullYear()} FIDAS. All Rights Reserved. Ventura Automation Services Inc.</p>
+        </div>
+      </div>
+    </footer>
+  );
+}

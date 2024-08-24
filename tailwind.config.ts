@@ -145,7 +145,11 @@ const config = {
           '100%': {
             'background-position': '0% 50%'
           }
-        }
+        },
+        shimmer: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -157,6 +161,7 @@ const config = {
         'water-flow': 'water-flow 15s ease infinite',
         'water-wave': 'water-wave 10s ease infinite',
         'flowing-gradient': 'flowing-gradient 15s ease infinite',
+        shimmer: 'shimmer 2s infinite',
       },
     },
   },

@@ -30,15 +30,6 @@ const floatingAnimation = {
   }
 };
 
-const pulseAnimation = {
-  scale: [1, 1.05, 1],
-  transition: {
-    duration: 2,
-    repeat: Infinity,
-    ease: "easeInOut"
-  }
-};
-
 const numberAnimation = {
   scale: [1, 1.2, 1],
   color: ['#2563EB', '#3B82F6', '#2563EB'],
@@ -46,6 +37,26 @@ const numberAnimation = {
     duration: 3,
     repeat: Infinity,
     ease: "easeInOut"
+  }
+};
+
+const buttonShimmerAnimation = {
+  background: ['linear-gradient(45deg, #3B82F6 0%, #60A5FA 50%, #3B82F6 100%)', 'linear-gradient(45deg, #60A5FA 0%, #3B82F6 50%, #60A5FA 100%)'],
+  transition: {
+    background: {
+      duration: 2,
+      repeat: Infinity,
+      ease: "linear"
+    }
+  }
+};
+
+const buttonShineAnimation = {
+  backgroundPosition: ['200% 50%', '-200% 50%'],
+  transition: {
+    duration: 3,
+    repeat: Infinity,
+    ease: "linear"
   }
 };
 
@@ -108,9 +119,10 @@ export default function FidasContent() {
                 Fabric Inspection & Defect Analysis System (FIDAS) combines multiple inspection-specific IoT devices & software exclusively integrated for real-time on-table fabric inspection purposes.
               </p>
               <div className="text-center">
-                <Button variant="outline" size="lg" className="text-xl font-semibold px-12 py-6 rounded-full border-2 hover:bg-blue-600 hover:text-white transition-all duration-300">
-                  Explore FIDAS
-                </Button>
+                <button className="relative inline-flex h-14 items-center justify-center rounded-full border border-blue-800 bg-blue-600 px-8 font-semibold text-white overflow-hidden">
+                  <span className="relative z-10">Explore FIDAS</span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-blue-600 via-blue-400 to-blue-600 animate-shimmer"></span>
+                </button>
               </div>
             </div>
           </ScrollAnimationWrapper>
@@ -128,20 +140,24 @@ export default function FidasContent() {
             variants={staggerChildren}
           >
             <ScrollAnimationWrapper>
-              <motion.div
-                animate={pulseAnimation}
-              >
+              <div>
                 <h3 className="text-4xl font-bold mb-8">What we do ?</h3>
-                <p className="text-2xl leading-relaxed">
-                  We monitor fabric quality in real-time and suggest cutting decisions to inspectors, maximizing fresh realization and avoiding wastage.
-                </p>
-              </motion.div>
+                <TypeAnimation
+                  sequence={[
+                    'We monitor fabric quality in real-time and suggest cutting decisions to inspectors, maximizing fresh realization and avoiding wastage.',
+                    5000,
+                  ]}
+                  wrapper="p"
+                  speed={50}
+                  repeat={Infinity}
+                  className="text-2xl leading-relaxed"
+                  cursor={false}
+                />
+              </div>
             </ScrollAnimationWrapper>
 
             <ScrollAnimationWrapper>
-              <motion.div
-                animate={pulseAnimation}
-              >
+              <div>
                 <h3 className="text-4xl font-bold mb-8">Step into the Future with FIDAS</h3>
                 <motion.ul 
                   className="space-y-6 text-2xl"
@@ -158,7 +174,7 @@ export default function FidasContent() {
                     </motion.li>
                   ))}
                 </motion.ul>
-              </motion.div>
+              </div>
             </ScrollAnimationWrapper>
           </motion.div>
         </section>
