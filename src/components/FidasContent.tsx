@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Image from 'next/image';
 import { CheckCircle } from 'lucide-react';
 import { TypeAnimation } from 'react-type-animation';
+import Link from 'next/link';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 50 },
@@ -32,7 +33,7 @@ const floatingAnimation = {
 
 const numberAnimation = {
   scale: [1, 1.2, 1],
-  color: ['#2563EB', '#3B82F6', '#2563EB'],
+  color: ['#3B82F6', '#60A5FA', '#3B82F6'],
   transition: {
     duration: 3,
     repeat: Infinity,
@@ -73,7 +74,7 @@ export default function FidasContent() {
           <div className="w-full space-y-8">
             <ScrollAnimationWrapper>
               <motion.h1 
-                className="text-4xl font-bold mb-4 text-center tracking-tight"
+                className="text-4xl font-bold mb-4 text-center tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
                 variants={fadeInUp}
               >
                 <TypeAnimation
@@ -96,14 +97,16 @@ export default function FidasContent() {
 
             <ScrollAnimationWrapper>
               <div className="space-y-4">
-                <p className="text-lg leading-relaxed text-center">
+                <p className="text-lg leading-relaxed text-center text-gray-600">
                   Fabric Inspection & Defect Analysis System (FIDAS) combines multiple inspection-specific IoT devices & software exclusively integrated for real-time on-table fabric inspection purposes.
                 </p>
                 <div className="text-center">
-                  <button className="relative inline-flex h-10 items-center justify-center rounded-full border border-blue-800 bg-blue-600 px-6 font-semibold text-white text-sm overflow-hidden">
-                    <span className="relative z-10">Explore FIDAS</span>
-                    <span className="absolute inset-0 bg-gradient-to-r from-blue-600 via-blue-400 to-blue-600 animate-shimmer"></span>
-                  </button>
+                  <Link href="/products/hardware">
+                    <button className="relative inline-flex h-10 items-center justify-center rounded-full border border-blue-600 bg-blue-500 px-6 font-semibold text-white text-sm overflow-hidden">
+                      <span className="relative z-10">Explore FIDAS</span>
+                      <span className="absolute inset-0 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-500 animate-shimmer"></span>
+                    </button>
+                  </Link>
                 </div>
               </div>
             </ScrollAnimationWrapper>
@@ -112,7 +115,7 @@ export default function FidasContent() {
 
         <section className="py-24 space-y-8">
           <ScrollAnimationWrapper>
-            <h2 className="text-3xl font-bold mb-8 text-center">
+            <h2 className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
               Automotive Seating Fabric Inspection Software
             </h2>
           </ScrollAnimationWrapper>
@@ -124,24 +127,24 @@ export default function FidasContent() {
             >
               <ScrollAnimationWrapper>
                 <div>
-                  <h3 className="text-2xl font-bold mb-4">What we do ?</h3>
+                  <h3 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">What we do ?</h3>
                   <TypeAnimation
                     sequence={[
                       'We monitor fabric quality in real-time and suggest cutting decisions to inspectors, maximizing fresh realization and avoiding wastage.',
-                      7000,
+                      3000,
                     ]}
                     wrapper="p"
-                    speed={40}
+                    speed={60}
                     repeat={Infinity}
-                    className="text-base leading-relaxed"
-                    cursor={false}
+                    className="text-base leading-relaxed text-gray-600"
+                    cursor={true}
                   />
                 </div>
               </ScrollAnimationWrapper>
 
               <ScrollAnimationWrapper>
                 <div>
-                  <h3 className="text-2xl font-bold mb-4">Step into the Future with FIDAS</h3>
+                  <h3 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">Step into the Future with FIDAS</h3>
                   <motion.ul 
                     className="space-y-3 text-base"
                     variants={staggerChildren}
@@ -153,7 +156,7 @@ export default function FidasContent() {
                         className="flex items-center"
                       >
                         <CheckCircle className="text-green-500 mr-2" size={16} />
-                        <span>{item}</span>
+                        <span className="text-gray-600">{item}</span>
                       </motion.li>
                     ))}
                   </motion.ul>
@@ -174,7 +177,7 @@ export default function FidasContent() {
         <section className="py-16 space-y-16">
           <ScrollAnimationWrapper>
             <motion.h3 
-              className="text-3xl font-bold mb-8 text-center"
+              className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
@@ -212,7 +215,7 @@ export default function FidasContent() {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                   >
                     <motion.span 
-                      className="text-3xl font-bold text-blue-600 mr-4"
+                      className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400 mr-4"
                       animate={numberAnimation}
                     >
                       {index + 1}
@@ -221,6 +224,7 @@ export default function FidasContent() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.5, delay: (index * 0.1) + 0.2 }}
+                      className="text-gray-600"
                     >
                       {item}
                     </motion.span>
@@ -233,7 +237,7 @@ export default function FidasContent() {
 
         <section className="py-16">
           <ScrollAnimationWrapper>
-            <h2 className="text-3xl font-bold mb-8 text-center">
+            <h2 className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
               Industry Verticals We Serve
             </h2>
           </ScrollAnimationWrapper>
@@ -266,7 +270,7 @@ export default function FidasContent() {
                         {industry.icon}
                       </motion.div>
                       <div>
-                        <h4 className="text-lg font-semibold mb-1 text-gray-800">{industry.name}</h4>
+                        <h4 className="text-lg font-semibold mb-1 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">{industry.name}</h4>
                         <p className="text-sm text-gray-600">{industry.description}</p>
                       </div>
                     </div>

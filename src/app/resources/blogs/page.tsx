@@ -1,9 +1,10 @@
 "use client";
-import React from 'react';
-import { motion, Variants } from 'framer-motion';
+import React, { useEffect } from 'react';
+import { motion, Variants, useAnimation } from 'framer-motion';
 import { ScrollAnimationWrapper } from '@/components/ScrollAnimationWrapper';
 import { FaCalendarAlt, FaUser, FaTags } from 'react-icons/fa';
 import Image from 'next/image';
+import { useInView } from 'react-intersection-observer';
 
 const fadeInUp: Variants = {
   initial: { opacity: 0, y: 60 },
@@ -38,6 +39,18 @@ export default function Blogs() {
     },
   ];
 
+  const controls = useAnimation();
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
+  useEffect(() => {
+    if (inView) {
+      controls.start("animate");
+    }
+  }, [controls, inView]);
+
   return (
     <div className="w-full bg-gradient-to-br from-gray-50 to-blue-50 text-gray-800 min-h-screen">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -61,40 +74,39 @@ export default function Blogs() {
           />
         </div>
 
-        <ScrollAnimationWrapper>
-          <motion.div
-            initial="initial"
-            animate="animate"
-            className="space-y-6"
-          >
-            {blogs.map((blog, index) => (
-              <motion.article
-                key={index}
-                variants={fadeInUp}
-                className="bg-white shadow-md rounded-lg overflow-hidden"
-              >
-                <Image src={blog.imageUrl} alt={blog.title} width={500} height={300} className="w-full h-64 object-cover" />
-                <div className="p-6">
-                  <h2 className="text-2xl font-semibold mb-2 text-gray-800">{blog.title}</h2>
-                  <p className="text-gray-600 mb-4">{blog.summary}</p>
-                  <div className="flex items-center text-sm text-gray-500 mb-4">
-                    <FaUser className="mr-2" />
-                    <span className="mr-4">{blog.author}</span>
-                    <FaCalendarAlt className="mr-2" />
-                    <span>{blog.date}</span>
-                  </div>
-                  <div className="flex flex-wrap items-center text-sm text-gray-500 mb-4">
-                    <FaTags className="mr-2" />
-                    {blog.tags.map((tag, tagIndex) => (
-                      <span key={tagIndex} className="mr-2 mb-2 bg-blue-100 text-blue-600 px-2 py-1 rounded">{tag}</span>
-                    ))}
-                  </div>
-                  <a href="#" className="text-blue-600 hover:underline inline-block">Read more</a>
+        <motion.div
+          ref={ref}
+          initial="initial"
+          animate={controls}
+          className="space-y-6"
+        >
+          {blogs.map((blog, index) => (
+            <motion.article
+              key={index}
+              variants={fadeInUp}
+              className="bg-white shadow-md rounded-lg overflow-hidden"
+            >
+              <Image src={blog.imageUrl} alt={blog.title} width={500} height={300} className="w-full h-64 object-cover" />
+              <div className="p-6">
+                <h2 className="text-2xl font-semibold mb-2 text-gray-800">{blog.title}</h2>
+                <p className="text-gray-600 mb-4">{blog.summary}</p>
+                <div className="flex items-center text-sm text-gray-500 mb-4">
+                  <FaUser className="mr-2" />
+                  <span className="mr-4">{blog.author}</span>
+                  <FaCalendarAlt className="mr-2" />
+                  <span>{blog.date}</span>
                 </div>
-              </motion.article>
-            ))}
-          </motion.div>
-        </ScrollAnimationWrapper>
+                <div className="flex flex-wrap items-center text-sm text-gray-500 mb-4">
+                  <FaTags className="mr-2" />
+                  {blog.tags.map((tag, tagIndex) => (
+                    <span key={tagIndex} className="mr-2 mb-2 bg-blue-100 text-blue-600 px-2 py-1 rounded">{tag}</span>
+                  ))}
+                </div>
+                <a href="#" className="text-blue-600 hover:underline inline-block">Read more</a>
+              </div>
+            </motion.article>
+          ))}
+        </motion.div>
       </div>
     </div>
   );
