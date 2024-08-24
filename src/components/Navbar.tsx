@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { HoveredLink, Menu, MenuItem } from "./ui/navbar-menu";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { Menu as MenuIcon, X, ChevronDown } from "lucide-react";
+import { Menu as MenuIcon, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
@@ -13,7 +13,7 @@ export default function Navbar() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      setIsScrolled(scrollPosition > 0);
+      setIsScrolled(scrollPosition > 50);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -22,7 +22,10 @@ export default function Navbar() {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50">
-      <nav className="max-w-[98%] mx-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-full shadow-lg px-6 py-4 mt-4">
+      <nav className={cn(
+        "max-w-[98%] mx-auto border border-gray-200 dark:border-gray-700 rounded-full shadow-lg px-6 py-4 mt-4 transition-all duration-300",
+        isScrolled ? "bg-white/50 dark:bg-gray-800/50 backdrop-blur-md" : "bg-white dark:bg-gray-800"
+      )}>
         <div className="flex items-center justify-between">
           <div className="flex-shrink-0">
             <Image src="/images/ventura.png" alt="Ventura Logo" width={100} height={40} />
