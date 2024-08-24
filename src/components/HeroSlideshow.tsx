@@ -26,7 +26,7 @@ const slides = [
     description: "Improving quality standards by 40% in automotive seating fabrics",
   },
   {
-    image: "https://images.unsplash.com/photo-1581092160562-2ab34067fc0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
     title: "Advanced Data Analytics",
     description: "Providing 360° actionable insights with 99.5% data accuracy",
   },
@@ -56,7 +56,7 @@ export default function HeroSlideshow() {
   }, [api]);
 
   return (
-    <div className="relative w-full mx-auto text-gray-800 pt-28">
+    <div className="relative w-full mx-auto text-gray-800">
       <Carousel
         setApi={setApi}
         className="w-full mx-auto"
@@ -69,7 +69,7 @@ export default function HeroSlideshow() {
         <CarouselContent>
           {slides.map((slide, index) => (
             <CarouselItem key={index}>
-              <div className="relative w-full h-[calc(100vh-64px)]">
+              <div className="relative w-full h-[calc(60vh-64px)] md:h-[calc(100vh-64px)]">
                 <Image
                   src={slide.image}
                   alt={slide.title}
@@ -79,16 +79,18 @@ export default function HeroSlideshow() {
                   className="brightness-50"
                   sizes="100vw"
                 />
-                <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-4">
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 sm:mb-4 text-center">{slide.title}</h2>
-                  <p className="text-lg sm:text-xl md:text-2xl text-center max-w-3xl">{slide.description}</p>
+                <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-4 px-12 md:px-4">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 sm:mb-4 text-center">{slide.title}</h2>
+                  <p className="text-base sm:text-lg md:text-xl text-center max-w-3xl">{slide.description}</p>
                 </div>
               </div>
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/20 text-white hover:bg-white/40 transition-all duration-300" />
-        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/20 text-white hover:bg-white/40 transition-all duration-300" />
+        <div className="hidden md:block">
+          <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/20 text-white hover:bg-white/40 transition-all duration-300" />
+          <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/20 text-white hover:bg-white/40 transition-all duration-300" />
+        </div>
       </Carousel>
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/50 px-3 py-1 rounded-full text-white text-sm">
         {current} / {count}

@@ -24,7 +24,7 @@ export default function Navbar() {
     <div className="fixed top-0 left-0 right-0 z-50">
       <nav className={cn(
         "max-w-[98%] mx-auto border border-gray-200 dark:border-gray-700 rounded-full shadow-lg px-6 py-4 mt-4 transition-all duration-300",
-        isScrolled ? "bg-white/50 dark:bg-gray-800/50 backdrop-blur-md" : "bg-white dark:bg-gray-800"
+        isScrolled ? "bg-white/50 dark:bg-gray-800/50 backdrop-blur-md" : "bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
       )}>
         <div className="flex items-center justify-between">
           <div className="flex-shrink-0">
