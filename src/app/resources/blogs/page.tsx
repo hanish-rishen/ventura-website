@@ -3,6 +3,7 @@ import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { ScrollAnimationWrapper } from '@/components/ScrollAnimationWrapper';
 import { FaCalendarAlt, FaUser, FaTags } from 'react-icons/fa';
+import Image from 'next/image';
 
 const fadeInUp: Variants = {
   initial: { opacity: 0, y: 60 },
@@ -72,7 +73,7 @@ export default function Blogs() {
                 variants={fadeInUp}
                 className="bg-white shadow-md rounded-lg overflow-hidden"
               >
-                <img src={blog.imageUrl} alt={blog.title} className="w-full h-64 object-cover" />
+                <Image src={blog.imageUrl} alt={blog.title} width={500} height={300} className="w-full h-64 object-cover" />
                 <div className="p-6">
                   <h2 className="text-2xl font-semibold mb-2 text-gray-800">{blog.title}</h2>
                   <p className="text-gray-600 mb-4">{blog.summary}</p>
