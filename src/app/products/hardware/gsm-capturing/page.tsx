@@ -61,7 +61,7 @@ export default function GSMCapturing() {
           <ScrollAnimationWrapper>
             <motion.div className="space-y-6" variants={fadeInUp}>
               <p className="text-lg leading-relaxed">
-                Ventura Automation's Automatic Fabric GSM Capturing System is an advanced solution designed to provide accurate and real-time measurements of fabric weight. 
+                Ventura Automation&apos;s Automatic Fabric GSM Capturing System is an advanced solution designed to provide accurate and real-time measurements of fabric weight. 
                 Our system integrates seamlessly with existing machinery, offering precise data for quality control and production optimization in textile manufacturing.
               </p>
               <h2 className="text-2xl font-semibold">Key Features</h2>

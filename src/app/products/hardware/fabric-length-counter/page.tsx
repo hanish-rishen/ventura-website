@@ -77,7 +77,7 @@ export default function FabricLengthCounter() {
           <ScrollAnimationWrapper>
             <motion.div className="space-y-6" variants={fadeInUp}>
               <p className="text-lg leading-relaxed">
-                Ventura Automation's Fabric Length Measurement System is an advanced solution designed to meet the precise needs of the textile industry. 
+                Ventura Automation&apos;s Fabric Length Measurement System is an advanced solution designed to meet the precise needs of the textile industry. 
                 Our system provides accurate, real-time length measurements, ensuring optimal quality control and production efficiency.
               </p>
               <h2 className="text-2xl font-semibold">Key Features</h2>

@@ -21,7 +21,7 @@ export default function DigitalPickCounter() {
   ];
 
   const steps = [
-    { title: "Fabric Placement", description: "Place the fabric sample on the device's measurement area" },
+    { title: "Fabric Placement", description: "Place the fabric sample on the device&apos;s measurement area" },
     { title: "Automated Scanning", description: "The digital sensor scans the fabric, detecting thread count" },
     { title: "Data Processing", description: "Advanced algorithms process the scanned data for accuracy" },
     { title: "Result Display", description: "Thread density measurements are displayed on the user interface" },
@@ -62,7 +62,7 @@ export default function DigitalPickCounter() {
           <ScrollAnimationWrapper>
             <motion.div className="space-y-6" variants={fadeInUp}>
               <p className="text-lg leading-relaxed">
-                Ventura Automation's Digital Pick Counter is an advanced solution designed to automate the process of measuring fabric thread density. 
+                Ventura Automation&apos;s Digital Pick Counter is an advanced solution designed to automate the process of measuring fabric thread density. 
                 Our system provides accurate, real-time measurements, ensuring optimal quality control and production efficiency in textile manufacturing.
               </p>
               <h2 className="text-2xl font-semibold">Key Features</h2>

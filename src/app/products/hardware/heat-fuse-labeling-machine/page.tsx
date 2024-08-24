@@ -66,7 +66,7 @@ export default function HeatFuseLabelingMachine() {
               <p className="text-lg leading-relaxed">
                 Our Fabric Heat Fuse Labeling Machine is a state-of-the-art solution for efficient and precise label application. 
                 With its pneumatic activation and adjustable temperature up to 180°C, it ensures perfect adhesion for a wide range of fabrics. 
-                The machine's compact, almost handheld design makes it incredibly versatile and easy to use in various production environments.
+                The machine&apos;s compact, almost handheld design makes it incredibly versatile and easy to use in various production environments.
               </p>
               <h2 className="text-2xl font-semibold">Key Features</h2>
               <ul className="list-none pl-5 space-y-3">
