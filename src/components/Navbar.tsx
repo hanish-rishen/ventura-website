@@ -3,12 +3,15 @@ import React, { useState, useEffect } from "react";
 import { HoveredLink, Menu, MenuItem } from "./ui/navbar-menu";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import Link from "next/link";
 import { Menu as MenuIcon, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,21 +20,28 @@ export default function Navbar() {
     };
 
     window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Call once to set initial state
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50">
+    <div className={`fixed top-0 left-0 right-0 z-50`}>
       <nav className={cn(
-        "max-w-[98%] mx-auto border border-gray-200 dark:border-gray-700 rounded-full shadow-lg px-6 py-4 mt-4 transition-all duration-300",
-        isScrolled ? "bg-white/50 dark:bg-gray-800/50 backdrop-blur-md" : "bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
+        "max-w-[98%] mx-auto rounded-full px-6 py-4 mt-4 transition-all duration-300",
+        pathname === '/' 
+          ? isScrolled 
+            ? "bg-white/70 backdrop-blur-md shadow-lg" 
+            : "bg-white"
+          : "bg-white/50 dark:bg-gray-800/50 backdrop-blur-md border border-gray-200 dark:border-gray-700 shadow-lg"
       )}>
         <div className="flex items-center justify-between">
           <div className="flex-shrink-0">
-            <Image src="/images/Ventura.png" alt="Ventura Logo" width={100} height={40} />
+            <Link href="/">
+              <Image src="/images/Ventura.png" alt="Ventura Logo" width={100} height={40} />
+            </Link>
           </div>
           <div className="hidden md:block">
-            <NavbarContent />
+            <NavbarContent pathname={pathname} isScrolled={isScrolled} />
           </div>
           <button
             className="md:hidden"
@@ -51,7 +61,7 @@ export default function Navbar() {
             className="md:hidden mt-2 mx-6 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl overflow-hidden"
           >
             <div className="p-6 max-h-[70vh] overflow-y-auto">
-              <NavbarContent isMobile={true} />
+              <NavbarContent isMobile={true} pathname={pathname} isScrolled={isScrolled} />
             </div>
           </motion.div>
         )}
@@ -60,7 +70,7 @@ export default function Navbar() {
   );
 }
 
-function NavbarContent({ isMobile = false }) {
+function NavbarContent({ isMobile = false, pathname, isScrolled }: { isMobile?: boolean; pathname: string; isScrolled: boolean }) {
   const [active, setActive] = useState<string | null>(null);
 
   const handleItemClick = (item: string) => {
@@ -69,8 +79,12 @@ function NavbarContent({ isMobile = false }) {
     }
   };
 
+  const textColorClass = pathname === '/' 
+    ? 'text-gray-800'
+    : 'text-gray-800 dark:text-white';
+
   return (
-    <div className={`flex ${isMobile ? 'flex-col w-full space-y-2' : 'flex-row items-center space-x-4'}`}>
+    <div className={`flex ${isMobile ? 'flex-col w-full space-y-2' : 'flex-row items-center space-x-4'} ${textColorClass}`}>
       <Menu setActive={setActive}>
         {[
           { item: "About", links: [
@@ -85,7 +99,8 @@ function NavbarContent({ isMobile = false }) {
           { item: "Services", links: [
             { href: "/services/how-it-works", text: "How Does It Work" },
             { href: "/services/implementation", text: "Implementation Methodology" },
-            { href: "/services/benefits", text: "Benefits of FIDAS" }
+            { href: "/services/benefits", text: "Benefits of FIDAS" },
+            { href: "/services/hardware", text: "Hardware" }
           ]},
           { item: "Customers", links: [
             { href: "/customers/success", text: "Customer Success" },

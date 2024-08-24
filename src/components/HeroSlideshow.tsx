@@ -69,7 +69,7 @@ export default function HeroSlideshow() {
         <CarouselContent>
           {slides.map((slide, index) => (
             <CarouselItem key={index}>
-              <div className="relative w-full h-[calc(60vh-64px)] md:h-[calc(100vh-64px)]">
+              <div className="relative w-full h-[60vh] md:h-[calc(100vh-64px)]">
                 <Image
                   src={slide.image}
                   alt={slide.title}
