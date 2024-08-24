@@ -69,58 +69,48 @@ export default function FidasContent() {
   return (
     <div className="w-full bg-gray-50 text-gray-800">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <section className="py-16 space-y-16">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-            <div className="w-full md:w-1/2 h-96 relative mb-8 md:mb-0 order-1 md:order-1">
-              <iframe 
-                src="https://lottie.host/embed/88cd69c5-a546-498e-91d6-04d91fe3c78b/Bzh8iDIoca.json"
-                className="w-full h-full"
-                style={{ border: 'none' }}
-              ></iframe>
-            </div>
+        <section className="py-16 space-y-8">
+          <div className="w-full space-y-8">
+            <ScrollAnimationWrapper>
+              <motion.h1 
+                className="text-4xl font-bold mb-4 text-center tracking-tight"
+                variants={fadeInUp}
+              >
+                <TypeAnimation
+                  sequence={[
+                    'About FIDAS',
+                    1500,
+                    'Fabric Inspection',
+                    1500,
+                    'Defect Analysis',
+                    1500,
+                    'About FIDAS',
+                    1500
+                  ]}
+                  wrapper="span"
+                  speed={40}
+                  repeat={Infinity}
+                />
+              </motion.h1>
+            </ScrollAnimationWrapper>
 
-            <div className="w-full md:w-1/2 space-y-8 order-2 md:order-2">
-              <ScrollAnimationWrapper>
-                <motion.h1 
-                  className="text-4xl font-bold mb-4 text-center md:text-left tracking-tight"
-                  variants={fadeInUp}
-                >
-                  <TypeAnimation
-                    sequence={[
-                      'About FIDAS',
-                      1500,
-                      'Fabric Inspection',
-                      1500,
-                      'Defect Analysis',
-                      1500,
-                      'About FIDAS',
-                      1500
-                    ]}
-                    wrapper="span"
-                    speed={40}
-                    repeat={Infinity}
-                  />
-                </motion.h1>
-              </ScrollAnimationWrapper>
-
-              <ScrollAnimationWrapper>
-                <div className="space-y-4">
-                  <p className="text-lg leading-relaxed text-center md:text-left">
-                    Fabric Inspection & Defect Analysis System (FIDAS) combines multiple inspection-specific IoT devices & software exclusively integrated for real-time on-table fabric inspection purposes.
-                  </p>
-                  <div className="text-center md:text-left">
-                    <button className="relative inline-flex h-10 items-center justify-center rounded-full border border-blue-800 bg-blue-600 px-6 font-semibold text-white text-sm overflow-hidden">
-                      <span className="relative z-10">Explore FIDAS</span>
-                      <span className="absolute inset-0 bg-gradient-to-r from-blue-600 via-blue-400 to-blue-600 animate-shimmer"></span>
-                    </button>
-                  </div>
+            <ScrollAnimationWrapper>
+              <div className="space-y-4">
+                <p className="text-lg leading-relaxed text-center">
+                  Fabric Inspection & Defect Analysis System (FIDAS) combines multiple inspection-specific IoT devices & software exclusively integrated for real-time on-table fabric inspection purposes.
+                </p>
+                <div className="text-center">
+                  <button className="relative inline-flex h-10 items-center justify-center rounded-full border border-blue-800 bg-blue-600 px-6 font-semibold text-white text-sm overflow-hidden">
+                    <span className="relative z-10">Explore FIDAS</span>
+                    <span className="absolute inset-0 bg-gradient-to-r from-blue-600 via-blue-400 to-blue-600 animate-shimmer"></span>
+                  </button>
                 </div>
-              </ScrollAnimationWrapper>
-            </div>
+              </div>
+            </ScrollAnimationWrapper>
           </div>
         </section>
 
-        <section className="py-16 space-y-8">
+        <section className="py-24 space-y-8">
           <ScrollAnimationWrapper>
             <h2 className="text-3xl font-bold mb-8 text-center">
               Automotive Seating Fabric Inspection Software
