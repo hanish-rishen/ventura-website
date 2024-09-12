@@ -12,7 +12,7 @@ const fadeInUp: Variants = {
 
 export default function AboutUs() {
   const companyValues = [
-    { icon: <FaUsers />, title: "Customer-Centric", description: "We prioritize our clients' needs and satisfaction above all else." },
+    { icon: <FaUsers />, title: "Customer-Centric", description: "We prioritize our clients&apos; needs and satisfaction above all else." },
     { icon: <FaLightbulb />, title: "Innovation", description: "We constantly strive to develop cutting-edge solutions for the textile industry." },
     { icon: <FaCogs />, title: "Expertise", description: "Our team has deep insights into textile industry operations." },
     { icon: <FaHandshake />, title: "Collaboration", description: "We work closely with end-users to ensure successful project implementation." },
@@ -84,7 +84,7 @@ export default function AboutUs() {
                 Ventura Automation Services Inc is the undisputed leader in providing Fabric Inspection Software Solutions in India. We are passionate about revolutionizing the textile industry through innovative technology.
               </p>
               <p className="text-lg leading-relaxed text-justify">
-                We are Subject Matter Experts in Fabric Inspection. We possess deep domain knowledge and retain experts in our core team. We are stubborn in management's core objectives and will never allow things to go wrong.
+                We are Subject Matter Experts in Fabric Inspection. We possess deep domain knowledge and retain experts in our core team. We are stubborn in management&apos;s core objectives and will never allow things to go wrong.
               </p>
               <p className="text-lg leading-relaxed text-justify">
                 Our specialty is that we provide real-time inspection systems. Length, Width, and Weight are captured on a real-time basis using our own IoT devices, providing real-time gradation to Fabric Checkers.
