@@ -416,7 +416,7 @@ export default function FidasContent() {
           </ScrollAnimationWrapper>
         </section>
 
-        <section className="py-16 bg-gray-100">
+        <section className="py-16">
           <ScrollAnimationWrapper>
             <motion.h2 
               className="text-3xl font-bold mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
@@ -427,60 +427,104 @@ export default function FidasContent() {
           </ScrollAnimationWrapper>
 
           <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-            <div className="w-full md:w-1/2 bg-white p-6 rounded-lg shadow-lg">
-              <h3 className="text-xl font-semibold mb-4">Content</h3>
-              <p className="text-gray-600 mb-4">
-                FIDAS seamlessly integrates with various third-party applications, enhancing its functionality and adaptability to different business ecosystems.
+            <motion.div 
+              className="w-full md:w-1/2"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <h3 className="text-2xl font-bold mb-4 text-blue-600">Seamless Integration</h3>
+              <p className="text-gray-700 mb-6 leading-relaxed">
+                FIDAS effortlessly connects with a wide array of third-party applications, 
+                amplifying its capabilities and adapting fluidly to diverse business environments.
               </p>
-              <motion.button
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Read More
-              </motion.button>
-            </div>
+              <Link href="/products/sap-integration">
+                <motion.button
+                  className="bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                  whileHover={{ scale: 1.05, boxShadow: "0 0 15px rgba(59, 130, 246, 0.5)" }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Explore Integrations
+                </motion.button>
+              </Link>
+            </motion.div>
 
             <div className="w-full md:w-1/2">
               <motion.div 
-                className="relative w-64 h-64 mx-auto"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+                className="relative w-80 h-80 mx-auto"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
               >
-                <motion.div
-                  className="absolute inset-0 flex items-center justify-center"
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.5 }}
-                >
-                  <div className="w-20 h-20 bg-yellow-400 rounded-full flex items-center justify-center text-white font-bold">
-                    FIDAS Software
-                  </div>
-                </motion.div>
                 {[
                   { name: "SAP S4 HANA", color: "bg-blue-500" },
                   { name: "SALUTO MES", color: "bg-green-500" },
                   { name: "YOUR OWN PORTAL", color: "bg-red-500" },
                   { name: "VENDOR RETURNS DATA", color: "bg-purple-500" },
-                  { name: "3rd Party Analytics Dashboard", color: "bg-indigo-500" },
+                  { name: "3rd Party Analytics", color: "bg-indigo-500" },
                   { name: "CUSTOMER SCM CLOUD", color: "bg-teal-500" },
                   { name: "AUTOMATED EMAIL", color: "bg-pink-500" },
                   { name: "WHATSAPP", color: "bg-green-400" }
                 ].map((app, index) => (
-                  <motion.div
-                    key={app.name}
-                    className={`absolute w-16 h-16 ${app.color} rounded-full flex items-center justify-center text-white text-xs font-semibold`}
-                    style={{
-                      top: `${50 - 40 * Math.cos(index * Math.PI / 4)}%`,
-                      left: `${50 + 40 * Math.sin(index * Math.PI / 4)}%`,
-                    }}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.1 + 1 }}
-                  >
-                    {app.name}
-                  </motion.div>
+                  <React.Fragment key={app.name}>
+                    <motion.div
+                      className="absolute top-1/2 left-1/2 w-[45%] h-[2px] bg-gray-300 origin-left"
+                      style={{
+                        rotate: `${index * 45}deg`,
+                      }}
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{ delay: index * 0.1, duration: 0.5 }}
+                    />
+                    <motion.div
+                      className={`absolute w-20 h-20 ${app.color} rounded-full flex items-center justify-center text-white text-xs font-semibold z-10 shadow-lg`}
+                      style={{
+                        top: `${40 - 45 * Math.cos(index * Math.PI / 4)}%`,
+                        left: `${38 + 45 * Math.sin(index * Math.PI / 4)}%`,
+                      }}
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ 
+                        opacity: 1, 
+                        scale: 1,
+                      }}
+                      transition={{ 
+                        delay: index * 0.1 + 0.5,
+                        duration: 0.5,
+                      }}
+                      whileHover={{
+                        scale: 1.1,
+                        boxShadow: "0px 0px 8px rgba(0,0,0,0.3)",
+                      }}
+                    >
+                      <span className="text-center leading-tight">{app.name}</span>
+                    </motion.div>
+                  </React.Fragment>
                 ))}
+                <motion.div
+                  className="absolute inset-0 flex items-center justify-center"
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 1, duration: 0.5 }}
+                >
+                  <motion.div 
+                    className="w-28 h-28 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-white font-bold text-sm text-center z-20 shadow-xl"
+                    whileHover={{ scale: 1.1 }}
+                    animate={floatingAnimation}
+                  >
+                    FIDAS Software
+                  </motion.div>
+                </motion.div>
+                <motion.div
+                  className="absolute inset-0"
+                  animate={{
+                    rotate: 360
+                  }}
+                  transition={{
+                    duration: 40,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                />
               </motion.div>
             </div>
           </div>

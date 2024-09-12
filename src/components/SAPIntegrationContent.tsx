@@ -62,7 +62,6 @@ export default function SAPIntegrationContent() {
             className="text-xl text-center mb-8"
             variants={fadeInUp}
           >
-            FIDAS = PERFECTION
           </motion.p>
         </ScrollAnimationWrapper>
 
