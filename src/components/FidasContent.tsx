@@ -288,6 +288,203 @@ export default function FidasContent() {
             </div>
           </div>
         </section>
+
+        <section className="py-16 space-y-8">
+          <ScrollAnimationWrapper>
+            <motion.h2 
+              className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
+              variants={fadeInUp}
+            >
+              Elevate Your Business with FIDAS
+            </motion.h2>
+            <motion.p 
+              className="text-xl text-center mb-8"
+              variants={fadeInUp}
+            >
+            </motion.p>
+          </ScrollAnimationWrapper>
+
+          <ScrollAnimationWrapper>
+            <motion.h3 
+              className="text-2xl font-bold mb-6 text-center"
+              variants={fadeInUp}
+            >
+              20 Reasons to Choose FIDAS
+            </motion.h3>
+            <motion.ul 
+              className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12"
+              variants={staggerChildren}
+            >
+              {[
+                "Improve Production in Inspection Department",
+                "Amazing Cost Benefits",
+                "Pre-empts for Corrective Actions",
+                "Accomplish Processes That Cannot Be Done Manually",
+                "Achieve Accuracy",
+                "Adhere to Compliances",
+                "Eliminate Routine Manual and Clerical Tasks",
+                "Consistent Quality Deliverables... Ensured!!!",
+                "Implement Industry Best Practices",
+                "Create Work Comfort & Peace of Mind",
+                "Increase System Versatility",
+                "Happy Customers & Win More Business",
+                "Get it Done Through Experts",
+                "FIDAS: Your Secret Weapon"
+              ].map((reason, index) => (
+                <motion.li 
+                  key={index}
+                  className="flex items-center space-x-2"
+                  variants={fadeInUp}
+                >
+                  <CheckCircle className="text-green-500" />
+                  <span>{reason}</span>
+                </motion.li>
+              ))}
+            </motion.ul>
+          </ScrollAnimationWrapper>
+        </section>
+
+        <section className="py-16">
+          <ScrollAnimationWrapper>
+            <h2 className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
+              FIDAS Improves Production in Inspection Department
+            </h2>
+          </ScrollAnimationWrapper>
+
+          <motion.ul 
+            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            variants={staggerChildren}
+          >
+            {[
+              "Faster Defect Logging",
+              "Improves worker efficiency as no need for manual marking in paper",
+              "No defect re-entry in System",
+              "Get reasons for non-productive time",
+              "Reduced Roll Doff time",
+              "Real-time online monitoring of inspection production",
+              "Automated Grade Generation",
+              "Easy to fix increased production target",
+              "Monitor productivity"
+            ].map((item, index) => (
+              <motion.li 
+                key={index}
+                className="flex items-start space-x-2"
+                variants={fadeInUp}
+              >
+                <CheckCircle className="text-green-500 mt-1 flex-shrink-0" />
+                <span>{item}</span>
+              </motion.li>
+            ))}
+          </motion.ul>
+        </section>
+
+        <section className="py-16 space-y-8">
+          <ScrollAnimationWrapper>
+            <motion.h2 
+              className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
+              variants={fadeInUp}
+            >
+              FIDAS: The Industry Standard
+            </motion.h2>
+          </ScrollAnimationWrapper>
+
+          <ScrollAnimationWrapper>
+            <motion.ul 
+              className="grid grid-cols-1 md:grid-cols-2 gap-6"
+              variants={staggerChildren}
+            >
+              {[
+                "De facto inspection software for the Indian textile industry",
+                "Chosen by multinational companies like Adient (USA), Treves (France), Aunde (Germany), and Tesca (France)",
+                "Replaced European fabric inspection applications in several organizations",
+                "Inspects 99% of automotive car seating fabrics in India",
+                "Ensures strict adherence to customer quality terms",
+                "Addresses minute details crucial for evolving business models",
+                "100% project success rate over the past 15 years",
+                "Guaranteed return on investment"
+              ].map((item, index) => (
+                <motion.li 
+                  key={index}
+                  className="flex items-start space-x-2"
+                  variants={fadeInUp}
+                >
+                  <CheckCircle className="text-green-500 mt-1 flex-shrink-0" />
+                  <span>{item}</span>
+                </motion.li>
+              ))}
+            </motion.ul>
+          </ScrollAnimationWrapper>
+        </section>
+
+        <section className="py-16 bg-gray-100">
+          <ScrollAnimationWrapper>
+            <motion.h2 
+              className="text-3xl font-bold mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
+              variants={fadeInUp}
+            >
+              FIDAS - Integration with 3rd Party Applications
+            </motion.h2>
+          </ScrollAnimationWrapper>
+
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+            <div className="w-full md:w-1/2 bg-white p-6 rounded-lg shadow-lg">
+              <h3 className="text-xl font-semibold mb-4">Content</h3>
+              <p className="text-gray-600 mb-4">
+                FIDAS seamlessly integrates with various third-party applications, enhancing its functionality and adaptability to different business ecosystems.
+              </p>
+              <motion.button
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Read More
+              </motion.button>
+            </div>
+
+            <div className="w-full md:w-1/2">
+              <motion.div 
+                className="relative w-64 h-64 mx-auto"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+              >
+                <motion.div
+                  className="absolute inset-0 flex items-center justify-center"
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <div className="w-20 h-20 bg-yellow-400 rounded-full flex items-center justify-center text-white font-bold">
+                    FIDAS Software
+                  </div>
+                </motion.div>
+                {[
+                  { name: "SAP S4 HANA", color: "bg-blue-500" },
+                  { name: "SALUTO MES", color: "bg-green-500" },
+                  { name: "YOUR OWN PORTAL", color: "bg-red-500" },
+                  { name: "VENDOR RETURNS DATA", color: "bg-purple-500" },
+                  { name: "3rd Party Analytics Dashboard", color: "bg-indigo-500" },
+                  { name: "CUSTOMER SCM CLOUD", color: "bg-teal-500" },
+                  { name: "AUTOMATED EMAIL", color: "bg-pink-500" },
+                  { name: "WHATSAPP", color: "bg-green-400" }
+                ].map((app, index) => (
+                  <motion.div
+                    key={app.name}
+                    className={`absolute w-16 h-16 ${app.color} rounded-full flex items-center justify-center text-white text-xs font-semibold`}
+                    style={{
+                      top: `${50 - 40 * Math.cos(index * Math.PI / 4)}%`,
+                      left: `${50 + 40 * Math.sin(index * Math.PI / 4)}%`,
+                    }}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.1 + 1 }}
+                  >
+                    {app.name}
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );

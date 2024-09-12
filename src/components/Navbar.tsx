@@ -114,7 +114,8 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
           { item: "Products", links: [
             { href: "/products/software", text: "Associated Software Products" },
             { href: "/products/technologies", text: "Technologies" },
-            { href: "/products/hardware", text: "Hardware Products" }
+            { href: "/products/hardware", text: "Hardware Products" },
+            { href: "/products/sap-integration", text: "SAP Integration" }
           ]},
           { item: "Services", links: [
             { href: "/services/how-it-works", text: "How Does It Work" },

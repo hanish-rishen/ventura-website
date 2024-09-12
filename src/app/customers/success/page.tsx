@@ -2,7 +2,7 @@
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { ScrollAnimationWrapper } from '@/components/ScrollAnimationWrapper';
-import { FaQuoteLeft, FaQuoteRight, FaIndustry, FaChartLine, FaSmile } from 'react-icons/fa';
+import { FaQuoteLeft, FaQuoteRight, FaIndustry, FaChartLine, FaSmile, FaCar, FaGlobe } from 'react-icons/fa';
 
 const fadeInUp: Variants = {
   initial: { opacity: 0, y: 60 },
@@ -14,6 +14,9 @@ export default function CustomerSuccess() {
     { icon: <FaIndustry />, company: "TextileTech Inc.", story: "Reduced defect rate by 40% within 3 months of implementing FIDAS" },
     { icon: <FaChartLine />, company: "FabricMasters Ltd.", story: "Increased production efficiency by 25% and cut costs by 15%" },
     { icon: <FaSmile />, company: "QualityWeave Co.", story: "Improved customer satisfaction scores from 7.5 to 9.2 out of 10" },
+    { icon: <FaCar />, company: "AutoFabrics Ltd.", story: "Implemented FIDAS for 99% of their automotive seating fabric inspection" },
+    { icon: <FaGlobe />, company: "GlobalTex Corp.", story: "Chose FIDAS over European alternatives, saving 35% on software costs" },
+    { icon: <FaIndustry />, company: "MultiTex Industries", story: "Successfully integrated FIDAS with their SAP S4 Hana system" },
   ];
 
   return (

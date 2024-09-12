@@ -14,6 +14,9 @@ export default function CompanyInfo() {
     { year: 2008, event: "Ventura Automation Services Inc was created to focus on Fabric Inspection Software domain within textile industry" },
     { year: 2015, event: "Powerful Fabric Optimization Engine utilizing linear algorithm launched and implemented successfully in finished fabric inspection" },
     { year: 2022, event: "More than 100 Successful FIDAS software implementations across India in various verticals of fabric Inspection" },
+    { year: 2010, event: "Launched FIDAS, revolutionizing fabric inspection in India" },
+    { year: 2018, event: "Reached milestone of 5 million meters of fabric inspected daily using FIDAS" },
+    { year: 2020, event: "Expanded to serve 99% of automotive car seating fabrics inspection in India" },
   ];
 
   return (

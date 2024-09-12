@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { motion, Variants, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { FaRobot, FaNetworkWired, FaChartLine, FaDatabase, FaExchangeAlt } from 'react-icons/fa';
+import { FaRobot, FaNetworkWired, FaChartLine, FaDatabase, FaExchangeAlt, FaIndustry, FaCogs, FaMoneyBillWave } from 'react-icons/fa';
 
 const fadeInUp: Variants = {
   initial: { opacity: 0, y: 60 },
@@ -67,6 +67,37 @@ export default function Technologies() {
         "Automated roll-wise barcode generation",
         "Real-time data synchronization",
         "Traceability throughout the production process"
+      ]
+    },
+    {
+      icon: <FaIndustry />,
+      name: "Industry 4.0 Ready",
+      description: "Prepared for the future of textile manufacturing.",
+      features: [
+        "Integration with ASRS (Automated Storage & Recovery System)",
+        "Compatibility with conveyor lines",
+        "Automated weighment and barcode systems"
+      ]
+    },
+    {
+      icon: <FaCogs />,
+      name: "Customizable Workflows",
+      description: "Adaptable to various fabric types and inspection needs.",
+      features: [
+        "Supports greige, knits, denim, automotive, and home textiles",
+        "Customizable grading and cut plan generation",
+        "Flexible defect tracking and reporting"
+      ]
+    },
+    {
+      icon: <FaMoneyBillWave />,
+      name: "Cost Optimization",
+      description: "Maximize profits and reduce wastage with FIDAS.",
+      features: [
+        "Unique Within-Roll Optimization Module for optimized cut plans",
+        "Reduction in fabric wastage by 20% everyday",
+        "Arrest fresh fabric realization leakage",
+        "Maximize profits through efficient resource utilization"
       ]
     }
   ];

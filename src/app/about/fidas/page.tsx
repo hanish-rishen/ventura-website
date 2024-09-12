@@ -19,7 +19,7 @@ export default function WhatIsFIDAS() {
     title: "FIDAS",
     subtitle: "Fabric Inspection & Defect Analysis System",
     description: "An innovative solution designed to revolutionize the fabric inspection process.",
-    imageUrl: "/images/fidas-hero.jpg", // Replace with actual image path
+    videoUrl: "/images/Hero.mp4",
   };
 
   const features = [
@@ -33,7 +33,31 @@ export default function WhatIsFIDAS() {
       description: "De facto software for fabric inspection in India with over 100 successful implementations for 17 years.",
       icon: "icon-track-record", // Replace with actual icon component or path
     },
-    // Add more features as needed
+    {
+      title: "IoT Integration",
+      description: "Utilizes our own IoT devices for real-time length, width, and weight measurements.",
+      icon: "icon-iot",
+    },
+    {
+      title: "Cost-Effective",
+      description: "At least 35% lower cost compared to equivalent European software products.",
+      icon: "icon-cost",
+    },
+    {
+      title: "Industry Standard",
+      description: "FIDAS is the de facto inspection software for the Indian textile industry, chosen by multinational companies.",
+      icon: "icon-industry",
+    },
+    {
+      title: "Cost-Effective",
+      description: "At least 35% more cost-effective than comparable European software products.",
+      icon: "icon-savings",
+    },
+    {
+      title: "Customizable",
+      description: "Our experienced team customizes FIDAS to meet your business needs and suggests inspection best practices.",
+      icon: "icon-customize",
+    },
   ];
 
   const benefits = [
@@ -41,7 +65,10 @@ export default function WhatIsFIDAS() {
     "Maximized fresh fabric realization",
     "Reduced wastage",
     "Enhanced efficiency in textile manufacturing",
-    // Add more benefits as needed
+    "Real-time inspection and gradation",
+    "Integration with various ERP systems",
+    "Suitable for multiple fabric types and industries",
+    "Reduced dependency on manual inspection",
   ];
 
   return (
@@ -96,12 +123,13 @@ export default function WhatIsFIDAS() {
             variants={fadeInUp}
             className="mb-16"
           >
-            <Image
-              src={heroContent.imageUrl}
-              alt="FIDAS Hero"
-              width={1200}
-              height={600}
-              className="rounded-lg shadow-xl"
+            <video
+              src={heroContent.videoUrl}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full rounded-lg shadow-xl"
             />
           </motion.div>
         </ScrollAnimationWrapper>

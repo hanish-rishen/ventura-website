@@ -7,22 +7,22 @@ import Autoplay from "embla-carousel-autoplay";
 const slides = [
   {
     image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-    title: "Fabric Inspection",
+    title: "Your Search is Over!",
     description: "FIDAS: Achieving 99.9% defect detection accuracy",
   },
   {
     image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-    title: "AI-Powered Solutions",
-    description: "Reducing inspection time by 75% with our cutting-edge AI",
+    title: "Get Ready! Join the success club",
+    description: "127 successful fabric inspection projects implemented spanning 17 years",
   },
   {
     image: "https://images.unsplash.com/photo-1574634534894-89d7576c8259?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2064&q=80",
-    title: "Global Support Network",
+    title: "Fabric Inspection & Automation beyond your expectations",
     description: "97% customer satisfaction rate with our 24/7 expert assistance",
   },
   {
     image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-    title: "Automotive Textile Excellence",
+    title: "Meet the subject matter experts in Fabric Inspection Software",
     description: "Improving quality standards by 40% in automotive seating fabrics",
   },
   {
