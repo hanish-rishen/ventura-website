@@ -69,7 +69,7 @@ const ScrollAnimationWrapper = ({ children }: { children: React.ReactNode }) => 
 export default function FidasContent() {
   return (
     <div className="w-full bg-gray-50 text-gray-800">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <section className="py-16 space-y-8">
           <div className="w-full space-y-8">
             <ScrollAnimationWrapper>
@@ -120,25 +120,27 @@ export default function FidasContent() {
             </h2>
           </ScrollAnimationWrapper>
 
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <motion.div 
               className="w-full md:w-1/2 space-y-6 order-2 md:order-1"
               variants={staggerChildren}
             >
               <ScrollAnimationWrapper>
-                <div>
+                <div className="w-full"> {/* Add a fixed width container */}
                   <h3 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">What we do ?</h3>
-                  <TypeAnimation
-                    sequence={[
-                      'We monitor fabric quality in real-time and suggest cutting decisions to inspectors, maximizing fresh realization and avoiding wastage.',
-                      3000,
-                    ]}
-                    wrapper="p"
-                    speed={60}
-                    repeat={Infinity}
-                    className="text-base leading-relaxed text-gray-600"
-                    cursor={true}
-                  />
+                  <div className="h-20"> {/* Fixed height container for TypeAnimation */}
+                    <TypeAnimation
+                      sequence={[
+                        'We monitor fabric quality in real-time and suggest cutting decisions to inspectors, maximizing fresh realization and avoiding wastage.',
+                        3000,
+                      ]}
+                      wrapper="p"
+                      speed={60}
+                      repeat={Infinity}
+                      className="text-base leading-relaxed text-gray-600"
+                      cursor={true}
+                    />
+                  </div>
                 </div>
               </ScrollAnimationWrapper>
 
@@ -244,7 +246,7 @@ export default function FidasContent() {
 
           <div className="flex flex-col md:flex-row items-center justify-between gap-12">
             <motion.div 
-              className="w-full md:w-2/3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 order-2 md:order-1"
+              className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 order-2 md:order-1"
               variants={staggerChildren}
             >
               {[
@@ -369,56 +371,44 @@ export default function FidasContent() {
             </motion.div>
 
             <div className="w-full md:w-1/2">
-              <motion.div 
-                className="relative w-80 h-80 mx-auto"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-              >
-                {[
-                  { name: "SAP S4 HANA", color: "bg-blue-500" },
-                  { name: "SALUTO MES", color: "bg-green-500" },
-                  { name: "YOUR OWN PORTAL", color: "bg-red-500" },
-                  { name: "VENDOR RETURNS DATA", color: "bg-purple-500" },
-                  { name: "3rd Party Analytics", color: "bg-indigo-500" },
-                  { name: "CUSTOMER SCM CLOUD", color: "bg-teal-500" },
-                  { name: "AUTOMATED EMAIL", color: "bg-pink-500" },
-                  { name: "WHATSAPP", color: "bg-green-400" }
-                ].map((app, index) => (
-                  <React.Fragment key={app.name}>
-                    <motion.div
-                      className="absolute top-1/2 left-1/2 w-[45%] h-[2px] bg-gray-300 origin-left"
-                      style={{
-                        rotate: `${index * 45}deg`,
-                      }}
-                      initial={{ scaleX: 0 }}
-                      animate={{ scaleX: 1 }}
-                      transition={{ delay: index * 0.1, duration: 0.5 }}
-                    />
-                    <motion.div
-                      className={`absolute w-20 h-20 ${app.color} rounded-full flex items-center justify-center text-white text-xs font-semibold z-10 shadow-lg`}
-                      style={{
-                        top: `${40 - 45 * Math.cos(index * Math.PI / 4)}%`,
-                        left: `${38 + 45 * Math.sin(index * Math.PI / 4)}%`,
-                      }}
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ 
-                        opacity: 1, 
-                        scale: 1,
-                      }}
-                      transition={{ 
-                        delay: index * 0.1 + 0.5,
-                        duration: 0.5,
-                      }}
-                      whileHover={{
-                        scale: 1.1,
-                        boxShadow: "0px 0px 8px rgba(0,0,0,0.3)",
-                      }}
-                    >
-                      <span className="text-center leading-tight">{app.name}</span>
-                    </motion.div>
-                  </React.Fragment>
-                ))}
+              <div className="relative w-80 h-80 mx-auto">
+                <div className="absolute inset-0">
+                  {[
+                    { name: "SAP S4 HANA", color: "bg-blue-500" },
+                    { name: "SALUTO MES", color: "bg-green-500" },
+                    { name: "YOUR OWN PORTAL", color: "bg-red-500" },
+                    { name: "VENDOR RETURNS DATA", color: "bg-purple-500" },
+                    { name: "3rd Party Analytics", color: "bg-indigo-500" },
+                    { name: "CUSTOMER SCM CLOUD", color: "bg-teal-500" },
+                    { name: "AUTOMATED EMAIL", color: "bg-pink-500" },
+                    { name: "WHATSAPP", color: "bg-green-400" }
+                  ].map((app, index) => (
+                    <React.Fragment key={app.name}>
+                      <div
+                        className="absolute top-1/2 left-1/2 w-[45%] h-[2px] bg-gray-300 origin-left"
+                        style={{
+                          transform: `rotate(${index * 45}deg)`,
+                        }}
+                      />
+                      <motion.div
+                        className={`absolute w-20 h-20 ${app.color} rounded-full flex items-center justify-center text-white text-xs font-semibold z-10 shadow-lg`}
+                        style={{
+                          top: `${40 - 45 * Math.cos(index * Math.PI / 4)}%`,
+                          left: `${38 + 45 * Math.sin(index * Math.PI / 4)}%`,
+                        }}
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: index * 0.1 + 0.5, duration: 0.5 }}
+                        whileHover={{
+                          scale: 1.1,
+                          boxShadow: "0px 0px 8px rgba(0,0,0,0.3)",
+                        }}
+                      >
+                        <span className="text-center leading-tight">{app.name}</span>
+                      </motion.div>
+                    </React.Fragment>
+                  ))}
+                </div>
                 <motion.div
                   className="absolute inset-0 flex items-center justify-center"
                   initial={{ opacity: 0, scale: 0 }}
@@ -433,18 +423,7 @@ export default function FidasContent() {
                     FIDAS Software
                   </motion.div>
                 </motion.div>
-                <motion.div
-                  className="absolute inset-0"
-                  animate={{
-                    rotate: 360
-                  }}
-                  transition={{
-                    duration: 40,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
-                />
-              </motion.div>
+              </div>
             </div>
           </div>
         </section>

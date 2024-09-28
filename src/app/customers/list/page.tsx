@@ -1,8 +1,9 @@
 "use client";
-import React from 'react';
-import { motion, Variants } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { motion, Variants, useAnimation } from 'framer-motion';
 import { ScrollAnimationWrapper } from '@/components/ScrollAnimationWrapper';
 import Image from 'next/image';
+import { useInView } from 'react-intersection-observer';
 
 const fadeInUp: Variants = {
   initial: { opacity: 0, y: 60 },
@@ -10,6 +11,28 @@ const fadeInUp: Variants = {
 };
 
 export default function CustomerList() {
+  const [isMobile, setIsMobile] = useState(false);
+  const controls = useAnimation();
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (inView) {
+      controls.start("animate");
+    }
+  }, [controls, inView]);
+
   const customers = [
     { name: "Treves", image: "/images/Treves.jpg" },
     { name: "Nandan", image: "/images/Nandan.jpg" },
@@ -43,31 +66,30 @@ export default function CustomerList() {
           />
         </div>
 
-        <ScrollAnimationWrapper>
-          <motion.div
-            initial="initial"
-            animate="animate"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            {customers.map((customer, index) => (
-              <motion.div
-                key={index}
-                variants={fadeInUp}
-                className="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg p-8 rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col items-center"
-              >
-                <h3 className="text-xl font-semibold mb-4 text-blue-600 text-center">{customer.name}</h3>
-                <div className="mb-4 flex justify-center h-24 relative w-full">
-                  <Image
-                    src={customer.image}
-                    alt={customer.name}
-                    layout="fill"
-                    objectFit="contain"
-                  />
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </ScrollAnimationWrapper>
+        <motion.div
+          ref={ref}
+          initial="initial"
+          animate={isMobile ? controls : "animate"}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          {customers.map((customer, index) => (
+            <motion.div
+              key={index}
+              variants={fadeInUp}
+              className="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg p-8 rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col items-center"
+            >
+              <h3 className="text-xl font-semibold mb-4 text-blue-600 text-center">{customer.name}</h3>
+              <div className="mb-4 flex justify-center h-24 relative w-full">
+                <Image
+                  src={customer.image}
+                  alt={customer.name}
+                  layout="fill"
+                  objectFit="contain"
+                />
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
     </div>
   );

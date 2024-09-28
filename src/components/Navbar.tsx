@@ -65,6 +65,7 @@ export default function Navbar() {
               height: { duration: 0.5 }
             }}
             className="md:hidden mt-2 mx-6 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl overflow-hidden"
+            style={{ width: 'calc(100% - 3rem)' }}  // Set a fixed width
           >
             <motion.div 
               className="p-6 max-h-[70vh] overflow-y-auto"
