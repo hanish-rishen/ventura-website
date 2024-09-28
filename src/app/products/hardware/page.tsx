@@ -28,7 +28,7 @@ export default function HardwareServices() {
     { name: "Barcode Scanning & Printing", link: "/products/hardware/barcode-scanning-printing", image: "/images/barcode-printer.jpeg" },
     { name: "Automatic Defect Stickering System", link: "/products/hardware/defect-stickering-system", image: "/images/AUTOMATED-STICKERING-MACHINE.png" },
     { name: "Touch Screen Monitor with Industrial PC", link: "/products/hardware/touchscreen-monitor", image: "/images/pcu.jpg" },
-    { name: "Fabric Heat Fuse Labeling Machine", link: "/products/hardware/heat-fuse-labeling-machine", image: "/images/heat-fusing-machine.png" },
+    { name: "Fabric Heat Fuse Labeling Machine", link: "/products/hardware/heat-fuse-labeling-machine", image: "/images/Heat-Fusing-Machine.png" },
   ];
 
   return (
