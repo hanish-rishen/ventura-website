@@ -14,7 +14,7 @@ const blogs = [
     author: "FIDAS Team",
     date: "June 15, 2023",
     tags: ["Quality Control", "Fabric Inspection", "Textile Industry", "SOP"],
-    imageUrl: "/images/blogs/Capture.png",
+    imageUrl: "/images/blogs/Capture.PNG",
     content: `
 **FIDAS SOP: Comprehensive Guide to Fabric Inspection and Defect Analysis**
 
