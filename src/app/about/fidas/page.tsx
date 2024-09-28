@@ -3,6 +3,7 @@ import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { ScrollAnimationWrapper } from '@/components/ScrollAnimationWrapper';
 import Image from 'next/image';
+import { FaCheck } from 'react-icons/fa';
 
 const fadeInUp: Variants = {
   initial: { opacity: 0, y: 60 },
@@ -19,7 +20,7 @@ export default function WhatIsFIDAS() {
     title: "FIDAS",
     subtitle: "Fabric Inspection & Defect Analysis System",
     description: "An innovative solution designed to revolutionize the fabric inspection process.",
-    videoUrl: "/images/Hero.mp4",
+    imageUrl: "/images/what-is-fidas.gif",
   };
 
   const features = [
@@ -123,47 +124,46 @@ export default function WhatIsFIDAS() {
             variants={fadeInUp}
             className="mb-16"
           >
-            <video
-              src={heroContent.videoUrl}
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full rounded-lg shadow-xl"
+            <Image
+              src={heroContent.imageUrl}
+              alt="What is FIDAS"
+              width={800}
+              height={450}
+              className="w-full"
             />
           </motion.div>
         </ScrollAnimationWrapper>
 
-        <ScrollAnimationWrapper>
-          <motion.h2
-            variants={fadeInUp}
-            className="text-3xl font-bold mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
-          >
-            Features
-          </motion.h2>
-          <motion.div
-            initial="initial"
-            animate="animate"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                variants={fadeInUp}
-                className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2"
-              >
-                <div className="text-4xl text-blue-600 mb-4">
-                  {/* Replace with actual icon component */}
-                  <svg className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-semibold mb-4 text-blue-600">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </ScrollAnimationWrapper>
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-3xl font-bold mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
+        >
+          Features
+        </motion.h2>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          {features.map((feature, index) => (
+            <div
+              key={index}
+              className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2"
+            >
+              <div className="text-4xl text-blue-600 mb-4">
+                {/* Replace with actual icon component */}
+                <svg className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-4 text-blue-600">{feature.title}</h3>
+              <p className="text-gray-600">{feature.description}</p>
+            </div>
+          ))}
+        </motion.div>
 
         <ScrollAnimationWrapper>
           <motion.h2
@@ -172,21 +172,19 @@ export default function WhatIsFIDAS() {
           >
             Benefits
           </motion.h2>
-          <motion.ul
+          <motion.div
             variants={fadeInUp}
-            className="space-y-4"
+            className="flex flex-wrap justify-center"
           >
             {benefits.map((benefit, index) => (
-              <motion.li key={index} className="flex items-start">
-                <div className="flex-shrink-0">
-                  <svg className="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+              <motion.div key={index} className="flex items-center m-4 w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
+                <div className="flex-shrink-0 mr-3">
+                  <FaCheck className="text-blue-500 text-xl" />
                 </div>
-                <p className="ml-3 text-base text-gray-700">{benefit}</p>
-              </motion.li>
+                <p className="text-base text-gray-700">{benefit}</p>
+              </motion.div>
             ))}
-          </motion.ul>
+          </motion.div>
         </ScrollAnimationWrapper>
       </div>
     </div>

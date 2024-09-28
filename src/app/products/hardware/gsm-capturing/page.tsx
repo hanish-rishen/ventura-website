@@ -83,8 +83,14 @@ export default function GSMCapturing() {
           </ScrollAnimationWrapper>
 
           <ScrollAnimationWrapper>
-            <div className="h-96 bg-gray-200 rounded-lg">
-              {/* Placeholder for your animated image */}
+            <div className="relative h-96 bg-gray-200 rounded-lg overflow-hidden">
+              <Image
+                src="/images/GSM-Scale.jpg"
+                alt="Automatic Fabric GSM Capturing System"
+                layout="fill"
+                objectFit="cover"
+                className="rounded-lg"
+              />
             </div>
           </ScrollAnimationWrapper>
         </div>

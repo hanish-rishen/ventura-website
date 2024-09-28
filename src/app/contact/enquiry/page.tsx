@@ -1,8 +1,8 @@
 "use client";
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { ScrollAnimationWrapper } from '@/components/ScrollAnimationWrapper';
-import { FaUser, FaEnvelope, FaBuilding, FaCommentAlt } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaBuilding, FaCommentAlt, FaDownload } from 'react-icons/fa';
 
 const fadeInUp: Variants = {
   initial: { opacity: 0, y: 60 },
@@ -10,6 +10,22 @@ const fadeInUp: Variants = {
 };
 
 export default function Enquiry() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [company, setCompany] = useState('');
+  const [enquiry, setEnquiry] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const subject = encodeURIComponent('Enquiry Form Submission');
+    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nCompany: ${company}\n\nEnquiry Details: ${enquiry}`);
+    window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=regi@fidas.in&su=${subject}&body=${body}`, '_blank');
+  };
+
+  const handleDownloadLetterhead = () => {
+    window.open('/Brouchers/LETTER HEAD.doc', '_blank');
+  };
+
   return (
     <div className="w-full bg-gradient-to-br from-gray-50 to-blue-50 text-gray-800 min-h-screen">
       <div className="max-w-3xl mx-auto px-6 lg:px-8 py-16">
@@ -40,43 +56,86 @@ export default function Enquiry() {
             animate="animate"
             className="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg p-8 rounded-xl border border-gray-200 shadow-lg"
           >
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="name" className="flex items-center text-sm font-medium text-gray-700 mb-1">
                   <FaUser className="mr-2 text-blue-600" />
                   Name
                 </label>
-                <input type="text" id="name" name="name" className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300" required />
+                <input 
+                  type="text" 
+                  id="name" 
+                  name="name" 
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300" 
+                  required 
+                />
               </div>
               <div>
                 <label htmlFor="email" className="flex items-center text-sm font-medium text-gray-700 mb-1">
                   <FaEnvelope className="mr-2 text-blue-600" />
                   Email
                 </label>
-                <input type="email" id="email" name="email" className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300" required />
+                <input 
+                  type="email" 
+                  id="email" 
+                  name="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300" 
+                  required 
+                />
               </div>
               <div>
                 <label htmlFor="company" className="flex items-center text-sm font-medium text-gray-700 mb-1">
                   <FaBuilding className="mr-2 text-blue-600" />
                   Company
                 </label>
-                <input type="text" id="company" name="company" className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300" />
+                <input 
+                  type="text" 
+                  id="company" 
+                  name="company" 
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300" 
+                />
               </div>
               <div>
                 <label htmlFor="enquiry" className="flex items-center text-sm font-medium text-gray-700 mb-1">
                   <FaCommentAlt className="mr-2 text-blue-600" />
                   Enquiry Details
                 </label>
-                <textarea id="enquiry" name="enquiry" rows={6} className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300" required></textarea>
+                <textarea 
+                  id="enquiry" 
+                  name="enquiry" 
+                  rows={6} 
+                  value={enquiry}
+                  onChange={(e) => setEnquiry(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300" 
+                  required
+                ></textarea>
               </div>
-              <motion.button
-                type="submit"
-                className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Submit Enquiry
-              </motion.button>
+              <div className="flex space-x-4">
+                <motion.button
+                  type="submit"
+                  className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Submit Enquiry
+                </motion.button>
+                <motion.button
+                  type="button"
+                  onClick={handleDownloadLetterhead}
+                  className="flex items-center justify-center bg-green-600 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-green-700 transition-colors duration-300"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <FaDownload className="mr-2" />
+                  Download Letterhead
+                </motion.button>
+              </div>
             </form>
           </motion.div>
         </ScrollAnimationWrapper>

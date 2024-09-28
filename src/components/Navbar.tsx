@@ -6,7 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Menu as MenuIcon, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import SmallLoader from './SmallLoader';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,7 +35,7 @@ export default function Navbar() {
             : "bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
           : "bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 shadow-lg"
       )}>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mr-16">
           <div className="flex-shrink-0">
             <Link href="/">
               <Image src="/images/Ventura.png" alt="Ventura Logo" width={100} height={40} />
@@ -83,6 +84,8 @@ export default function Navbar() {
 
 function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }: { isMobile?: boolean; pathname: string; isScrolled: boolean; setIsMenuOpen?: React.Dispatch<React.SetStateAction<boolean>> }) {
   const [active, setActive] = useState<string | null>(null);
+  const [loading, setLoading] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleItemClick = (item: string) => {
     if (isMobile) {
@@ -90,12 +93,15 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
     }
   };
 
-  const handleLinkClick = () => {
-    if (isMobile && setIsMenuOpen) {
-      setTimeout(() => {
+  const handleLinkClick = (href: string) => {
+    setLoading(href);
+    router.push(href);
+    setTimeout(() => {
+      setLoading(null);
+      if (isMobile && setIsMenuOpen) {
         setIsMenuOpen(false);
-      }, 150);
-    }
+      }
+    }, 150);
   };
 
   const textColorClass = pathname === '/' 
@@ -131,9 +137,6 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
             { href: "/resources/faq", text: "FAQ / Q & A" },
             { href: "/resources/downloads", text: "Downloads" }
           ]},
-          { item: "Partners", links: [
-            { href: "/partners", text: "Partners" }
-          ]},
           { item: "Contact", links: [
             { href: "/contact/us", text: "Contact Us" },
             { href: "/contact/social", text: "Social Media" },
@@ -148,15 +151,17 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
             onClick={() => handleItemClick(menuItem.item)}
             isMobile={isMobile}
           >
-            <div className={`flex flex-col ${isMobile ? 'space-y-2' : 'space-y-1'}`}>
+            <div className={`flex flex-col ${isMobile ? 'space-y-2' : 'space-y-1'} ${!isMobile ? 'min-w-[220px]' : ''}`}>
               {menuItem.links.map((link, linkIndex) => (
-                <HoveredLink 
-                  key={linkIndex} 
-                  href={link.href} 
-                  onClick={handleLinkClick}
-                >
-                  {link.text}
-                </HoveredLink>
+                <div key={linkIndex} className="flex items-center justify-between">
+                  <HoveredLink 
+                    href={link.href} 
+                    onClick={() => handleLinkClick(link.href)}
+                  >
+                    {link.text}
+                  </HoveredLink>
+                  {loading === link.href && <SmallLoader />}
+                </div>
               ))}
             </div>
           </MenuItem>

@@ -87,8 +87,13 @@ export default function HeatFuseLabelingMachine() {
           </ScrollAnimationWrapper>
 
           <ScrollAnimationWrapper>
-            <div className="h-96 bg-gray-200 rounded-lg">
-              {/* Placeholder for your animated image */}
+            <div className="relative h-96 bg-gray-200 rounded-lg overflow-hidden">
+              <Image
+                src="/images/heat-fusing-machine.png"
+                alt="Heat Fuse Labeling Machine"
+                layout="fill"
+                objectFit="cover"
+              />
             </div>
           </ScrollAnimationWrapper>
         </div>

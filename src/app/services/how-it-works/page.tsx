@@ -3,6 +3,7 @@ import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { ScrollAnimationWrapper } from '@/components/ScrollAnimationWrapper';
 import { FaCamera, FaRobot, FaChartLine, FaDatabase } from 'react-icons/fa';
+import Image from 'next/image';
 
 const fadeInUp: Variants = {
   initial: { opacity: 0, y: 60 },
@@ -38,6 +39,18 @@ export default function HowItWorks() {
               transition: { repeat: Infinity, duration: 10, ease: "linear" },
             }}
           />
+        </div>
+
+        <div className="mb-12 flex justify-center">
+          <div className="relative w-full max-w-3xl aspect-w-16 aspect-h-9">
+            <Image
+              src="/images/FIDAS - 1.jpg"
+              alt="FIDAS Fabric Inspection Machine"
+              width={800}
+              height={450}
+              className="rounded-lg shadow-lg object-cover"
+            />
+          </div>
         </div>
 
         <ScrollAnimationWrapper>

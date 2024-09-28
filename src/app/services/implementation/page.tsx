@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { motion, Variants, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { FaComments, FaCogs, FaDesktop, FaCode, FaUserGraduate, FaHeadset } from 'react-icons/fa';
+import Image from 'next/image';
 
 const fadeInUp: Variants = {
   initial: { opacity: 0, y: 60 },
@@ -58,6 +59,18 @@ export default function Implementation() {
               transition: { repeat: Infinity, duration: 10, ease: "linear" },
             }}
           />
+        </div>
+
+        <div className="mb-12 flex justify-center">
+          <div className="relative w-full max-w-3xl aspect-w-16 aspect-h-9">
+            <Image
+              src="/images/WIDTH MEASUREMENT.jpg"
+              alt="FIDAS Width Measurement"
+              width={800}
+              height={450}
+              className="rounded-lg shadow-lg object-cover"
+            />
+          </div>
         </div>
 
         <motion.div

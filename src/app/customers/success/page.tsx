@@ -2,7 +2,7 @@
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { ScrollAnimationWrapper } from '@/components/ScrollAnimationWrapper';
-import { FaQuoteLeft, FaQuoteRight, FaIndustry, FaChartLine, FaSmile, FaCar, FaGlobe } from 'react-icons/fa';
+import { FaQuoteLeft, FaQuoteRight } from 'react-icons/fa';
 
 const fadeInUp: Variants = {
   initial: { opacity: 0, y: 60 },
@@ -10,13 +10,22 @@ const fadeInUp: Variants = {
 };
 
 export default function CustomerSuccess() {
-  const successStories = [
-    { icon: <FaIndustry />, company: "TextileTech Inc.", story: "Reduced defect rate by 40% within 3 months of implementing FIDAS" },
-    { icon: <FaChartLine />, company: "FabricMasters Ltd.", story: "Increased production efficiency by 25% and cut costs by 15%" },
-    { icon: <FaSmile />, company: "QualityWeave Co.", story: "Improved customer satisfaction scores from 7.5 to 9.2 out of 10" },
-    { icon: <FaCar />, company: "AutoFabrics Ltd.", story: "Implemented FIDAS for 99% of their automotive seating fabric inspection" },
-    { icon: <FaGlobe />, company: "GlobalTex Corp.", story: "Chose FIDAS over European alternatives, saving 35% on software costs" },
-    { icon: <FaIndustry />, company: "MultiTex Industries", story: "Successfully integrated FIDAS with their SAP S4 Hana system" },
+  const testimonials = [
+    {
+      name: "Mr. Mahipal Singh Ahada",
+      position: "Senior Manager – LNJ Denim",
+      quote: "FIDAS is the solution to go if you want to get quick feedback at the floor level and our everyday quality meetings go easy as required information is hand, thanks to FIDAS. It's a small investment compared to the outsized returns you'll get. I would recommend FIDAS software who wants to get actionable information."
+    },
+    {
+      name: "Mr. Sudhakar",
+      position: "Group CTO – SPM Industries",
+      quote: "Ventura has been supportive to our business for the past 5 years by implementing FIDAS which was tailored to meet our demands. They are reliable, thorough, smart, available and subject matter experts in denim fabric inspection. FIDAS is must have tool for a highly productive customized fabric inspection software."
+    },
+    {
+      name: "Mr. Padam Jain",
+      position: "CTO",
+      quote: "Our relationship with Ventura Automation has extended well beyond providing fabric inspection software solutions. The deployment team have deep insight of how textile industry operates & they work closely at end user level to bring up the project, which makes them extremely special."
+    }
   ];
 
   return (
@@ -30,7 +39,7 @@ export default function CustomerSuccess() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              Customer Success Stories
+              What Our Customers Say About FIDAS
             </motion.h1>
           </ScrollAnimationWrapper>
           <motion.div
@@ -48,20 +57,22 @@ export default function CustomerSuccess() {
             animate="animate"
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
-            {successStories.map((story, index) => (
+            {testimonials.map((testimonial, index) => (
               <motion.div
                 key={index}
                 variants={fadeInUp}
-                className="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg p-8 rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+                className="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg p-8 rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col h-full"
               >
-                <div className="text-4xl text-blue-600 mb-4">{story.icon}</div>
-                <h3 className="text-xl font-semibold mb-4 text-blue-600">{story.company}</h3>
-                <div className="relative">
+                <div className="relative flex-grow">
                   <FaQuoteLeft className="absolute top-0 left-0 text-blue-200 text-lg opacity-50" />
                   <p className="text-gray-600 pl-6 pr-6 pt-2 pb-2 relative">
-                    {story.story}
+                    {testimonial.quote}
                   </p>
                   <FaQuoteRight className="absolute bottom-0 right-0 text-blue-200 text-lg opacity-50" />
+                </div>
+                <div className="mt-4">
+                  <h3 className="text-xl font-semibold text-blue-600">{testimonial.name}</h3>
+                  <p className="text-gray-500">{testimonial.position}</p>
                 </div>
               </motion.div>
             ))}

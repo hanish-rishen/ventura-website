@@ -100,8 +100,14 @@ export default function DefectStickeringSystem() {
           </ScrollAnimationWrapper>
 
           <ScrollAnimationWrapper>
-            <div className="h-96 bg-gray-200 rounded-lg">
-              {/* Placeholder for your animated image */}
+            <div className="relative h-96 bg-gray-200 rounded-lg overflow-hidden">
+              <Image
+                src="/images/AUTOMATED-STICKERING-MACHINE.png"
+                alt="Automatic Defect Stickering System"
+                layout="fill"
+                objectFit="cover"
+                className="rounded-lg"
+              />
             </div>
           </ScrollAnimationWrapper>
         </div>

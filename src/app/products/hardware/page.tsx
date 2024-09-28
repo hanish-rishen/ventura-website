@@ -21,14 +21,14 @@ const staggerContainer = {
 
 export default function HardwareServices() {
   const services = [
-    { name: "Fabric Length Measurement Counter", link: "/products/hardware/fabric-length-counter", image: "https://images.unsplash.com/photo-1618932260643-eee4a2f652a6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" },
-    { name: "Automatic Width Measurement System", link: "/products/hardware/width-measurement-system", image: "https://images.unsplash.com/photo-1581092921461-eab62e97a780?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" },
-    { name: "Digital Pick Counter", link: "/products/hardware/digital-pick-counter", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" },
-    { name: "Automatic Fabric GSM Capturing", link: "/products/hardware/gsm-capturing", image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" },
-    { name: "Barcode Scanning & Printing", link: "/products/hardware/barcode-scanning-printing", image: "https://images.unsplash.com/photo-1617791160536-598cf32026fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" },
-    { name: "Automatic Defect Stickering System", link: "/products/hardware/defect-stickering-system", image: "https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" },
-    { name: "Touch Screen Monitor with Industrial PC", link: "/products/hardware/touchscreen-monitor", image: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" },
-    { name: "Fabric Heat Fuse Labeling Machine", link: "/products/hardware/heat-fuse-labeling-machine", image: "https://images.unsplash.com/photo-1581092335397-9583eb92d232?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" },
+    { name: "Fabric Length Measurement Counter", link: "/products/hardware/fabric-length-counter", image: "/images/DIGITAL-FABRIC-LENGTH-MEASUREMENT-COUNTER.jpg" },
+    { name: "Automatic Width Measurement System", link: "/products/hardware/width-measurement-system", image: "/images/DIGITAL-FABRIC-WIDTH-MEASUREMENT.jpeg" },
+    { name: "Digital Pick Counter", link: "/products/hardware/digital-pick-counter", image: "/images/DIGITAL-PICK-COUNTER.png" },
+    { name: "Automatic Fabric GSM Capturing", link: "/products/hardware/gsm-capturing", image: "/images/GSM-Scale.jpg" },
+    { name: "Barcode Scanning & Printing", link: "/products/hardware/barcode-scanning-printing", image: "/images/barcode-printer.jpeg" },
+    { name: "Automatic Defect Stickering System", link: "/products/hardware/defect-stickering-system", image: "/images/AUTOMATED-STICKERING-MACHINE.png" },
+    { name: "Touch Screen Monitor with Industrial PC", link: "/products/hardware/touchscreen-monitor", image: "/images/pcu.jpg" },
+    { name: "Fabric Heat Fuse Labeling Machine", link: "/products/hardware/heat-fuse-labeling-machine", image: "/images/heat-fusing-machine.png" },
   ];
 
   return (

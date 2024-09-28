@@ -2,7 +2,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ScrollAnimationWrapper } from '@/components/ScrollAnimationWrapper';
-import { TypeAnimation } from 'react-type-animation';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+import { FaChevronDown } from 'react-icons/fa';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 50 },
@@ -39,29 +45,26 @@ export default function FAQ() {
         </ScrollAnimationWrapper>
 
         <motion.div 
-          className="space-y-12"
+          className="space-y-4"
           variants={staggerChildren}
         >
-          {faqs.map((faq, index) => (
-            <ScrollAnimationWrapper key={index}>
-              <motion.div 
-                className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300"
-                variants={fadeInUp}
-              >
-                <h2 className="text-2xl font-semibold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">{faq.question}</h2>
-                <TypeAnimation
-                  sequence={[
-                    faq.answer,
-                    3000,
-                  ]}
-                  wrapper="p"
-                  speed={50}
-                  className="text-lg text-gray-600"
-                  repeat={1}
-                />
-              </motion.div>
-            </ScrollAnimationWrapper>
-          ))}
+          <Accordion type="single" collapsible className="w-full">
+            {faqs.map((faq, index) => (
+              <ScrollAnimationWrapper key={index}>
+                <motion.div variants={fadeInUp}>
+                  <AccordionItem value={`item-${index}`}>
+                    <AccordionTrigger className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400 flex justify-between items-center">
+                      <span>{faq.question}</span>
+                      <FaChevronDown className="text-blue-600 transition-transform duration-200 ml-auto" />
+                    </AccordionTrigger>
+                    <AccordionContent className="text-lg text-gray-600">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                </motion.div>
+              </ScrollAnimationWrapper>
+            ))}
+          </Accordion>
         </motion.div>
       </div>
     </div>

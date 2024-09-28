@@ -3,6 +3,7 @@ import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { ScrollAnimationWrapper } from '@/components/ScrollAnimationWrapper';
 import { FaArrowRight } from 'react-icons/fa';
+import Image from 'next/image';
 
 const fadeInUp: Variants = {
   initial: { opacity: 0, y: 60 },
@@ -72,8 +73,14 @@ export default function WidthMeasurementSystem() {
           </ScrollAnimationWrapper>
 
           <ScrollAnimationWrapper>
-            <div className="h-96 bg-gray-200 rounded-lg">
-              {/* Placeholder for your animated image */}
+            <div className="h-96 bg-gray-200 rounded-lg relative overflow-hidden">
+              <Image
+                src="/images/DIGITAL-FABRIC-WIDTH-MEASUREMENT.jpeg"
+                alt="Width Measurement System"
+                layout="fill"
+                objectFit="cover"
+                className="rounded-lg"
+              />
             </div>
           </ScrollAnimationWrapper>
         </div>

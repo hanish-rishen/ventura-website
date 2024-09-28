@@ -2,7 +2,7 @@
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { ScrollAnimationWrapper } from '@/components/ScrollAnimationWrapper';
-import { FaBuilding } from 'react-icons/fa';
+import Image from 'next/image';
 
 const fadeInUp: Variants = {
   initial: { opacity: 0, y: 60 },
@@ -11,12 +11,13 @@ const fadeInUp: Variants = {
 
 export default function CustomerList() {
   const customers = [
-    "TextileTech Inc.",
-    "FabricMasters Ltd.",
-    "QualityWeave Co.",
-    "InnovaTextiles",
-    "PrecisionFabrics",
-    "GlobalThreads",
+    { name: "Treves", image: "/images/Treves.jpg" },
+    { name: "Nandan", image: "/images/Nandan.jpg" },
+    { name: "RSWM", image: "/images/RSWM.jpg" },
+    { name: "Tibre", image: "/images/tibre.jpg" },
+    { name: "Anubha", image: "/images/anubha.jpg" },
+    { name: "BKS", image: "/images/bks.png" },
+    { name: "Technocraft", image: "/images/technocraft.jpg" },
   ];
 
   return (
@@ -52,10 +53,17 @@ export default function CustomerList() {
               <motion.div
                 key={index}
                 variants={fadeInUp}
-                className="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg p-8 rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+                className="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg p-8 rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col items-center"
               >
-                <div className="text-4xl text-blue-600 mb-4"><FaBuilding /></div>
-                <h3 className="text-xl font-semibold mb-4 text-blue-600">{customer}</h3>
+                <h3 className="text-xl font-semibold mb-4 text-blue-600 text-center">{customer.name}</h3>
+                <div className="mb-4 flex justify-center h-24 relative w-full">
+                  <Image
+                    src={customer.image}
+                    alt={customer.name}
+                    layout="fill"
+                    objectFit="contain"
+                  />
+                </div>
               </motion.div>
             ))}
           </motion.div>

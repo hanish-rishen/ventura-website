@@ -1,20 +1,40 @@
 "use client";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { ScrollAnimationWrapper } from '@/components/ScrollAnimationWrapper';
-import { FaFileAlt, FaCogs, FaChartBar, FaDownload } from 'react-icons/fa';
+import { FaFileAlt, FaCogs, FaChartBar, FaDownload, FaFilePdf, FaFilePowerpoint, FaFileWord, FaFileImage, FaFile } from 'react-icons/fa';
+import Image from 'next/image';
 
 const fadeInUp: Variants = {
   initial: { opacity: 0, y: 60 },
   animate: { opacity: 1, y: 0 },
 };
 
+interface Download {
+  name: string;
+  description: string;
+  extension: string;
+  path: string;
+}
+
 export default function Downloads() {
-  const downloads = [
-    { icon: <FaFileAlt />, name: "FIDAS Brochure", description: "Comprehensive overview of FIDAS capabilities", fileType: "PDF", fileSize: "2.5 MB" },
-    { icon: <FaCogs />, name: "Technical Specifications", description: "Detailed technical information about FIDAS", fileType: "PDF", fileSize: "1.8 MB" },
-    { icon: <FaChartBar />, name: "Case Studies", description: "Real-world examples of FIDAS implementation", fileType: "ZIP", fileSize: "5.2 MB" },
-  ];
+  const [downloads, setDownloads] = useState<Download[]>([]);
+
+  useEffect(() => {
+    fetch('/Brouchers/downloads.json')
+      .then(response => response.json())
+      .then(data => setDownloads(data));
+  }, []);
+
+  const getIcon = (extension: string) => {
+    switch (extension.toLowerCase()) {
+      case 'pdf': return <FaFilePdf />;
+      case 'ppt': case 'pptx': return <FaFilePowerpoint />;
+      case 'doc': case 'docx': return <FaFileWord />;
+      case 'jpg': case 'jpeg': case 'png': case 'gif': return <FaFileImage />;
+      default: return <FaFile />;
+    }
+  };
 
   return (
     <div className="w-full bg-gradient-to-br from-gray-50 to-blue-50 text-gray-800 min-h-screen">
@@ -51,17 +71,36 @@ export default function Downloads() {
                 variants={fadeInUp}
                 className="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg p-8 rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
               >
-                <div className="text-4xl text-blue-600 mb-4">{download.icon}</div>
-                <h3 className="text-xl font-semibold mb-4 text-blue-600">{download.name}</h3>
-                <p className="text-gray-600 mb-4">{download.description}</p>
-                <div className="flex items-center text-sm text-gray-500 mb-4">
-                  <span className="mr-4">File type: {download.fileType}</span>
-                  <span>Size: {download.fileSize}</span>
+                <div className="flex items-center mb-4">
+                  <div className="text-4xl text-blue-600 mr-4">{getIcon(download.extension)}</div>
+                  <h3 className="text-xl font-semibold text-blue-600">{download.name}</h3>
                 </div>
-                <button className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                <div className="mb-4 h-40 bg-gray-200 rounded-lg overflow-hidden flex items-center justify-center">
+                  {download.extension.match(/^(jpg|jpeg|png|gif)$/i) ? (
+                    <Image
+                      src={download.path}
+                      alt={download.name}
+                      width={300}
+                      height={200}
+                      objectFit="cover"
+                    />
+                  ) : (
+                    <div className="text-6xl text-blue-600">
+                      {getIcon(download.extension)}
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center text-sm text-gray-500 mb-4">
+                  <span className="uppercase">{download.extension}</span>
+                </div>
+                <a 
+                  href={download.path} 
+                  download 
+                  className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                >
                   <FaDownload className="mr-2" />
                   Download
-                </button>
+                </a>
               </motion.div>
             ))}
           </motion.div>

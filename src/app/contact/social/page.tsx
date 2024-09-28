@@ -2,7 +2,7 @@
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { ScrollAnimationWrapper } from '@/components/ScrollAnimationWrapper';
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import { FaFacebook, FaTwitter, FaLinkedin } from 'react-icons/fa';
 
 const fadeInUp: Variants = {
   initial: { opacity: 0, y: 60 },
@@ -22,10 +22,9 @@ const floatingIcon: Variants = {
 
 export default function SocialMedia() {
   const socialPlatforms = [
-    { icon: <FaFacebook />, name: "Facebook", handle: "@FIDAStech", link: "https://facebook.com/FIDAStech" },
-    { icon: <FaTwitter />, name: "Twitter", handle: "@FIDAS_tech", link: "https://twitter.com/FIDAS_tech" },
-    { icon: <FaInstagram />, name: "Instagram", handle: "@fidas_technology", link: "https://instagram.com/fidas_technology" },
-    { icon: <FaLinkedin />, name: "LinkedIn", handle: "FIDAS Technology", link: "https://linkedin.com/company/fidas-technology" },
+    { icon: <FaFacebook />, name: "Facebook", handle: "@fidas.in", link: "https://www.facebook.com/fidas.in" },
+    { icon: <FaTwitter />, name: "Twitter", handle: "@fidas_in", link: "https://twitter.com/fidas_in" },
+    { icon: <FaLinkedin />, name: "LinkedIn", handle: "Ventura Automation Services", link: "https://www.linkedin.com/company/ventura-automation-services/" },
   ];
 
   return (
@@ -55,7 +54,7 @@ export default function SocialMedia() {
           <motion.div
             initial="initial"
             animate="animate"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
             {socialPlatforms.map((platform, index) => (
               <motion.div
@@ -69,23 +68,6 @@ export default function SocialMedia() {
                 <a href={platform.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">Follow Us</a>
               </motion.div>
             ))}
-          </motion.div>
-        </ScrollAnimationWrapper>
-
-        <ScrollAnimationWrapper>
-          <motion.div
-            variants={fadeInUp}
-            className="mt-16 text-center"
-          >
-            <h2 className="text-3xl font-semibold mb-4 text-blue-600">Stay Connected</h2>
-            <p className="text-lg text-gray-600 mb-8">Follow us on social media for the latest updates, industry insights, and more!</p>
-            <motion.button
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Join Our Community
-            </motion.button>
           </motion.div>
         </ScrollAnimationWrapper>
       </div>
