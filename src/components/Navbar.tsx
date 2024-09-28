@@ -35,17 +35,17 @@ export default function Navbar() {
             : "bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
           : "bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 shadow-lg"
       )}>
-        <div className="flex items-center justify-between mr-16">
+        <div className="flex items-center justify-between">
           <div className="flex-shrink-0">
             <Link href="/">
               <Image src="/images/Ventura.png" alt="Ventura Logo" width={100} height={40} />
             </Link>
           </div>
-          <div className="hidden md:block">
+          <div className="hidden md:block mr-16">
             <NavbarContent pathname={pathname} isScrolled={isScrolled} />
           </div>
           <button
-            className="md:hidden"
+            className="md:hidden pr-0"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <X size={24} /> : <MenuIcon size={24} />}
