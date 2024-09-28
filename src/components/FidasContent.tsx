@@ -101,7 +101,7 @@ export default function FidasContent() {
                   Fabric Inspection & Defect Analysis System (FIDAS) combines multiple inspection-specific IoT devices & software exclusively integrated for real-time on-table fabric inspection purposes.
                 </p>
                 <div className="text-center">
-                  <Link href="/products/hardware">
+                  <Link href="/about/fidas">
                     <button className="relative inline-flex h-10 items-center justify-center rounded-full border border-blue-600 bg-blue-500 px-6 font-semibold text-white text-sm overflow-hidden">
                       <span className="relative z-10">Explore FIDAS</span>
                       <span className="absolute inset-0 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-500 animate-shimmer"></span>
@@ -295,113 +295,32 @@ export default function FidasContent() {
               className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
               variants={fadeInUp}
             >
-              Elevate Your Business with FIDAS
-            </motion.h2>
-            <motion.p 
-              className="text-xl text-center mb-8"
-              variants={fadeInUp}
-            >
-            </motion.p>
-          </ScrollAnimationWrapper>
-
-          <ScrollAnimationWrapper>
-            <motion.h3 
-              className="text-2xl font-bold mb-6 text-center"
-              variants={fadeInUp}
-            >
-              20 Reasons to Choose FIDAS
-            </motion.h3>
-            <motion.ul 
-              className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12"
-              variants={staggerChildren}
-            >
-              {[
-                "Improve Production in Inspection Department",
-                "Amazing Cost Benefits",
-                "Pre-empts for Corrective Actions",
-                "Accomplish Processes That Cannot Be Done Manually",
-                "Achieve Accuracy",
-                "Adhere to Compliances",
-                "Eliminate Routine Manual and Clerical Tasks",
-                "Consistent Quality Deliverables... Ensured!!!",
-                "Implement Industry Best Practices",
-                "Create Work Comfort & Peace of Mind",
-                "Increase System Versatility",
-                "Happy Customers & Win More Business",
-                "Get it Done Through Experts",
-                "FIDAS: Your Secret Weapon"
-              ].map((reason, index) => (
-                <motion.li 
-                  key={index}
-                  className="flex items-center space-x-2"
-                  variants={fadeInUp}
-                >
-                  <CheckCircle className="text-green-500" />
-                  <span>{reason}</span>
-                </motion.li>
-              ))}
-            </motion.ul>
-          </ScrollAnimationWrapper>
-        </section>
-
-        <section className="py-16">
-          <ScrollAnimationWrapper>
-            <h2 className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
-              FIDAS Improves Production in Inspection Department
-            </h2>
-          </ScrollAnimationWrapper>
-
-          <motion.ul 
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
-            variants={staggerChildren}
-          >
-            {[
-              "Faster Defect Logging",
-              "Improves worker efficiency as no need for manual marking in paper",
-              "No defect re-entry in System",
-              "Get reasons for non-productive time",
-              "Reduced Roll Doff time",
-              "Real-time online monitoring of inspection production",
-              "Automated Grade Generation",
-              "Easy to fix increased production target",
-              "Monitor productivity"
-            ].map((item, index) => (
-              <motion.li 
-                key={index}
-                className="flex items-start space-x-2"
-                variants={fadeInUp}
-              >
-                <CheckCircle className="text-green-500 mt-1 flex-shrink-0" />
-                <span>{item}</span>
-              </motion.li>
-            ))}
-          </motion.ul>
-        </section>
-
-        <section className="py-16 space-y-8">
-          <ScrollAnimationWrapper>
-            <motion.h2 
-              className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
-              variants={fadeInUp}
-            >
-              FIDAS: The Industry Standard
+              Elevate Your Business with FIDAS: The Industry Standard
             </motion.h2>
           </ScrollAnimationWrapper>
 
           <ScrollAnimationWrapper>
             <motion.ul 
-              className="grid grid-cols-1 md:grid-cols-2 gap-6"
+              className="grid grid-cols-1 md:grid-cols-2 gap-4"
               variants={staggerChildren}
             >
               {[
+                "Improve production efficiency in inspection department",
+                "Faster defect logging and automated grade generation",
+                "Real-time online monitoring of inspection production",
                 "De facto inspection software for the Indian textile industry",
-                "Chosen by multinational companies like Adient (USA), Treves (France), Aunde (Germany), and Tesca (France)",
-                "Replaced European fabric inspection applications in several organizations",
+                "Chosen by multinational companies worldwide",
                 "Inspects 99% of automotive car seating fabrics in India",
                 "Ensures strict adherence to customer quality terms",
-                "Addresses minute details crucial for evolving business models",
                 "100% project success rate over the past 15 years",
-                "Guaranteed return on investment"
+                "Guaranteed return on investment",
+                "Eliminates routine manual and clerical tasks",
+                "Implements industry best practices",
+                "Increases system versatility",
+                "Integrates seamlessly with third-party applications",
+                "Provides pre-emptive corrective actions",
+                "Achieves consistent quality deliverables",
+                "Enhances overall operational efficiency and productivity"
               ].map((item, index) => (
                 <motion.li 
                   key={index}
