@@ -8,7 +8,7 @@ import MainContentWrapper from "@/components/MainContentWrapper";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "FIDAS - AI-Driven Financial Insights",
+  title: "FIDAS",
   description: "Empowering financial decisions with AI-driven insights",
   icons: {
     icon: '/favicon.ico',
