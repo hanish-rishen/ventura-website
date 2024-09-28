@@ -10,6 +10,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "FIDAS - AI-Driven Financial Insights",
   description: "Empowering financial decisions with AI-driven insights",
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
