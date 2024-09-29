@@ -20,10 +20,10 @@ export default function Footer() {
             <h3 className="text-lg font-medium text-white mb-4">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li><Link href="/" className="hover:text-blue-400">Home</Link></li>
-              <li><Link href="/about" className="hover:text-blue-400">About Us</Link></li>
-              <li><Link href="/automation" className="hover:text-blue-400">Automation Devices</Link></li>
-              <li><Link href="/solutions" className="hover:text-blue-400">Fabric Inspection Solutions</Link></li>
-              <li><Link href="/contact" className="hover:text-blue-400">Contact Us</Link></li>
+              <li><Link href="/about/fidas" className="hover:text-blue-400">About Us</Link></li>
+              <li><Link href="/products/software" className="hover:text-blue-400">Products</Link></li>
+              <li><Link href="/services/how-it-works" className="hover:text-blue-400">Services</Link></li>
+              <li><Link href="/contact/us" className="hover:text-blue-400">Contact Us</Link></li>
             </ul>
           </div>
           <div>
@@ -53,10 +53,9 @@ export default function Footer() {
             </Link>
           </div>
           <div className="flex space-x-4">
-            <Link href="#" className="hover:text-blue-400"><Twitter size={20} /></Link>
-            <Link href="#" className="hover:text-blue-400"><FacebookIcon size={20} /></Link>
-            <Link href="#" className="hover:text-blue-400"><InstagramIcon size={20} /></Link>
-            <Link href="#" className="hover:text-blue-400"><Linkedin size={20} /></Link>
+            <Link href="https://twitter.com/fidas_in" className="hover:text-blue-400"><Twitter size={20} /></Link>
+            <Link href="https://www.facebook.com/fidas.in" className="hover:text-blue-400"><FacebookIcon size={20} /></Link>
+            <Link href="https://www.linkedin.com/company/ventura-automation-services/" className="hover:text-blue-400"><Linkedin size={20} /></Link>
           </div>
         </div>
         <div className="mt-8 text-center text-sm">
