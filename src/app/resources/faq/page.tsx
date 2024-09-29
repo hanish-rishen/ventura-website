@@ -53,9 +53,9 @@ export default function FAQ() {
               <ScrollAnimationWrapper key={index}>
                 <motion.div variants={fadeInUp}>
                   <AccordionItem value={`item-${index}`}>
-                    <AccordionTrigger className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400 flex justify-between items-center">
-                      <span>{faq.question}</span>
-                      <FaChevronDown className="text-blue-600 transition-transform duration-200 ml-auto" />
+                    <AccordionTrigger className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400 flex justify-between items-center text-left">
+                      <span className="text-left">{faq.question}</span>
+                      <FaChevronDown className="text-blue-600 transition-transform duration-200 ml-auto flex-shrink-0" />
                     </AccordionTrigger>
                     <AccordionContent className="text-lg text-gray-600">
                       {faq.answer}
