@@ -32,7 +32,7 @@ export default function SoftwareProducts() {
         "Can be implemented directly on compacting machines",
         "Barcode / QR Code generation for style/roll-wise quality data"
       ],
-      image: "/images/Knits Inspection.png"
+      image: "/images/Knits Inspection.PNG"
     },
     {
       name: "Denim Fabric Inspection & Optimization",
