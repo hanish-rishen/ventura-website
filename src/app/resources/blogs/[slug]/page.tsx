@@ -2,20 +2,19 @@ import React from 'react';
 import { FaCalendarAlt, FaUser, FaTags } from 'react-icons/fa';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { client } from '@/lib/sanity';
 import { PortableText } from '@portabletext/react';
 import { urlFor } from '@/lib/sanity';
+
+export const revalidate = 60; // Revalidate every 60 seconds
 
 async function getBlog(slug: string) {
   return await client.fetch(`*[_type == "post" && slug.current == $slug][0]{
     ...,
     "author": author->name,
     "categories": categories[]->title
-  }`, { slug }, { next: { revalidate: 0 } });
+  }`, { slug }, { cache: 'no-store' }) // Remove the next: { revalidate: 0 } option
 }
-
-export const revalidate = 60; // Revalidate every 60 seconds
 
 export default async function BlogPost({ params }: { params: { slug: string } }) {
   const blog = await getBlog(params.slug);
@@ -50,7 +49,7 @@ export default async function BlogPost({ params }: { params: { slug: string } })
           <FaUser className="mr-2" />
           <span className="mr-4">{blog.author || 'Unknown Author'}</span>
           <FaCalendarAlt className="mr-2" />
-          <span>{new Date(blog.publishedAt).toLocaleDateString()}</span>
+          <span>{new Date(blog.publishedAt).toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
         </div>
 
         <div className="flex flex-wrap items-center text-sm text-gray-500 mb-8">
@@ -60,52 +59,50 @@ export default async function BlogPost({ params }: { params: { slug: string } })
           ))}
         </div>
 
-        <ScrollArea className="h-[60vh] overflow-y-auto">
-          <div className="prose prose-lg max-w-none">
-            {blog.body && <PortableText 
-              value={blog.body} 
-              components={{
-                types: {
-                  image: ({value}) => {
-                    if (!value?.asset?._ref) {
-                      return null;
-                    }
-                    return (
-                      <div className="relative w-full h-64 my-8">
-                        <Image
-                          src={urlFor(value).url()}
-                          alt={value.alt || ' '}
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
-                    );
-                  },
+        <div className="prose prose-lg max-w-none text-justify">
+          {blog.body && <PortableText 
+            value={blog.body} 
+            components={{
+              types: {
+                image: ({value}) => {
+                  if (!value?.asset?._ref) {
+                    return null;
+                  }
+                  return (
+                    <div className="relative w-full h-64 my-8">
+                      <Image
+                        src={urlFor(value).url()}
+                        alt={value.alt || ' '}
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+                  );
                 },
-                marks: {
-                  link: ({value, children}) => {
-                    const target = (value?.href || '').startsWith('http') ? '_blank' : undefined
-                    return (
-                      <a href={value?.href} target={target} rel={target === '_blank' ? 'noopener noreferrer' : undefined}>
-                        {children}
-                      </a>
-                    )
-                  },
+              },
+              marks: {
+                link: ({value, children}) => {
+                  const target = (value?.href || '').startsWith('http') ? '_blank' : undefined
+                  return (
+                    <a href={value?.href} target={target} rel={target === '_blank' ? 'noopener noreferrer' : undefined}>
+                      {children}
+                    </a>
+                  )
                 },
-                block: {
-                  // Handle block-level elements that might contain objects
-                  normal: ({children}) => <p>{children}</p>,
-                  h1: ({children}) => <h1>{children}</h1>,
-                  h2: ({children}) => <h2>{children}</h2>,
-                  h3: ({children}) => <h3>{children}</h3>,
-                  h4: ({children}) => <h4>{children}</h4>,
-                  blockquote: ({children}) => <blockquote>{children}</blockquote>,
-                  // Add more block types as needed
-                },
-              }}
-            />}
-          </div>
-        </ScrollArea>
+              },
+              block: {
+                // Handle block-level elements that might contain objects
+                normal: ({children}) => <p>{children}</p>,
+                h1: ({children}) => <h1>{children}</h1>,
+                h2: ({children}) => <h2>{children}</h2>,
+                h3: ({children}) => <h3>{children}</h3>,
+                h4: ({children}) => <h4>{children}</h4>,
+                blockquote: ({children}) => <blockquote>{children}</blockquote>,
+                // Add more block types as needed
+              },
+            }}
+          />}
+        </div>
       </div>
     </div>
   );

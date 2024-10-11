@@ -26,7 +26,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className={`fixed top-0 left-0 right-0 z-50`}>
+    <div className="absolute top-0 left-0 right-0 z-50">
       <nav className={cn(
         "max-w-[98%] mx-auto rounded-full px-6 py-4 mt-4 transition-all duration-300",
         pathname === '/' 
@@ -113,32 +113,32 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
     <div className={`flex ${isMobile ? 'flex-col w-full space-y-2' : 'flex-row items-center space-x-4'} ${textColorClass}`}>
       <Menu setActive={setActive}>
         {[
-          { item: "About", links: [
+          { item: "About", href: "/about", links: [
             { href: "/about/fidas", text: "What is FIDAS" },
             { href: "/about/company", text: "About Us" },
             { href: "/about/info", text: "Company Information" }
           ]},
-          { item: "Products", links: [
+          { item: "Products", href: "/products", links: [
             { href: "/products/software", text: "Associated Software Products" },
             { href: "/products/technologies", text: "Technologies" },
             { href: "/products/hardware", text: "Hardware Products" },
             { href: "/products/sap-integration", text: "SAP Integration" }
           ]},
-          { item: "Services", links: [
+          { item: "Services", href: "/services", links: [
             { href: "/services/how-it-works", text: "How Does It Work" },
             { href: "/services/implementation", text: "Implementation Methodology" },
             { href: "/services/benefits", text: "Benefits of FIDAS" }
           ]},
-          { item: "Customers", links: [
+          { item: "Customers", href: "/customers", links: [
             { href: "/customers/success", text: "Customer Success" },
             { href: "/customers/list", text: "Customer List" }
           ]},
-          { item: "Resources", links: [
+          { item: "Resources", href: "/resources", links: [
             { href: "/resources/blogs", text: "Blogs" },
             { href: "/resources/faq", text: "FAQ / Q & A" },
             { href: "/resources/downloads", text: "Downloads" }
           ]},
-          { item: "Contact", links: [
+          { item: "Contact", href: "/contact", links: [
             { href: "/contact/us", text: "Contact Us" },
             { href: "/contact/social", text: "Social Media" },
             { href: "/contact/enquiry", text: "Enquiry" }
@@ -149,7 +149,12 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
             setActive={setActive} 
             active={active} 
             item={menuItem.item}
-            onClick={() => handleItemClick(menuItem.item)}
+            onClick={() => {
+              handleItemClick(menuItem.item);
+              if (menuItem.href) {
+                handleLinkClick(menuItem.href);
+              }
+            }}
             isMobile={isMobile}
           >
             <div className={`flex flex-col ${isMobile ? 'space-y-2' : 'space-y-1'} ${!isMobile ? 'min-w-[220px]' : ''}`}>
