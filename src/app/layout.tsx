@@ -4,7 +4,10 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MainContentWrapper from "@/components/MainContentWrapper";
-import GoogleAnalytics from '@/components/GoogleAnalytics';
+import { Suspense } from 'react';
+import dynamic from 'next/dynamic';
+
+const GoogleAnalytics = dynamic(() => import('@/components/GoogleAnalytics'), { ssr: false });
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,7 +30,9 @@ export default function RootLayout({
         <Navbar />
         <MainContentWrapper>{children}</MainContentWrapper>
         <Footer />
-        <GoogleAnalytics GA_MEASUREMENT_ID={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID!} />
+        <Suspense fallback={null}>
+          <GoogleAnalytics GA_MEASUREMENT_ID={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID!} />
+        </Suspense>
       </body>
     </html>
   );
