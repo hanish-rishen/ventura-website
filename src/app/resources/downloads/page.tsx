@@ -5,7 +5,6 @@ import { useInView } from 'react-intersection-observer';
 import { ScrollAnimationWrapper } from '@/components/ScrollAnimationWrapper';
 import { FaFileAlt, FaCogs, FaChartBar, FaDownload, FaFilePdf, FaFilePowerpoint, FaFileWord, FaFileImage, FaFile } from 'react-icons/fa';
 import Image from 'next/image';
-
 const fadeInUp: Variants = {
   initial: { opacity: 0, y: 60 },
   animate: { opacity: 1, y: 0 },
@@ -24,8 +23,6 @@ const AnimatedDownload = ({ download, index }: { download: Download; index: numb
     triggerOnce: true,
     threshold: 0.1,
   });
-  const [showModal, setShowModal] = useState(false);
-  const [contactInfo, setContactInfo] = useState({ name: '', email: '', company: '' });
 
   useEffect(() => {
     if (inView) {
@@ -43,18 +40,13 @@ const AnimatedDownload = ({ download, index }: { download: Download; index: numb
     }
   };
 
-  const handleDownload = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setShowModal(true);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Here you would typically send the contact info to your server
-    console.log('Contact info:', contactInfo);
-    // Then proceed with the download
-    window.location.href = download.path;
-    setShowModal(false);
+  const handleDownload = () => {
+    const link = document.createElement('a');
+    link.href = download.path;
+    link.download = download.name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -95,41 +87,6 @@ const AnimatedDownload = ({ download, index }: { download: Download; index: numb
         <FaDownload className="mr-2" />
         Download
       </button>
-
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg">
-            <h2 className="text-2xl font-bold mb-4">Enter your details to download</h2>
-            <form onSubmit={handleSubmit}>
-              <input
-                type="text"
-                placeholder="Name"
-                className="w-full p-2 mb-4 border rounded"
-                value={contactInfo.name}
-                onChange={(e) => setContactInfo({...contactInfo, name: e.target.value})}
-                required
-              />
-              <input
-                type="email"
-                placeholder="Email"
-                className="w-full p-2 mb-4 border rounded"
-                value={contactInfo.email}
-                onChange={(e) => setContactInfo({...contactInfo, email: e.target.value})}
-                required
-              />
-              <input
-                type="text"
-                placeholder="Company"
-                className="w-full p-2 mb-4 border rounded"
-                value={contactInfo.company}
-                onChange={(e) => setContactInfo({...contactInfo, company: e.target.value})}
-                required
-              />
-              <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Download</button>
-            </form>
-          </div>
-        </div>
-      )}
     </motion.div>
   );
 };

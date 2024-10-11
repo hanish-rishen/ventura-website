@@ -6,12 +6,6 @@
     "path": "/Brouchers/base doc for brochure.docx"
   },
   {
-    "name": "Technical Specifications",
-    "description": "Detailed technical information about FIDAS",
-    "extension": "pdf",
-    "path": "/brochures/technical_specs.pdf"
-  },
-  {
     "name": "Greige Fabric Presentation",
     "description": "Presentation on Greige Fabric inspection",
     "extension": "pptx",
