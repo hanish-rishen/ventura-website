@@ -1,41 +1,70 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaBlog, FaQuestionCircle, FaDownload, FaArrowRight } from 'react-icons/fa';
+import { client } from '@/lib/sanity';
+import * as FaIcons from 'react-icons/fa';
 
-export default function Resources() {
+async function getResourcesData() {
+  const resourcesPage = await client.fetch(`*[_type == "resourcesPage"][0]{
+    title,
+    resourceCards[] {
+      title,
+      description,
+      "imageUrl": image.asset->url,
+      icon,
+      link
+    }
+  }`);
+  
+  return resourcesPage;
+}
+
+export const revalidate = 60;
+
+export default async function Resources() {
+  const resourcesData = await getResourcesData();
+
   return (
     <div className="w-full bg-gradient-to-br from-gray-50 to-blue-50 text-gray-800 min-h-screen">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
         <h1 className="text-5xl font-bold mb-16 text-center tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
-          Resources
+          {resourcesData?.title || 'Resources'}
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[
-            { title: 'Blogs', icon: FaBlog, href: '/resources/blogs', image: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1472&q=80' },
-            { title: 'FAQ / Q & A', icon: FaQuestionCircle, href: '/resources/faq', image: 'https://images.unsplash.com/photo-1484069560501-87d72b0c3669?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80' },
-            { title: 'Downloads', icon: FaDownload, href: '/resources/downloads', image: 'https://images.unsplash.com/photo-1517292987719-0369a794ec0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1474&q=80' },
-          ].map((card, index) => (
-            <Link key={index} href={card.href}>
-              <div className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 h-full flex flex-col">
-                <div className="relative h-48">
-                  <Image 
-                    src={card.image}
-                    alt={card.title}
-                    layout="fill"
-                    objectFit="cover"
-                  />
+          {resourcesData?.resourceCards?.map((card: {
+            icon: string;
+            link: string;
+            imageUrl: string;
+            title: string;
+            description: string;
+          }, index: number) => {
+            const IconComponent = card.icon ? FaIcons[card.icon as keyof typeof FaIcons] : null;
+            return (
+              <Link key={index} href={card.link || '#'}>
+                <div className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 h-full flex flex-col">
+                  <div className="relative h-48">
+                    {card.imageUrl && (
+                      <Image 
+                        src={card.imageUrl}
+                        alt={card.title || ''}
+                        fill
+                        style={{ objectFit: "cover" }}
+                      />
+                    )}
+                  </div>
+                  <div className="p-6 flex flex-col items-center flex-grow">
+                    {IconComponent && <IconComponent className="text-5xl mb-4 text-blue-600" />}
+                    <h2 className="text-2xl font-semibold text-center">{card.title || 'Untitled'}</h2>
+                    <p className="mt-2 text-gray-600 text-center">{card.description || ''}</p>
+                    <FaIcons.FaArrowRight className="mt-4 text-blue-600" />
+                  </div>
                 </div>
-                <div className="p-6 flex flex-col items-center flex-grow">
-                  <card.icon className="text-5xl mb-4 text-blue-600" />
-                  <h2 className="text-2xl font-semibold text-center">{card.title}</h2>
-                  <p className="mt-2 text-gray-600 text-center flex-grow">Explore our {card.title.toLowerCase()}</p>
-                  <FaArrowRight className="mt-4 text-blue-600" />
-                </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          }) || (
+            <p>No resources available at the moment.</p>
+          )}
         </div>
       </div>
     </div>

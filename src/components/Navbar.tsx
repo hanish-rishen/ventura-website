@@ -88,12 +88,6 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
   const [loading, setLoading] = useState<string | null>(null);
   const router = useRouter();
 
-  const handleItemClick = (item: string) => {
-    if (isMobile) {
-      setActive(active === item ? null : item);
-    }
-  };
-
   const handleLinkClick = (href: string) => {
     setLoading(href);
     router.push(href);
@@ -109,70 +103,77 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
     ? 'text-gray-800'
     : 'text-gray-800 dark:text-white';
 
+  const menuItems = [
+    { item: "About", href: "/about", links: [
+      { href: "/about/fidas", text: "What is FIDAS" },
+      { href: "/about/company", text: "About Us" },
+      { href: "/about/info", text: "Company Information" }
+    ]},
+    { item: "Products", href: "/products", links: [
+      { href: "/products/software", text: "Associated Software Products" },
+      { href: "/products/technologies", text: "Technologies" },
+      { href: "/products/hardware", text: "Hardware Products" },
+      { href: "/products/sap-integration", text: "SAP Integration" }
+    ]},
+    { item: "Services", href: "/services", links: [
+      { href: "/services/how-it-works", text: "How Does It Work" },
+      { href: "/services/implementation", text: "Implementation Methodology" },
+      { href: "/services/benefits", text: "Benefits of FIDAS" }
+    ]},
+    { item: "Customers", href: "/customers", links: [
+      { href: "/customers/success", text: "Customer Success" },
+      { href: "/customers/list", text: "Customer List" }
+    ]},
+    { item: "Resources", href: "/resources", links: [
+      { href: "/resources/blogs", text: "Blogs" },
+      { href: "/resources/faq", text: "FAQ / Q & A" },
+      { href: "/resources/downloads", text: "Downloads" }
+    ]},
+    { item: "Contact", href: "/contact", links: [
+      { href: "/contact/us", text: "Contact Us" },
+      { href: "/contact/social", text: "Social Media" },
+      { href: "/contact/enquiry", text: "Enquiry" }
+    ]}
+  ];
+
   return (
     <div className={`flex ${isMobile ? 'flex-col w-full space-y-2' : 'flex-row items-center space-x-4'} ${textColorClass}`}>
-      <Menu setActive={setActive}>
-        {[
-          { item: "About", href: "/about", links: [
-            { href: "/about/fidas", text: "What is FIDAS" },
-            { href: "/about/company", text: "About Us" },
-            { href: "/about/info", text: "Company Information" }
-          ]},
-          { item: "Products", href: "/products", links: [
-            { href: "/products/software", text: "Associated Software Products" },
-            { href: "/products/technologies", text: "Technologies" },
-            { href: "/products/hardware", text: "Hardware Products" },
-            { href: "/products/sap-integration", text: "SAP Integration" }
-          ]},
-          { item: "Services", href: "/services", links: [
-            { href: "/services/how-it-works", text: "How Does It Work" },
-            { href: "/services/implementation", text: "Implementation Methodology" },
-            { href: "/services/benefits", text: "Benefits of FIDAS" }
-          ]},
-          { item: "Customers", href: "/customers", links: [
-            { href: "/customers/success", text: "Customer Success" },
-            { href: "/customers/list", text: "Customer List" }
-          ]},
-          { item: "Resources", href: "/resources", links: [
-            { href: "/resources/blogs", text: "Blogs" },
-            { href: "/resources/faq", text: "FAQ / Q & A" },
-            { href: "/resources/downloads", text: "Downloads" }
-          ]},
-          { item: "Contact", href: "/contact", links: [
-            { href: "/contact/us", text: "Contact Us" },
-            { href: "/contact/social", text: "Social Media" },
-            { href: "/contact/enquiry", text: "Enquiry" }
-          ]}
-        ].map((menuItem, index) => (
-          <MenuItem 
-            key={index} 
-            setActive={setActive} 
-            active={active} 
-            item={menuItem.item}
-            onClick={() => {
-              handleItemClick(menuItem.item);
-              if (menuItem.href) {
-                handleLinkClick(menuItem.href);
-              }
-            }}
-            isMobile={isMobile}
-          >
-            <div className={`flex flex-col ${isMobile ? 'space-y-2' : 'space-y-1'} ${!isMobile ? 'min-w-[220px]' : ''}`}>
-              {menuItem.links.map((link, linkIndex) => (
-                <div key={linkIndex} className="flex items-center justify-between">
-                  <HoveredLink 
-                    href={link.href} 
-                    onClick={() => handleLinkClick(link.href)}
-                  >
-                    {link.text}
-                  </HoveredLink>
-                  {loading === link.href && <SmallLoader />}
-                </div>
-              ))}
-            </div>
-          </MenuItem>
-        ))}
-      </Menu>
+      {isMobile ? (
+        menuItems.map((menuItem, index) => (
+          <Link key={index} href={menuItem.href} onClick={() => handleLinkClick(menuItem.href)} className="text-lg py-1">
+            {menuItem.item}
+          </Link>
+        ))
+      ) : (
+        <Menu setActive={setActive}>
+          {menuItems.map((menuItem, index) => (
+            <MenuItem 
+              key={index} 
+              setActive={setActive} 
+              active={active} 
+              item={menuItem.item}
+              isMobile={isMobile}
+            >
+              <Link href={menuItem.href} onClick={() => handleLinkClick(menuItem.href)} className="block mb-0 font-semibold">
+                {menuItem.item}
+              </Link>
+              <div className="flex flex-col space-y-1 min-w-[220px]">
+                {menuItem.links.map((link, linkIndex) => (
+                  <div key={linkIndex} className="flex items-center justify-between">
+                    <HoveredLink 
+                      href={link.href} 
+                      onClick={() => handleLinkClick(link.href)}
+                    >
+                      {link.text}
+                    </HoveredLink>
+                    {loading === link.href && <SmallLoader />}
+                  </div>
+                ))}
+              </div>
+            </MenuItem>
+          ))}
+        </Menu>
+      )}
     </div>
   );
 }

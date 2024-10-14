@@ -40,7 +40,7 @@ export const MenuItem = ({
   };
 
   const handleMouseLeave = (e: React.MouseEvent) => {
-    if (!isMobile && menuRef.current && !menuRef.current.contains(e.relatedTarget as Node)) {
+    if (!isMobile && menuRef.current && e.relatedTarget instanceof Node && !menuRef.current.contains(e.relatedTarget)) {
       setActive(null);
       setIsOpen(false);
     }

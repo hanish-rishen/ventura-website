@@ -1,65 +1,94 @@
+"use client";
+
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Phone, Mail, MapPin, Linkedin } from 'lucide-react';
-import { Twitter, FacebookIcon, InstagramIcon } from 'lucide-react';
+import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import { client } from '@/sanity/lib/client';
+
+interface FooterData {
+  companyName: string;
+  description: string;
+  socialLinks: { platform: string; url: string }[];
+  navigationLinks: { title: string; url: string }[];
+  copyrightText: string;
+  contactEmail: string;
+  contactPhone: string;
+}
+
+async function getFooterData(): Promise<FooterData> {
+  const footerData = await client.fetch(`*[_type == "footer"][0]{
+    companyName,
+    description,
+    socialLinks,
+    navigationLinks,
+    copyrightText,
+    contactEmail,
+    contactPhone
+  }`);
+  
+  return footerData;
+}
 
 export default function Footer() {
+  const [footerData, setFooterData] = useState<FooterData | null>(null);
+
+  useEffect(() => {
+    getFooterData().then(data => setFooterData(data));
+  }, []);
+
+  if (!footerData) {
+    return null; // or a loading spinner
+  }
+
+  const socialIcons: { [key: string]: React.ElementType } = {
+    facebook: FaFacebook,
+    twitter: FaTwitter,
+    instagram: FaInstagram,
+    linkedin: FaLinkedin,
+  };
+
   return (
-    <footer className="bg-gray-900 text-gray-300">
+    <footer className="bg-gray-800 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="col-span-1 sm:col-span-2">
-            <h2 className="text-xl font-semibold text-white mb-4">About Us</h2>
-            <p className="text-sm">
-              Professional grade fabric inspection software with successful track record with rich 17 years
-              of domain experience. Thanks to our R&D efforts, we have successfully developed
-              almost every IOT devices which automatically fetches fabric quality related data to our
-              software.
-            </p>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="col-span-2">
+            <h2 className="text-2xl font-bold mb-4">{footerData.companyName}</h2>
+            <p className="text-gray-300 mb-4">{footerData.description}</p>
+            <div className="flex space-x-4">
+              {footerData.socialLinks.map((link, index) => {
+                const Icon = socialIcons[link.platform.toLowerCase()];
+                return Icon ? (
+                  <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
+                    <Icon className="w-6 h-6" />
+                  </a>
+                ) : null;
+              })}
+            </div>
           </div>
           <div>
-            <h3 className="text-lg font-medium text-white mb-4">Quick Links</h3>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="/" className="hover:text-blue-400">Home</Link></li>
-              <li><Link href="/about/fidas" className="hover:text-blue-400">About Us</Link></li>
-              <li><Link href="/products/software" className="hover:text-blue-400">Products</Link></li>
-              <li><Link href="/services/how-it-works" className="hover:text-blue-400">Services</Link></li>
-              <li><Link href="/contact/us" className="hover:text-blue-400">Contact Us</Link></li>
+            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <ul className="space-y-2">
+              {footerData.navigationLinks.map((link, index) => (
+                <li key={index}>
+                  <Link href={link.url.startsWith('/') ? link.url : `/${link.url}`} className="text-gray-300 hover:text-white transition-colors">
+                    {link.title}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-medium text-white mb-4">Our Services</h3>
-            <ul className="space-y-2 text-sm">
-              <li>Grey Inspection</li>
-              <li>Finish Fabric</li>
-              <li>Denim Fabric</li>
-              <li>RMG</li>
-              <li>Process</li>
-            </ul>
+            <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
+            {footerData.contactEmail && (
+              <p className="text-gray-300 mb-2">Email: {footerData.contactEmail}</p>
+            )}
+            {footerData.contactPhone && (
+              <p className="text-gray-300">Phone: {footerData.contactPhone}</p>
+            )}
           </div>
         </div>
-        <div className="mt-8 pt-8 border-t border-gray-700 flex flex-col sm:flex-row justify-between items-center">
-          <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-4 sm:mb-0">
-            <Link href="mailto:regi@fidas.in" className="flex items-center hover:text-blue-400">
-              <Mail size={18} className="mr-2" />
-              <span>regi@fidas.in</span>
-            </Link>
-            <Link href="tel:+919962936356" className="flex items-center hover:text-blue-400">
-              <Phone size={18} className="mr-2" />
-              <span>+91 9962936356</span>
-            </Link>
-            <Link href="#" className="flex items-center hover:text-blue-400">
-              <MapPin size={18} className="mr-2" />
-              <span>Chennai</span>
-            </Link>
-          </div>
-          <div className="flex space-x-4">
-            <Link href="https://twitter.com/fidas_in" className="hover:text-blue-400"><Twitter size={20} /></Link>
-            <Link href="https://www.facebook.com/fidas.in" className="hover:text-blue-400"><FacebookIcon size={20} /></Link>
-            <Link href="https://www.linkedin.com/company/ventura-automation-services/" className="hover:text-blue-400"><Linkedin size={20} /></Link>
-          </div>
-        </div>
-        <div className="mt-8 text-center text-sm">
-          <p>&copy; {new Date().getFullYear()} FIDAS. All Rights Reserved. Ventura Automation Services Inc.</p>
+        <div className="mt-8 pt-8 border-t border-gray-700 text-center">
+          <p className="text-gray-300">{footerData.copyrightText}</p>
         </div>
       </div>
     </footer>

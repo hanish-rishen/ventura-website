@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { ScrollAnimationWrapper } from '@/components/ScrollAnimationWrapper';
-import { FaUser, FaEnvelope, FaBuilding, FaCommentAlt, FaDownload } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaBuilding, FaCommentAlt } from 'react-icons/fa';
 
 const fadeInUp: Variants = {
   initial: { opacity: 0, y: 60 },
@@ -20,10 +20,6 @@ export default function Enquiry() {
     const subject = encodeURIComponent('Enquiry Form Submission');
     const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nCompany: ${company}\n\nEnquiry Details: ${enquiry}`);
     window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=regi@fidas.in&su=${subject}&body=${body}`, '_blank');
-  };
-
-  const handleDownloadLetterhead = () => {
-    window.open('/Brouchers/LETTER HEAD.doc', '_blank');
   };
 
   return (
@@ -116,24 +112,14 @@ export default function Enquiry() {
                   required
                 ></textarea>
               </div>
-              <div className="flex space-x-4">
+              <div>
                 <motion.button
                   type="submit"
-                  className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
+                  className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   Submit Enquiry
-                </motion.button>
-                <motion.button
-                  type="button"
-                  onClick={handleDownloadLetterhead}
-                  className="flex items-center justify-center bg-green-600 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-green-700 transition-colors duration-300"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <FaDownload className="mr-2" />
-                  Download Letterhead
                 </motion.button>
               </div>
             </form>

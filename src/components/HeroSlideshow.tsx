@@ -3,44 +3,43 @@ import React, { useState, useEffect } from "react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Image from "next/image";
 import Autoplay from "embla-carousel-autoplay";
+import { client } from "@/lib/sanity";
 
-const slides = [
-  {
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-    title: "Your Search is Over!",
-    description: "FIDAS: Achieving 99.9% defect detection accuracy",
-  },
-  {
-    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-    title: "Get Ready! Join the success club",
-    description: "127 successful fabric inspection projects implemented spanning 17 years",
-  },
-  {
-    image: "https://images.unsplash.com/photo-1574634534894-89d7576c8259?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2064&q=80",
-    title: "Fabric Inspection & Automation beyond your expectations",
-    description: "97% customer satisfaction rate with our 24/7 expert assistance",
-  },
-  {
-    image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-    title: "Meet the subject matter experts in Fabric Inspection Software",
-    description: "Improving quality standards by 40% in automotive seating fabrics",
-  },
-  {
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-    title: "Advanced Data Analytics",
-    description: "Providing 360° actionable insights with 99.5% data accuracy",
-  },
-  {
-    image: "https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-    title: "Sustainable Solutions",
-    description: "Reducing waste by 30% and improving efficiency by 50%",
-  },
-];
+interface Slide {
+  title: string;
+  description: string;
+  image?: string;
+  imageUrl?: string;
+}
 
 export default function HeroSlideshow() {
   const [api, setApi] = useState<any>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
+  const [slides, setSlides] = useState<Slide[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchSlides() {
+      try {
+        const fetchedSlides = await client.fetch(`
+          *[_type == "heroSlideshow"][0].slides[] {
+            title,
+            description,
+            "image": image.asset->url,
+            imageUrl
+          }
+        `);
+        setSlides(fetchedSlides || []);
+      } catch (error) {
+        console.error("Error fetching slides:", error);
+        setSlides([]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchSlides();
+  }, []);
 
   useEffect(() => {
     if (!api) {
@@ -54,6 +53,14 @@ export default function HeroSlideshow() {
       setCurrent(api.selectedScrollSnap() + 1);
     });
   }, [api]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (slides.length === 0) {
+    return <div>No slides available</div>;
+  }
 
   return (
     <div className="relative w-full mx-auto text-gray-800">
@@ -71,7 +78,7 @@ export default function HeroSlideshow() {
             <CarouselItem key={index}>
               <div className="relative w-full h-[60vh] md:h-[calc(100vh-64px)]">
                 <Image
-                  src={slide.image}
+                  src={slide.image || slide.imageUrl || ''}
                   alt={slide.title}
                   fill
                   style={{ objectFit: "cover" }}
