@@ -21,59 +21,63 @@ export default function Navbar() {
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Call once to set initial state
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <div className="absolute top-0 left-0 right-0 z-50">
-      <nav className={cn(
-        "max-w-[98%] mx-auto rounded-full px-6 py-4 mt-4 transition-all duration-300",
-        pathname === '/' 
-          ? isScrolled 
-            ? "bg-white/70 dark:bg-gray-800/70 backdrop-blur-md shadow-lg" 
-            : "bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
-          : "bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 shadow-lg"
-      )}>
-        <div className="flex items-center justify-between">
-          <div className="flex-shrink-0">
-            <Link href="/">
-              <Image src="/images/Ventura.png" alt="Ventura Logo" width={100} height={40} />
-            </Link>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+        <div className="flex justify-between items-center gap-4">
+          <Link href="/" className="flex-shrink-0">
+            <Image src="/images/Ventura.png" alt="Ventura Logo" width={100} height={40} />
+          </Link>
+
+          <div className="hidden md:block flex-1 max-w-3xl mx-auto">
+            <nav className={cn(
+              "rounded-full px-6 py-2 transition-all duration-300 border-2 border-blue-600/20",
+              pathname === '/' 
+                ? isScrolled 
+                  ? "bg-white/70 dark:bg-gray-800/70 backdrop-blur-md shadow-lg" 
+                  : "bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                : "bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-lg"
+            )}>
+              <NavbarContent pathname={pathname} isScrolled={isScrolled} />
+            </nav>
           </div>
-          <div className="hidden md:block mr-16">
-            <NavbarContent pathname={pathname} isScrolled={isScrolled} />
-          </div>
+
+          <Link 
+            href="/contact/us"
+            className="relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-medium text-white transition-all duration-300 ease-out bg-blue-600 rounded-full group"
+          >
+            <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-blue-700 group-hover:translate-x-0 ease">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </span>
+            <span className="absolute flex items-center justify-center w-full h-full text-white transition-all duration-300 transform group-hover:translate-x-full ease">Get a Quote</span>
+            <span className="relative invisible">Get a Quote</span>
+          </Link>
+
           <button
-            className="md:hidden pr-0"
+            className="md:hidden rounded-lg bg-white/70 dark:bg-gray-800/70 backdrop-blur-md shadow-lg p-2"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <X size={24} /> : <MenuIcon size={24} />}
           </button>
         </div>
-      </nav>
+      </div>
+
       <AnimatePresence mode="wait">
         {isMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ 
-              duration: 0.5,
-              ease: "easeInOut",
-              opacity: { duration: 0.3 },
-              height: { duration: 0.5 }
-            }}
-            className="md:hidden mt-2 mx-6 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl overflow-hidden"
-            style={{ width: 'calc(100% - 3rem)' }}  // Set a fixed width
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            className="md:hidden mt-2 mx-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl overflow-hidden"
           >
-            <motion.div 
-              className="p-6 max-h-[70vh] overflow-y-auto"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
+            <motion.div className="p-6">
               <NavbarContent isMobile={true} pathname={pathname} isScrolled={isScrolled} setIsMenuOpen={setIsMenuOpen} />
             </motion.div>
           </motion.div>
@@ -137,7 +141,7 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
   ];
 
   return (
-    <div className={`flex ${isMobile ? 'flex-col w-full space-y-2' : 'flex-row items-center space-x-4'} ${textColorClass}`}>
+    <div className={`flex justify-center ${isMobile ? 'flex-col w-full space-y-2' : 'flex-row items-center space-x-4'} ${textColorClass}`}>
       {isMobile ? (
         menuItems.map((menuItem, index) => (
           <Link key={index} href={menuItem.href} onClick={() => handleLinkClick(menuItem.href)} className="text-lg py-1">
@@ -152,11 +156,10 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
               setActive={setActive} 
               active={active} 
               item={menuItem.item}
+              href={menuItem.href}
+              onItemClick={() => handleLinkClick(menuItem.href)}
               isMobile={isMobile}
             >
-              <Link href={menuItem.href} onClick={() => handleLinkClick(menuItem.href)} className="block mb-0 font-semibold">
-                {menuItem.item}
-              </Link>
               <div className="flex flex-col space-y-1 min-w-[220px]">
                 {menuItem.links.map((link, linkIndex) => (
                   <div key={linkIndex} className="flex items-center justify-between">

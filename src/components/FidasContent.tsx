@@ -8,6 +8,7 @@ import { CheckCircle } from 'lucide-react';
 import { TypeAnimation } from 'react-type-animation';
 import Link from 'next/link';
 import { client } from '@/sanity/lib/client';
+import { urlForImage } from '@/sanity/lib/image';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 50 },
@@ -43,6 +44,20 @@ const numberAnimation = {
   }
 };
 
+const marqueeAnimation = {
+  animate: {
+    x: [0, -1920],
+    transition: {
+      x: {
+        repeat: Infinity,
+        repeatType: "loop",
+        duration: 50,
+        ease: "linear",
+      },
+    },
+  },
+};
+
 const ScrollAnimationWrapper = ({ children }: { children: React.ReactNode }) => {
   const controls = useAnimation();
   const ref = useRef(null);
@@ -71,48 +86,56 @@ const ScrollAnimationWrapper = ({ children }: { children: React.ReactNode }) => 
 interface FidasContentData {
   mainTitle: string;
   mainDescription: string;
-  automotiveTitle: string;
-  whatWeDoTitle: string;
-  whatWeDoDescription: string;
-  futureWithFidasTitle: string;
-  futureWithFidasPoints: string[];
-  automotiveIframeSrc: string;
-  howItWorksTitle: string;
-  howItWorksSteps: string[];
-  howItWorksIframeSrc: string;
+  trustedByTitle: string;
+  trustedCompanies: Array<{
+    asset: { url: string };
+    alt: string;
+  }>;
+  expertiseTitle: string;
+  videoUrl: string;
+  features: Array<{
+    title: string;
+    description: string;
+  }>;
+  testimonial: {
+    quote: string;
+    name: string;
+    position: string;
+    company: string;
+  };
+  whyChooseTitle: string;
+  whyChoosePoints: Array<{
+    title: string;
+    description: string;
+  }>;
   industryVerticalsTitle: string;
-  industryVerticals: { icon: string; name: string; description: string }[];
+  industryVerticals: Array<{
+    icon: string;
+    name: string;
+    description: string;
+  }>;
   industryVerticalsIframeSrc: string;
-  businessElevationTitle: string;
-  businessElevationPoints: string[];
-  integrationTitle: string;
-  integrationSubtitle: string;
-  integrationDescription: string;
-  integrationApps: { name: string; color: string }[];
+  whyChooseFidas: Array<{
+    title: string;
+    description: string;
+  }>;
 }
 
 async function getFidasContentData(): Promise<FidasContentData> {
   const fidasContentData = await client.fetch(`*[_type == "fidasContentPage"][0]{
     mainTitle,
     mainDescription,
-    automotiveTitle,
-    whatWeDoTitle,
-    whatWeDoDescription,
-    futureWithFidasTitle,
-    futureWithFidasPoints,
-    automotiveIframeSrc,
-    howItWorksTitle,
-    howItWorksSteps,
-    howItWorksIframeSrc,
+    trustedByTitle,
+    trustedCompanies,
+    expertiseTitle,
+    videoUrl,
+    features,
+    testimonial,
+    whyChooseFidas,
+    whyChoosePoints,
     industryVerticalsTitle,
     industryVerticals,
-    industryVerticalsIframeSrc,
-    businessElevationTitle,
-    businessElevationPoints,
-    integrationTitle,
-    integrationSubtitle,
-    integrationDescription,
-    integrationApps
+    industryVerticalsIframeSrc
   }`);
   
   return fidasContentData;
@@ -141,164 +164,158 @@ export default function FidasContent() {
   }
 
   return (
-    <div className="w-full bg-gray-50 text-gray-800">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <section className="py-16 space-y-8">
-          <div className="w-full space-y-8">
-            <ScrollAnimationWrapper>
-              <motion.h1 
-                className="text-4xl font-bold mb-4 text-center tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
-                variants={fadeInUp}
-              >
-                <TypeAnimation
-                  sequence={[
-                    pageData.mainTitle,
-                    1500,
-                  ]}
-                  wrapper="span"
-                  speed={40}
-                  repeat={Infinity}
-                />
-              </motion.h1>
-            </ScrollAnimationWrapper>
+    <div className="w-full bg-gradient-to-br from-gray-50 to-blue-50 text-gray-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0">
+        
 
-            <ScrollAnimationWrapper>
-              <div className="space-y-4">
-                <p className="text-lg leading-relaxed text-center text-gray-600">
-                  {pageData.mainDescription}
-                </p>
-                <div className="text-center">
-                  <Link href="/about/fidas">
-                    <button className="relative inline-flex h-10 items-center justify-center rounded-full border border-blue-600 bg-blue-500 px-6 font-semibold text-white text-sm overflow-hidden">
-                      <span className="relative z-10">Explore FIDAS</span>
-                      <span className="absolute inset-0 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-500 animate-shimmer"></span>
-                    </button>
-                  </Link>
-                </div>
-              </div>
-            </ScrollAnimationWrapper>
+        {/* Trusted By Section */}
+        <section className="py-16">
+          <ScrollAnimationWrapper>
+            <h2 className="text-3xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
+              {pageData.trustedByTitle}
+            </h2>
+          </ScrollAnimationWrapper>
+          
+          <div className="relative overflow-hidden">
+            <div className="flex">
+              <motion.div 
+                className="flex space-x-12 whitespace-nowrap"
+                animate="animate"
+                variants={marqueeAnimation}
+              >
+                {/* First set of images */}
+                {pageData.trustedCompanies.map((company, index) => (
+                  <div 
+                    key={`first-${index}`} 
+                    className="flex-shrink-0 flex items-center justify-center min-w-[200px]"
+                  >
+                    <Image
+                      src={urlForImage(company.asset)?.url() || ''}
+                      alt={company.alt || 'Trusted Company'}
+                      width={150}
+                      height={60}
+                      className="object-contain"
+                    />
+                  </div>
+                ))}
+                {/* Duplicate set for seamless loop */}
+                {pageData.trustedCompanies.map((company, index) => (
+                  <div 
+                    key={`second-${index}`} 
+                    className="flex-shrink-0 flex items-center justify-center min-w-[200px]"
+                  >
+                    <Image
+                      src={urlForImage(company.asset)?.url() || ''}
+                      alt={company.alt || 'Trusted Company'}
+                      width={150}
+                      height={60}
+                      className="object-contain"
+                    />
+                  </div>
+                ))}
+              </motion.div>
+            </div>
           </div>
         </section>
 
-        <section className="py-24 space-y-8">
+        {/* Expertise Section */}
+        <section className="py-16">
           <ScrollAnimationWrapper>
-            <h2 className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
-              {pageData.automotiveTitle}
+            <h2 className="text-3xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
+              {pageData.expertiseTitle}
             </h2>
           </ScrollAnimationWrapper>
 
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            <motion.div 
-              className="w-full md:w-1/2 space-y-6 order-2 md:order-1"
-              variants={staggerChildren}
-            >
-              <ScrollAnimationWrapper>
-                <div className="w-full">
-                  <h3 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">{pageData.whatWeDoTitle}</h3>
-                  <div className="h-20">
-                    <TypeAnimation
-                      sequence={[
-                        pageData.whatWeDoDescription,
-                        3000,
-                      ]}
-                      wrapper="p"
-                      speed={60}
-                      repeat={Infinity}
-                      className="text-base leading-relaxed text-gray-600"
-                      cursor={true}
-                    />
+          <div className="relative bg-gradient-to-r from-blue-100 to-blue-50 rounded-xl p-4 md:p-8 lg:p-12">
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* Left Column */}
+              <div className="lg:w-1/2 space-y-8">
+                {/* Video Section */}
+                <div className="relative w-full rounded-lg overflow-hidden shadow-lg bg-white h-[400px] md:h-[500px]">
+                  <iframe
+                    src={pageData.videoUrl}
+                    title="Fabric Inspection Process"
+                    className="absolute inset-0 w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+
+                {/* Features Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {pageData.features.map((feature, index) => (
+                    <div key={index} className="flex items-start space-x-3 bg-white bg-opacity-70 p-4 rounded-lg shadow-sm">
+                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex-shrink-0 flex items-center justify-center">
+                        <span className="text-blue-600">✓</span>
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-gray-800 mb-1">{feature.title}</h4>
+                        <p className="text-sm text-gray-600">{feature.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right Column */}
+              <div className="lg:w-1/2 space-y-6">
+                <h3 className="text-2xl font-semibold text-blue-600">
+                  Your Trusted Partner for Accurate Fabric Insights
+                </h3>
+                              
+                {/* Testimonial */}
+                <div className="bg-white bg-opacity-70 rounded-lg p-6 shadow-sm">
+                  <p className="mb-4 italic text-gray-700">
+                    &ldquo;{pageData.testimonial.quote}&rdquo;
+                  </p>
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:justify-between">
+                    <div>
+                      <p className="font-semibold text-blue-600">{pageData.testimonial.name}</p>
+                      <p className="text-sm text-gray-500">{pageData.testimonial.position} – {pageData.testimonial.company}</p>
+                    </div>
+                    <Link href="/customers/success" className="inline-flex items-center text-blue-600 hover:text-blue-700 transition-colors">
+                      <span className="mr-2">More Testimonials</span>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </Link>
                   </div>
                 </div>
-              </ScrollAnimationWrapper>
 
-              <ScrollAnimationWrapper>
-                <div>
-                  <h3 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">{pageData.futureWithFidasTitle}</h3>
-                  <motion.ul 
-                    className="space-y-3 text-base"
-                    variants={staggerChildren}
-                  >
-                    {pageData.futureWithFidasPoints.map((item, index) => (
-                      <motion.li 
-                        key={index}
-                        variants={fadeInUp}
-                        className="flex items-center"
-                      >
-                        <CheckCircle className="text-green-500 mr-2" size={16} />
-                        <span className="text-gray-600">{item}</span>
-                      </motion.li>
+                {/* Unique Selling Points */}
+                <div className="space-y-4">
+                  <h4 className="text-lg font-semibold text-blue-600">{pageData.whyChooseTitle}</h4>
+                  <div className="space-y-3">
+                    {pageData.whyChooseFidas.map((point, index) => (
+                      <div key={index} className="flex items-start space-x-3 bg-white bg-opacity-60 p-4 rounded-lg">
+                        <div className="flex-shrink-0 mt-1">
+                          <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h5 className="font-medium text-gray-800">{point.title}</h5>
+                          <p className="text-sm text-gray-600">{point.description}</p>
+                        </div>
+                      </div>
                     ))}
-                  </motion.ul>
+                  </div>
                 </div>
-              </ScrollAnimationWrapper>
-            </motion.div>
 
-            <div className="w-full md:w-1/2 h-96 relative mb-8 md:mb-0 order-1 md:order-2">
-              <iframe 
-                src={pageData.automotiveIframeSrc}
-                className="w-full h-full"
-                style={{ border: 'none' }}
-              ></iframe>
+                <div className="flex justify-end mb-6">
+                  <Link href="/resources/blogs" className="inline-flex items-center text-blue-600 hover:text-blue-700 transition-colors group">
+                    <span className="mr-2">Explore Blogs</span>
+                    <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        <section className="py-16 space-y-16">
-          <ScrollAnimationWrapper>
-            <motion.h3 
-              className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              {pageData.howItWorksTitle}
-            </motion.h3>
-          </ScrollAnimationWrapper>
-
-          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-            <div className="w-full md:w-1/2 h-[400px] md:h-[500px] relative mb-8 md:mb-0 order-1 md:order-1">
-              <iframe 
-                src={pageData.howItWorksIframeSrc}
-                className="w-full h-full"
-                style={{ border: 'none' }}
-              ></iframe>
-            </div>
-
-            <motion.ul 
-              className="w-full md:w-1/2 space-y-6 text-base order-2 md:order-2"
-              variants={staggerChildren}
-            >
-              {pageData.howItWorksSteps.map((item, index) => (
-                <ScrollAnimationWrapper key={index}>
-                  <motion.li 
-                    className="flex items-start"
-                    variants={fadeInUp}
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
-                    <motion.span 
-                      className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400 mr-4"
-                      animate={numberAnimation}
-                    >
-                      {index + 1}
-                    </motion.span>
-                    <motion.span
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.5, delay: (index * 0.1) + 0.2 }}
-                      className="text-gray-600"
-                    >
-                      {item}
-                    </motion.span>
-                  </motion.li>
-                </ScrollAnimationWrapper>
-              ))}
-            </motion.ul>
-          </div>
-        </section>
-
-        <section className="py-16">
+        <section className="py-4">
           <ScrollAnimationWrapper>
             <h2 className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
               {pageData.industryVerticalsTitle}
@@ -344,120 +361,43 @@ export default function FidasContent() {
             </div>
           </div>
         </section>
+      </div>
+      <section className="py-2 mt-8 md:mt-0 space-y-4">
+          <div className="w-full space-y-8">
+            <ScrollAnimationWrapper>
+              <motion.h1
+                className="text-3xl md:text-4xl font-bold mb-4 text-center tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
+                variants={fadeInUp}
+              >
+                <TypeAnimation
+                  sequence={[
+                    pageData.mainTitle,
+                    1500,
+                  ]}
+                  wrapper="span"
+                  speed={40}
+                  repeat={Infinity}
+                />
+              </motion.h1>
+            </ScrollAnimationWrapper>
 
-        <section className="py-16 space-y-8">
-          <ScrollAnimationWrapper>
-            <motion.h2 
-              className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
-              variants={fadeInUp}
-            >
-              {pageData.businessElevationTitle}
-            </motion.h2>
-          </ScrollAnimationWrapper>
-
-          <ScrollAnimationWrapper>
-            <motion.ul 
-              className="grid grid-cols-1 md:grid-cols-2 gap-4"
-              variants={staggerChildren}
-            >
-              {pageData.businessElevationPoints.map((item, index) => (
-                <motion.li 
-                  key={index}
-                  className="flex items-start space-x-2"
-                  variants={fadeInUp}
-                >
-                  <CheckCircle className="text-green-500 mt-1 flex-shrink-0" />
-                  <span>{item}</span>
-                </motion.li>
-              ))}
-            </motion.ul>
-          </ScrollAnimationWrapper>
-        </section>
-
-        <section className="py-16">
-          <ScrollAnimationWrapper>
-            <motion.h2 
-              className="text-3xl font-bold mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
-              variants={fadeInUp}
-            >
-              {pageData.integrationTitle}
-            </motion.h2>
-          </ScrollAnimationWrapper>
-
-          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-            <motion.div 
-              className="w-full md:w-1/2"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <h3 className="text-2xl font-bold mb-4 text-blue-600">{pageData.integrationSubtitle}</h3>
-              <p className="text-gray-700 mb-6 leading-relaxed">
-                {pageData.integrationDescription}
-              </p>
-              <Link href="/products/sap-integration">
-                <motion.button
-                  className="bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                  whileHover={{ scale: 1.05, boxShadow: "0 0 15px rgba(59, 130, 246, 0.5)" }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Explore Integrations
-                </motion.button>
-              </Link>
-            </motion.div>
-
-            <div className="w-full md:w-1/2">
-              <div className="relative w-80 h-80 mx-auto">
-                <div className="absolute inset-0">
-                  {pageData.integrationApps.map((app, index) => {
-                    const randomColor = colorClasses[Math.floor(Math.random() * colorClasses.length)];
-                    return (
-                      <React.Fragment key={app.name}>
-                        <div
-                          className="absolute top-1/2 left-1/2 w-[45%] h-[2px] bg-gray-300 origin-left"
-                          style={{
-                            transform: `rotate(${index * 45}deg)`,
-                          }}
-                        />
-                        <motion.div
-                          className={`absolute w-20 h-20 ${randomColor} rounded-full flex items-center justify-center text-white text-xs font-semibold z-10 shadow-lg`}
-                          style={{
-                            top: `${40 - 45 * Math.cos(index * Math.PI / 4)}%`,
-                            left: `${38 + 45 * Math.sin(index * Math.PI / 4)}%`,
-                          }}
-                          initial={{ opacity: 0, scale: 0 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: index * 0.1 + 0.5, duration: 0.5 }}
-                          whileHover={{
-                            scale: 1.1,
-                            boxShadow: "0px 0px 8px rgba(0,0,0,0.3)",
-                          }}
-                        >
-                          <span className="text-center leading-tight">{app.name}</span>
-                        </motion.div>
-                      </React.Fragment>
-                    );
-                  })}
+            <ScrollAnimationWrapper>
+              <div className="space-y-8">
+                <p className="text-base md:text-lg leading-relaxed text-center text-gray-600">
+                  {pageData.mainDescription}
+                </p>
+                <div className="text-center">
+                  <Link href="/about/fidas">
+                    <button className="mb-24 relative inline-flex h-10 items-center justify-center rounded-full border border-blue-600 bg-blue-500 px-4 md:px-6 font-semibold text-white text-sm overflow-hidden">
+                      <span className="relative z-10">Explore FIDAS</span>
+                      <span className="absolute inset-0 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-500 animate-shimmer"></span>
+                    </button>
+                  </Link>
                 </div>
-                <motion.div
-                  className="absolute inset-0 flex items-center justify-center"
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 1, duration: 0.5 }}
-                >
-                  <motion.div 
-                    className="w-28 h-28 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-white font-bold text-sm text-center z-20 shadow-xl"
-                    whileHover={{ scale: 1.1 }}
-                    animate={floatingAnimation}
-                  >
-                    FIDAS Software
-                  </motion.div>
-                </motion.div>
               </div>
-            </div>
+            </ScrollAnimationWrapper>
           </div>
         </section>
-      </div>
     </div>
   );
 }

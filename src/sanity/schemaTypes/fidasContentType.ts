@@ -1,71 +1,89 @@
 import {defineField, defineType} from 'sanity'
+import * as FaIcons from 'react-icons/fa'
 
 export default defineType({
   name: 'fidasContentPage',
-  title: 'FIDAS Content Page',
+  title: 'FIDAS Content', 
   type: 'document',
   fields: [
     defineField({
-      name: 'mainTitle',
-      title: 'Main Title',
+      name: 'trustedByTitle',
+      title: 'Trusted By Section Title',
       type: 'string',
+      validation: Rule => Rule.required()
     }),
     defineField({
-      name: 'mainDescription',
-      title: 'Main Description',
-      type: 'text',
-    }),
-    defineField({
-      name: 'automotiveTitle',
-      title: 'Automotive Section Title',
-      type: 'string',
-    }),
-    defineField({
-      name: 'whatWeDoTitle',
-      title: 'What We Do Title',
-      type: 'string',
-    }),
-    defineField({
-      name: 'whatWeDoDescription',
-      title: 'What We Do Description',
-      type: 'text',
-    }),
-    defineField({
-      name: 'futureWithFidasTitle',
-      title: 'Future with FIDAS Title',
-      type: 'string',
-    }),
-    defineField({
-      name: 'futureWithFidasPoints',
-      title: 'Future with FIDAS Points',
+      name: 'trustedCompanies',
+      title: 'Trusted Companies',
       type: 'array',
-      of: [{type: 'string'}],
+      of: [{
+        type: 'image',
+        fields: [
+          {
+            name: 'alt',
+            type: 'string',
+            title: 'Alternative text',
+            validation: Rule => Rule.required()
+          }
+        ]
+      }],
+      validation: Rule => Rule.required()
     }),
     defineField({
-      name: 'automotiveIframeSrc',
-      title: 'Automotive Section Iframe Source',
-      type: 'url',
-    }),
-    defineField({
-      name: 'howItWorksTitle',
-      title: 'How It Works Title',
+      name: 'expertiseTitle',
+      title: 'Expertise Section Title',
       type: 'string',
+      validation: Rule => Rule.required()
     }),
     defineField({
-      name: 'howItWorksSteps',
-      title: 'How It Works Steps',
-      type: 'array',
-      of: [{type: 'string'}],
-    }),
-    defineField({
-      name: 'howItWorksIframeSrc',
-      title: 'How It Works Iframe Source',
+      name: 'videoUrl',
+      title: 'Video URL',
       type: 'url',
+      validation: Rule => Rule.required()
+    }),
+    defineField({
+      name: 'features',
+      title: 'Features',
+      type: 'array',
+      of: [{
+        type: 'object',
+        fields: [
+          {name: 'title', type: 'string', title: 'Title', validation: Rule => Rule.required()},
+          {name: 'description', type: 'text', title: 'Description', validation: Rule => Rule.required()}
+        ]
+      }],
+      validation: Rule => Rule.required()
+    }),
+    defineField({
+      name: 'testimonial',
+      title: 'Featured Testimonial',
+      type: 'object',
+      fields: [
+        {name: 'quote', type: 'text', title: 'Quote', validation: Rule => Rule.required()},
+        {name: 'name', type: 'string', title: 'Author Name', validation: Rule => Rule.required()},
+        {name: 'position', type: 'string', title: 'Position', validation: Rule => Rule.required()},
+        {name: 'company', type: 'string', title: 'Company', validation: Rule => Rule.required()}
+      ],
+      validation: Rule => Rule.required()
+    }),
+    defineField({
+      name: 'whyChooseFidas',
+      title: 'Why Choose FIDAS Section',
+      type: 'array',
+      of: [{
+        type: 'object',
+        fields: [
+          {name: 'title', type: 'string', title: 'Title', validation: Rule => Rule.required()},
+          {name: 'description', type: 'text', title: 'Description', validation: Rule => Rule.required()}
+        ]
+      }],
+      validation: Rule => Rule.required()
     }),
     defineField({
       name: 'industryVerticalsTitle',
       title: 'Industry Verticals Title',
       type: 'string',
+      validation: Rule => Rule.required()
     }),
     defineField({
       name: 'industryVerticals',
@@ -74,53 +92,29 @@ export default defineType({
       of: [{
         type: 'object',
         fields: [
-          {name: 'name', type: 'string', title: 'Name'},
-          {name: 'description', type: 'string', title: 'Description'},
-          {name: 'icon', type: 'string', title: 'Icon'},
-        ],
+          {name: 'name', type: 'string', title: 'Name', validation: Rule => Rule.required()},
+          {name: 'description', type: 'string', title: 'Description', validation: Rule => Rule.required()},
+          {name: 'icon', type: 'string', title: 'Icon', validation: Rule => Rule.required()}
+        ]
       }],
+      validation: Rule => Rule.required()
     }),
     defineField({
       name: 'industryVerticalsIframeSrc',
       title: 'Industry Verticals Iframe Source',
-      type: 'url',
+      type: 'url'
     }),
     defineField({
-      name: 'businessElevationTitle',
-      title: 'Business Elevation Title',
+      name: 'mainTitle',
+      title: 'Main Title',
       type: 'string',
+      validation: Rule => Rule.required()
     }),
     defineField({
-      name: 'businessElevationPoints',
-      title: 'Business Elevation Points',
-      type: 'array',
-      of: [{type: 'string'}],
-    }),
-    defineField({
-      name: 'integrationTitle',
-      title: 'Integration Section Title',
-      type: 'string',
-    }),
-    defineField({
-      name: 'integrationSubtitle',
-      title: 'Integration Section Subtitle',
-      type: 'string',
-    }),
-    defineField({
-      name: 'integrationDescription',
-      title: 'Integration Description',
+      name: 'mainDescription',
+      title: 'Main Description',
       type: 'text',
-    }),
-    defineField({
-      name: 'integrationApps',
-      title: 'Integration Apps',
-      type: 'array',
-      of: [{
-        type: 'object',
-        fields: [
-          {name: 'name', type: 'string', title: 'App Name'},
-        ],
-      }],
-    }),
-  ],
+      validation: Rule => Rule.required()
+    })
+  ]
 })

@@ -11,7 +11,8 @@ interface MenuItemProps {
   active: string | null;
   item: string;
   children: React.ReactNode;
-  onClick?: () => void;
+  href: string;
+  onItemClick?: () => void;
   isMobile: boolean;
 }
 
@@ -26,7 +27,8 @@ export const MenuItem = ({
   active, 
   item, 
   children,
-  onClick,
+  href,
+  onItemClick,
   isMobile
 }: MenuItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -47,19 +49,10 @@ export const MenuItem = ({
   };
 
   const handleClick = () => {
-    if (isMobile) {
-      setIsOpen(!isOpen);
-    }
-    if (onClick) {
-      onClick();
+    if (onItemClick) {
+      onItemClick();
     }
   };
-
-  useEffect(() => {
-    if (!isMobile) {
-      setIsOpen(active === item);
-    }
-  }, [active, item, isMobile]);
 
   return (
     <div 
@@ -235,7 +228,8 @@ function NavbarContent({ isMobile = false, setIsMenuOpen }: { isMobile?: boolean
             setActive={setActive} 
             active={active} 
             item={menuItem.item}
-            onClick={() => handleItemClick(menuItem.item)}
+            href={menuItem.links[0].href}
+            onItemClick={() => handleItemClick(menuItem.item)}
             isMobile={isMobile}
           >
             <div className={`flex flex-col ${isMobile ? 'space-y-2' : 'space-y-1'}`}>
