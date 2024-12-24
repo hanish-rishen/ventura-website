@@ -1,14 +1,16 @@
 "use client";
 
-import React, { useEffect, useRef } from 'react';
-import { motion, useAnimation, useInView } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useAnimation, useInView, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import Image from 'next/image';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, Search, Users, Sparkles, History, CircuitBoard, ArrowRight, Plus, Minus } from 'lucide-react';
 import { TypeAnimation } from 'react-type-animation';
 import Link from 'next/link';
 import { client } from '@/sanity/lib/client';
 import { urlForImage } from '@/sanity/lib/image';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent, TimedAccordion } from "@/components/ui/accordion"; // Add Accordion imports
 
 const fadeInUp = {
   initial: { opacity: 0, y: 50 },
@@ -84,8 +86,6 @@ const ScrollAnimationWrapper = ({ children }: { children: React.ReactNode }) => 
 };
 
 interface FidasContentData {
-  mainTitle: string;
-  mainDescription: string;
   trustedByTitle: string;
   trustedCompanies: Array<{
     asset: { url: string };
@@ -119,14 +119,109 @@ interface FidasContentData {
     title: string;
     description: string;
   }>;
+  aboutFidas: {
+    title: string;
+    video: {
+      asset: {
+        url: string;
+      };
+    };
+    points: Array<{
+      pointTitle: string;
+      description: string;
+    }>;
+  };
+  twentyReasons: {
+    sectionTitle: string;
+    reasons: Array<{
+      title: string;
+      points: string[];
+      image: {
+        asset: {
+          url: string;
+        };
+        alt: string;
+      };
+    }>;
+  };
+  optimizeSection: {
+    title: string;
+    subtitle: string;
+    features: Array<{
+      title: string;
+      image: {
+        asset: {
+          _ref: string;
+        };
+        alt: string;
+      };
+    }>;
+  };
+  learnSection: {
+    title: string;
+    image: {
+      asset: {
+        _ref: string;
+      };
+      alt: string;
+    };
+    steps: string[];
+  };
+  interfaceSection: {
+    title: string;
+    devices: Array<{
+      title: string;
+      description: string;
+      image: {
+        asset: {
+          _ref: string;
+        };
+        alt: string;
+      };
+      link: string;
+    }>;
+  };
+  softwareProducts: {
+    title: string;
+    products: Array<{
+      title: string;
+      description: string;
+      image: {
+        asset: {
+          _ref: string;
+        };
+        alt: string;
+      };
+      link: string;
+    }>;
+  };
+  customerList: {
+    sectionTitle: string;
+    customers: Array<{
+      name: string;
+      logo: {
+        asset: {
+          _ref: string;
+        };
+        alt: string;
+      };
+    }>;
+  };
 }
 
 async function getFidasContentData(): Promise<FidasContentData> {
   const fidasContentData = await client.fetch(`*[_type == "fidasContentPage"][0]{
-    mainTitle,
-    mainDescription,
     trustedByTitle,
     trustedCompanies,
+    aboutFidas{
+      title,
+      video{
+        asset->{
+          url
+        }
+      },
+      points
+    },
     expertiseTitle,
     videoUrl,
     features,
@@ -135,7 +230,73 @@ async function getFidasContentData(): Promise<FidasContentData> {
     whyChoosePoints,
     industryVerticalsTitle,
     industryVerticals,
-    industryVerticalsIframeSrc
+    industryVerticalsIframeSrc,
+    twentyReasons{
+      sectionTitle,
+      reasons[]{
+        title,
+        points,
+        image{
+          asset->{
+            url
+          },
+          alt
+        }
+      }
+    },
+    optimizeSection{
+      title,
+      subtitle,
+      features[]{
+        title,
+        image{
+          asset->,
+          alt
+        }
+      }
+    },
+    learnSection{
+      title,
+      image{
+        asset->,
+        alt
+      },
+      steps
+    },
+    interfaceSection{
+      title,
+      devices[]{
+        title,
+        description,
+        image{
+          asset->,
+          alt
+        },
+        link
+      }
+    },
+    softwareProducts{
+      title,
+      products[]{
+        title,
+        description,
+        image{
+          asset->,
+          alt
+        },
+        link
+      }
+    },
+    customerList{
+      sectionTitle,
+      customers[]{
+        name,
+        logo{
+          asset->,
+          alt
+        }
+      }
+    }
   }`);
   
   return fidasContentData;
@@ -157,6 +318,19 @@ export default function FidasContent() {
 
   React.useEffect(() => {
     getFidasContentData().then(data => setPageData(data));
+  }, []);
+
+  // Simplify video logic
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Simple autoplay when video is ready
+    video.play().catch((error) => {
+      console.log("Video autoplay failed:", error);
+    });
   }, []);
 
   if (!pageData) {
@@ -214,6 +388,226 @@ export default function FidasContent() {
                   </div>
                 ))}
               </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* About Section with Fixed Video */}
+        <section className="relative py-16">
+          {/* Title wrapper with padding */}
+          <div className="mb-16 pt-8">
+            <ScrollAnimationWrapper>
+              <h2 className="text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
+                {pageData.aboutFidas.title}
+              </h2>
+            </ScrollAnimationWrapper>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Video Column */}
+            <div className="relative lg:sticky lg:top-[120px] self-start h-[300px] lg:h-[calc(100vh-180px)] rounded-2xl overflow-hidden mb-8 lg:mb-0">
+              <video
+                ref={videoRef}
+                className="w-full h-full object-cover"
+                src={pageData.aboutFidas.video.asset.url}
+                autoPlay
+                muted
+                loop
+                playsInline
+              />
+            </div>
+
+            {/* Points Column */}
+            <div className="space-y-8 pt-4">
+              {/* Desktop Points */}
+              <div className="hidden lg:block space-y-8">
+                {pageData.aboutFidas.points.map((point, index) => (
+                  <ScrollAnimationWrapper key={index}>
+                    <div className="bg-white/50 backdrop-blur-sm rounded-xl p-8 transform transition-all duration-300 hover:bg-white/70">
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0 p-2 bg-blue-50 rounded-lg">
+                          {getIconForIndex(index)} {/* You'll need to create this helper function */}
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-semibold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
+                            {point.pointTitle}
+                          </h3>
+                          <p className="text-gray-600 leading-relaxed">{point.description}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </ScrollAnimationWrapper>
+                ))}
+              </div>
+
+              {/* Mobile Points */}
+              <div className="lg:hidden">
+                <div className="overflow-x-auto pb-4 -mx-4">
+                  <div className="flex space-x-4 px-4 min-w-max">
+                    {pageData.aboutFidas.points.map((point, index) => (
+                      <div key={index} className="bg-white/50 backdrop-blur-sm rounded-xl p-6 w-[300px] flex-shrink-0">
+                        <div className="flex items-start gap-3">
+                          <div className="flex-shrink-0 p-2 bg-blue-50 rounded-lg">
+                            {getIconForIndex(index)} {/* You'll need to create this helper function */}
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-semibold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
+                              {point.pointTitle}
+                            </h3>
+                            <p className="text-sm text-gray-600">{point.description}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* CTA Row */}
+          <div className="mt-16 flex justify-center items-center">
+            <Link href="/about/fidas">
+              <button className="inline-flex h-14 items-center justify-center gap-4 rounded-full border border-blue-600 bg-blue-500 px-8 font-semibold text-white hover:bg-blue-600 transition-colors">
+                <span>Discover More About FIDAS</span>
+                <ArrowRight className="w-5 h-5 flex-shrink-0" />
+              </button>
+            </Link>
+          </div>
+        </section>
+
+        {/* Features Grid Section */}
+        <section className="py-16">
+          <ScrollAnimationWrapper>
+            <h2 className="text-3xl font-bold text-center mb-16 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
+              {pageData.twentyReasons?.sectionTitle || "FIDAS is the right choice for computerization of Fabric Inspection: 20 Reasons"}
+            </h2>
+          </ScrollAnimationWrapper>
+
+          {pageData.twentyReasons?.reasons?.map((reason, index) => (
+            <div key={index} className={`grid grid-cols-1 lg:grid-cols-2 gap-8 mb-24 ${
+              index % 2 === 1 ? 'lg:grid-flow-col' : ''
+            }`}>
+              <div className={`relative h-[400px] rounded-2xl overflow-hidden shadow-lg ${
+                index % 2 === 1 ? 'order-1 lg:order-2' : ''
+              }`}>
+                <Image
+                  src={urlForImage(reason.image)?.url() || '/fallback-image.jpg'}
+                  alt={reason.image?.alt || 'Feature image'}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className={`space-y-6 flex flex-col justify-center ${
+                index % 2 === 1 ? 'order-2 lg:order-1' : ''
+              }`}>
+                <h3 className="text-2xl font-bold text-blue-600">{reason.title}</h3>
+                <div className="grid grid-cols-1 gap-4">
+                  {reason.points?.map((point, pointIndex) => (
+                    <div key={pointIndex} className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 mt-1 rounded-full bg-blue-100 flex items-center justify-center">
+                        <CheckCircle className="w-3 h-3 text-blue-600" />
+                      </div>
+                      <p className="text-gray-700">{point}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </section>
+
+        {/* New Optimization Section */}
+        <section className="py-16">
+          <div className="text-center mb-12">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
+            >
+              {pageData.optimizeSection.title}
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-xl text-gray-600"
+            >
+              {pageData.optimizeSection.subtitle}
+            </motion.p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-6xl mx-auto px-4">
+            {pageData.optimizeSection.features.map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 * index }}
+                className="group relative"
+              >
+                <div className="relative h-48 rounded-xl overflow-hidden shadow-lg">
+                  <Image
+                    src={urlForImage(feature.image.asset)?.url() || '/fallback-image.jpg'}
+                    alt={feature.image.alt || 'Feature image'}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <h3 className="absolute bottom-4 left-4 text-white font-medium">
+                    {feature.title}
+                  </h3>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Learn How FIDAS Section */}
+        <section className="py-16 bg-white/50 backdrop-blur-sm">
+          <div className="container mx-auto max-w-6xl px-4">
+            <ScrollAnimationWrapper>
+              <h2 className="text-3xl font-bold text-center mb-16 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
+                {pageData.learnSection.title}
+              </h2>
+            </ScrollAnimationWrapper>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              {/* Left side - Image */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+                className="relative h-[500px] rounded-2xl overflow-hidden shadow-xl"
+              >
+                <Image
+                  src={urlForImage(pageData.learnSection.image)?.url() || '/fallback-image.jpg'}
+                  alt={pageData.learnSection.image.alt}
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-transparent" />
+              </motion.div>
+
+              {/* Right side - Points */}
+              <div className="space-y-6">
+                {pageData.learnSection.steps.map((step, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="flex items-center gap-4 bg-white/80 backdrop-blur-sm rounded-xl p-6 hover:bg-white/90 transition-all duration-300 shadow-sm"
+                  >
+                    <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                      <span className="text-xl font-bold text-blue-600">{index + 1}</span>
+                    </div>
+                    <h3 className="text-xl font-semibold text-blue-600">
+                      {step}
+                    </h3>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -290,7 +684,7 @@ export default function FidasContent() {
                       <div key={index} className="flex items-start space-x-3 bg-white bg-opacity-60 p-4 rounded-lg">
                         <div className="flex-shrink-0 mt-1">
                           <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                           </svg>
                         </div>
                         <div>
@@ -310,6 +704,111 @@ export default function FidasContent() {
                     </svg>
                   </Link>
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        {/* Interface Section */}
+        <section className="py-16">
+          <div className="container mx-auto max-w-6xl px-4">
+            <ScrollAnimationWrapper>
+              <h2 className="text-3xl font-bold text-center mb-16 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
+                {pageData.interfaceSection.title}
+              </h2>
+            </ScrollAnimationWrapper>
+
+            <div className="space-y-12">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {pageData.interfaceSection.devices.map((device, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 * index }}
+                    className="flex gap-6 bg-white/80 p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
+                  >
+                    <div className="w-32 h-32 flex-shrink-0">
+                      <div className="relative w-full h-full rounded-lg overflow-hidden">
+                        <Image
+                          src={urlForImage(device.image)?.url() || '/fallback-image.jpg'}
+                          alt={device.image.alt}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex-1 flex flex-col justify-between space-y-4">
+                      <div className="space-y-2">
+                        <h3 className="text-xl font-semibold text-blue-600">{device.title}</h3>
+                        <p className="text-gray-600 line-clamp-3">
+                          {device.description}
+                        </p>
+                      </div>
+                      <Link href={device.link}>
+                        <button className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors font-medium">
+                          Read More <ArrowRight className="w-4 h-4" />
+                        </button>
+                      </Link>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-8 flex justify-center">
+              <Link
+                href="/products/hardware"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors"
+              >
+                See More Products
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Associated Software Products Section */}
+        <section className="py-16">
+          <div className="container mx-auto max-w-6xl px-4">
+            <ScrollAnimationWrapper>
+              <h2 className="text-3xl font-bold text-center mb-16 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
+                {pageData.softwareProducts.title}
+              </h2>
+            </ScrollAnimationWrapper>
+
+            <div className="space-y-12">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {pageData.softwareProducts.products.map((product, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 * index }}
+                    className="bg-white/80 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex flex-col"
+                  >
+                    <div className="relative w-full h-48 rounded-t-xl overflow-hidden">
+                      <Image
+                        src={urlForImage(product.image)?.url() || '/fallback-image.jpg'}
+                        alt={product.image.alt}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="p-6 flex-1 flex flex-col space-y-2">
+                      <h3 className="text-lg font-bold">{product.title}</h3>
+                      <p className="text-sm text-gray-600">{product.description}</p>
+                      <div className="mt-auto">
+                        <Link
+                          href={product.link}
+                          className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
+                        >
+                          <span>Read More</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </Link>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
             </div>
           </div>
@@ -343,7 +842,9 @@ export default function FidasContent() {
                         {industry.icon}
                       </motion.div>
                       <div>
-                        <h4 className="text-lg font-semibold mb-1 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">{industry.name}</h4>
+                        <h4 className="text-lg font-semibold mb-1 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
+                          {industry.name}
+                        </h4>
                         <p className="text-sm text-gray-600">{industry.description}</p>
                       </div>
                     </div>
@@ -351,7 +852,6 @@ export default function FidasContent() {
                 </ScrollAnimationWrapper>
               ))}
             </motion.div>
-
             <div className="w-full md:w-1/3 h-full relative mb-8 md:mb-0 order-1 md:order-2">
               <iframe 
                 src={pageData.industryVerticalsIframeSrc}
@@ -360,44 +860,64 @@ export default function FidasContent() {
               ></iframe>
             </div>
           </div>
-        </section>
-      </div>
-      <section className="py-2 mt-8 md:mt-0 space-y-4">
-          <div className="w-full space-y-8">
+        </section>        
+
+        {/* Customer List Section */}
+        <section className="py-16 bg-white/50 backdrop-blur-sm">
+          <div className="container mx-auto max-w-6xl px-4">
             <ScrollAnimationWrapper>
-              <motion.h1
-                className="text-3xl md:text-4xl font-bold mb-4 text-center tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
-                variants={fadeInUp}
-              >
-                <TypeAnimation
-                  sequence={[
-                    pageData.mainTitle,
-                    1500,
-                  ]}
-                  wrapper="span"
-                  speed={40}
-                  repeat={Infinity}
-                />
-              </motion.h1>
+              <h2 className="text-3xl font-bold text-center mb-16 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
+                {pageData.customerList?.sectionTitle || "Our Customers"}
+              </h2>
             </ScrollAnimationWrapper>
 
-            <ScrollAnimationWrapper>
-              <div className="space-y-8">
-                <p className="text-base md:text-lg leading-relaxed text-center text-gray-600">
-                  {pageData.mainDescription}
-                </p>
-                <div className="text-center">
-                  <Link href="/about/fidas">
-                    <button className="mb-24 relative inline-flex h-10 items-center justify-center rounded-full border border-blue-600 bg-blue-500 px-4 md:px-6 font-semibold text-white text-sm overflow-hidden">
-                      <span className="relative z-10">Explore FIDAS</span>
-                      <span className="absolute inset-0 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-500 animate-shimmer"></span>
-                    </button>
-                  </Link>
-                </div>
-              </div>
-            </ScrollAnimationWrapper>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {pageData.customerList?.customers?.map((customer, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="relative aspect-[4/3] group"
+                >
+                  <div className="absolute inset-4 bg-white rounded-lg shadow-sm p-4 transition-all duration-300 group-hover:shadow-md group-hover:scale-105">
+                    <div className="relative w-full h-full">
+                      <Image
+                        src={urlForImage(customer.logo)?.url() || '/fallback-image.jpg'}
+                        alt={customer.logo.alt}
+                        fill
+                        className="object-contain p-2"
+                      />
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* View All Button */}
+            <div className="mt-12 text-center">
+              <Link href="/customers/list">
+                <button className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors">
+                  <span>View All Customers</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </Link>
+            </div>
           </div>
         </section>
+
+      </div>
     </div>
   );
+}
+
+function getIconForIndex(index: number) {
+  const icons = [
+    <Search className="w-8 h-8 text-blue-500" key="search" />,
+    <Users className="w-8 h-8 text-blue-500" key="users" />,
+    <Sparkles className="w-8 h-8 text-blue-500" key="sparkles" />,
+    <History className="w-8 h-8 text-blue-500" key="history" />,
+    <CircuitBoard className="w-8 h-8 text-blue-500" key="circuit" />
+  ];
+  return icons[index % icons.length];
 }

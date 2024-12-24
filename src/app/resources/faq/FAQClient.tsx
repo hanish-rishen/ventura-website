@@ -8,7 +8,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { FaChevronDown } from 'react-icons/fa';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 50 },
@@ -40,9 +39,8 @@ export function FAQClient({ faqs }: { faqs: FAQ[] }) {
           <ScrollAnimationWrapper key={faq._id}>
             <motion.div variants={fadeInUp}>
               <AccordionItem value={`item-${index}`}>
-                <AccordionTrigger className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400 flex justify-between items-center text-left">
-                  <span className="text-left">{faq.question}</span>
-                  <FaChevronDown className="text-blue-600 transition-transform duration-200 ml-auto flex-shrink-0" />
+                <AccordionTrigger className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
+                  {faq.question}
                 </AccordionTrigger>
                 <AccordionContent className="text-lg text-gray-600">
                   {faq.answer}
