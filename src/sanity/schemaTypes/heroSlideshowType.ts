@@ -18,25 +18,6 @@ export default defineType({
       validation: Rule => Rule.required()
     }),
     defineField({
-      name: 'images',
-      title: 'Slideshow Images',
-      type: 'array',
-      of: [
-        {
-          type: 'image',
-          fields: [
-            {
-              name: 'alt',
-              type: 'string',
-              title: 'Alternative text',
-              validation: Rule => Rule.required()
-            }
-          ]
-        }
-      ],
-      validation: Rule => Rule.required().min(6).max(6)
-    }),
-    defineField({
       name: 'primaryButton',
       title: 'Primary Button',
       type: 'object',
