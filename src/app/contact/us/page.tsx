@@ -6,8 +6,8 @@ async function getContactUsData() {
   const contactUsPage = await client.fetch(`*[_type == "contactUsPage"][0]{
     address,
     phone,
-    email,
-    mapUrl
+    email
+    // remove mapUrl from query
   }`);
   
   return contactUsPage;

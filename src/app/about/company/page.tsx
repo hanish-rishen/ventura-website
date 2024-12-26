@@ -5,14 +5,12 @@ import { CompanyClient } from './CompanyClient';
 async function getCompanyData() {
   const companyPage = await client.fetch(`*[_type == "companyPage"][0]{
     introduction,
-    "routineWorksImage": routineWorksImage.asset->url,
+    "teamImage": teamImage.asset->url,
     companyValues,
     achievements,
     sapIntegration,
     futureIntegration,
-    contactUs,
-    whyChooseVentura,
-    fidasBenefits
+    contactUs
   }`);
   
   return companyPage;

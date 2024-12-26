@@ -13,8 +13,8 @@ export const companyPageType = defineType({
       rows: 5,
     }),
     defineField({
-      name: 'routineWorksImage',
-      title: 'Routine Works Image',
+      name: 'teamImage',  // Changed from routineWorksImage
+      title: 'Team Image', // Changed title
       type: 'image',
       options: {
         hotspot: true,
@@ -68,17 +68,6 @@ export const companyPageType = defineType({
         {name: 'description', type: 'text', title: 'Description'},
       ],
     }),
-    defineField({
-      name: 'whyChooseVentura',
-      title: 'Why Choose Ventura Automation?',
-      type: 'array',
-      of: [{type: 'block'}],
-    }),
-    defineField({
-      name: 'fidasBenefits',
-      title: 'FIDAS Benefits',
-      type: 'array',
-      of: [{type: 'string'}],
-    }),
+    // Removed fidasBenefits field
   ],
 })

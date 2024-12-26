@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { motion, Variants } from 'framer-motion';
-import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaTimes } from 'react-icons/fa';
+import ReCAPTCHA from "react-google-recaptcha";
 
 const fadeInUp: Variants = {
   initial: { 
@@ -30,25 +31,64 @@ interface ContactUsData {
   address: string;
   phone: string;
   email: string;
-  mapUrl: string;
 }
 
 export function ContactUsClient({ contactUsData }: { contactUsData: ContactUsData | null }) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [workEmail, setWorkEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [jobTitle, setJobTitle] = useState('');
+  const [companyName, setCompanyName] = useState('');
   const [message, setMessage] = useState('');
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [captchaValue, setCaptchaValue] = useState<string | null>(null);
 
-  const encodedAddress = contactUsData?.address ? encodeURIComponent(contactUsData.address) : '';
-  const largerMapUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
-  const mapUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d971.7209805155056!2d80.22504131482266!3d13.065359090796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5266c0f9a9e46f%3A0x7f8b2e0c8a2e6d4e!2s51%2C%20Basha%20St%2C%20Bharat%20Nagar%2C%20Choolaimedu%2C%20Chennai%2C%20Tamil%20Nadu%20600094!5e0!3m2!1sen!2sin!4v1623456789012!5m2!1sen!2sin&markers=color:red%7C13.065359090796,80.22504131482266`;
+  // Sample interests (you can move this to Sanity schema later)
+  const availableInterests = [
+    { name: 'FIDAS Software', tag: 'software' },
+    { name: 'Hardware Solutions', tag: 'hardware' },
+    { name: 'Technical Support', tag: 'support' },
+    { name: 'Business Inquiry', tag: 'business' },
+    { name: 'Partnership', tag: 'partnership' },
+    { name: 'Product Demo', tag: 'demo' },
+  ];
+
+  const toggleInterest = (tag: string) => {
+    setSelectedInterests(prev => 
+      prev.includes(tag) 
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    );
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!captchaValue) {
+      alert("Please complete the captcha");
+      return;
+    }
     if (contactUsData?.email) {
       const subject = encodeURIComponent('Contact Form Submission');
-      const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage: ${message}`);
+      const interestsText = selectedInterests.length > 0 
+        ? `\n\nInterested in: ${selectedInterests.join(', ')}`
+        : '';
+      const body = encodeURIComponent(
+        `First Name: ${firstName}
+        Last Name: ${lastName}
+        Work Email: ${workEmail}
+        Phone Number: ${phoneNumber}
+        Job Title: ${jobTitle}
+        Company: ${companyName}
+        
+        Message: ${message}${interestsText}`
+      );
       window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${contactUsData.email}&su=${subject}&body=${body}`, '_blank');
     }
+  };
+
+  const handleCaptchaChange = (value: string | null) => {
+    setCaptchaValue(value);
   };
 
   return (
@@ -79,34 +119,115 @@ export function ContactUsClient({ contactUsData }: { contactUsData: ContactUsDat
           animate="animate"
           className="grid grid-cols-1 lg:grid-cols-2 gap-12"
         >
+          {/* Left Column - Form */}
           <motion.div
             variants={fadeInUp}
             className="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg p-10 rounded-2xl border border-gray-200 shadow-xl"
           >
             <h2 className="text-3xl font-semibold mb-8 text-blue-600">Get in Touch</h2>
             <form className="space-y-6" onSubmit={handleSubmit}>
+              {/* Interested In Section */}
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                <input 
-                  type="text" 
-                  id="name" 
-                  name="name" 
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300" 
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Interested In
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {availableInterests.map((interest) => (
+                    <motion.button
+                      key={interest.tag}
+                      type="button"
+                      onClick={() => toggleInterest(interest.tag)}
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                        selectedInterests.includes(interest.tag)
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      }`}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {interest.name}
+                      {selectedInterests.includes(interest.tag) && (
+                        <FaTimes className="inline-block ml-2 w-3 h-3" />
+                      )}
+                    </motion.button>
+                  ))}
+                </div>
               </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                  <input 
+                    type="text" 
+                    id="firstName" 
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300" 
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                  <input 
+                    type="text" 
+                    id="lastName" 
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300" 
+                    required
+                  />
+                </div>
+              </div>
+
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <label htmlFor="workEmail" className="block text-sm font-medium text-gray-700 mb-1">Work Email</label>
                 <input 
                   type="email" 
-                  id="email" 
-                  name="email" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="workEmail" 
+                  value={workEmail}
+                  onChange={(e) => setWorkEmail(e.target.value)}
                   className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300" 
+                  required
                 />
               </div>
+
+              <div>
+                <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-1">Mobile Phone Number</label>
+                <input 
+                  type="tel" 
+                  id="phoneNumber" 
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300" 
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="jobTitle" className="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
+                  <input 
+                    type="text" 
+                    id="jobTitle" 
+                    value={jobTitle}
+                    onChange={(e) => setJobTitle(e.target.value)}
+                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300" 
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
+                  <input 
+                    type="text" 
+                    id="companyName" 
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300" 
+                    required
+                  />
+                </div>
+              </div>
+
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">Message</label>
                 <textarea 
@@ -118,23 +239,39 @@ export function ContactUsClient({ contactUsData }: { contactUsData: ContactUsDat
                   className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300"
                 ></textarea>
               </div>
+              
+              <div className="flex justify-center mb-4">
+                <ReCAPTCHA
+                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
+                  onChange={handleCaptchaChange}
+                  theme="light"
+                  className="transform scale-90 sm:scale-100"
+                />
+              </div>
+
               <motion.button
                 type="submit"
-                className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                className={`w-full px-6 py-3 rounded-lg text-lg font-semibold transition-colors duration-300 ${
+                  captchaValue 
+                    ? "bg-blue-600 text-white hover:bg-blue-700"
+                    : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                }`}
+                whileHover={captchaValue ? { scale: 1.05 } : {}}
+                whileTap={captchaValue ? { scale: 0.95 } : {}}
+                disabled={!captchaValue}
               >
                 Send Message
               </motion.button>
             </form>
           </motion.div>
 
+          {/* Right Column - Contact Info */}
           <motion.div
             variants={fadeInUp}
-            className="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg p-10 rounded-2xl border border-gray-200 shadow-xl"
+            className="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg p-10 rounded-2xl border border-gray-200 shadow-xl h-fit"
           >
             <h2 className="text-3xl font-semibold mb-8 text-blue-600">Contact Information</h2>
-            <div className="space-y-6 mb-8">
+            <div className="space-y-6">
               {contactUsData?.address && (
                 <div className="flex items-center">
                   <motion.div variants={floatingIcon} animate="animate">
@@ -160,31 +297,6 @@ export function ContactUsClient({ contactUsData }: { contactUsData: ContactUsDat
                 </div>
               )}
             </div>
-            {contactUsData?.mapUrl && (
-              <>
-                <div className="w-full h-64 rounded-lg overflow-hidden shadow-lg">
-                  <iframe 
-                    src={contactUsData.mapUrl}
-                    width="100%" 
-                    height="100%" 
-                    style={{border:0}} 
-                    allowFullScreen={true}
-                    loading="lazy" 
-                    referrerPolicy="no-referrer-when-downgrade">
-                  </iframe>
-                </div>
-                <div className="mt-4 text-center">
-                  <a 
-                    href={largerMapUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline"
-                  >
-                    View on larger map
-                  </a>
-                </div>
-              </>
-            )}
           </motion.div>
         </motion.div>
       </div>

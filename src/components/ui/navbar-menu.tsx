@@ -72,7 +72,7 @@ export const MenuItem = ({
         className={cn(
           "overflow-hidden transition-all duration-300 ease-in-out",
           !isMobile ? "absolute top-full left-1/2 transform -translate-x-1/2 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg" : "",
-          isOpen ? "opacity-100 max-h-96" : "opacity-0 max-h-0"
+          isOpen ? "opacity-100 max-h-[800px]" : "opacity-0 max-h-0"
         )}
         style={{ minWidth: '200px' }}
       >

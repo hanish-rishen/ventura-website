@@ -14,7 +14,7 @@ const fadeInUp: Variants = {
 
 interface CompanyData {
   introduction: string;
-  routineWorksImage: string;
+  teamImage: string;
   companyValues: Array<{
     icon: string;
     title: string;
@@ -27,8 +27,6 @@ interface CompanyData {
     title: string;
     description: string;
   };
-  whyChooseVentura: any[];
-  fidasBenefits: string[];
 }
 
 export function CompanyClient({ companyData }: { companyData: CompanyData }) {
@@ -59,7 +57,34 @@ export function CompanyClient({ companyData }: { companyData: CompanyData }) {
           />
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-between gap-12 mb-16">
+        {/* Update the layout section */}
+        <div className="flex flex-col gap-12 mb-16">
+          <ScrollAnimationWrapper>
+            <motion.div 
+              className="w-full space-y-8"  // Added space-y-8 for spacing between title and image
+              variants={fadeInUp}
+            >
+              <motion.h2
+                variants={fadeInUp}
+                className="text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
+              >
+                Our Team
+              </motion.h2>
+              <div className="relative rounded-lg overflow-hidden">
+                {companyData.teamImage && (
+                  <Image
+                    src={companyData.teamImage}
+                    alt="Our Team"
+                    width={700}
+                    height={700}
+                    className="w-full"
+                    objectFit="contain"
+                  />
+                )}
+              </div>
+            </motion.div>
+          </ScrollAnimationWrapper>
+
           <ScrollAnimationWrapper>
             <motion.div 
               className="w-full space-y-6"
@@ -68,23 +93,6 @@ export function CompanyClient({ companyData }: { companyData: CompanyData }) {
               <p className="text-lg leading-relaxed text-justify">
                 {companyData.introduction}
               </p>
-            </motion.div>
-          </ScrollAnimationWrapper>
-
-          <ScrollAnimationWrapper>
-            <motion.div 
-              className="w-full relative rounded-lg overflow-hidden"
-              variants={fadeInUp}
-            >
-              {companyData.routineWorksImage && (
-                <Image
-                  src={companyData.routineWorksImage}
-                  alt="Routine Works"
-                  width={700}
-                  height={700}
-                  objectFit="contain"
-                />
-              )}
             </motion.div>
           </ScrollAnimationWrapper>
         </div>
@@ -196,46 +204,7 @@ export function CompanyClient({ companyData }: { companyData: CompanyData }) {
             </motion.div>
           </ScrollAnimationWrapper>
         )}
-
-        {companyData.whyChooseVentura && companyData.whyChooseVentura.length > 0 && (
-          <ScrollAnimationWrapper>
-            <motion.h2
-              variants={fadeInUp}
-              className="text-3xl font-bold mt-16 mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
-            >
-              Why Choose Ventura Automation?
-            </motion.h2>
-            <motion.div variants={fadeInUp} className="prose max-w-none list-disc pl-5">
-              <PortableText 
-                value={companyData.whyChooseVentura}
-                components={{
-                  list: {
-                    bullet: ({children}) => <ul className="list-disc pl-5">{children}</ul>,
-                  },
-                }}
-              />
-            </motion.div>
-          </ScrollAnimationWrapper>
-        )}
-
-        {companyData.fidasBenefits && companyData.fidasBenefits.length > 0 && (
-          <ScrollAnimationWrapper>
-            <motion.h2
-              variants={fadeInUp}
-              className="text-3xl font-bold mt-16 mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
-            >
-              FIDAS Benefits
-            </motion.h2>
-            <motion.ul variants={fadeInUp} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {companyData.fidasBenefits.map((benefit, index) => (
-                <motion.li key={index} className="flex items-center space-x-2">
-                  <FaCheckCircle className="text-green-500" />
-                  <span>{benefit}</span>
-                </motion.li>
-              ))}
-            </motion.ul>
-          </ScrollAnimationWrapper>
-        )}
+        {/* Removed FIDAS Benefits section */}
       </div>
     </div>
   );

@@ -1,16 +1,18 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from 'react';
-import { motion, useAnimation, useInView, useScroll, useTransform, useSpring } from 'framer-motion';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { motion, useAnimation, useInView, useScroll, useTransform } from 'framer-motion';
+import { useSpring, animated, config } from 'react-spring';
 import { Button } from "@/components/ui/button";
 import Image from 'next/image';
-import { CheckCircle, Search, Users, Sparkles, History, CircuitBoard, ArrowRight, Plus, Minus } from 'lucide-react';
+import { CheckCircle, Search, Users, Sparkles, History, CircuitBoard, ArrowRight, Plus, Minus, Star } from 'lucide-react';
 import { TypeAnimation } from 'react-type-animation';
 import Link from 'next/link';
 import { client } from '@/sanity/lib/client';
 import { urlForImage } from '@/sanity/lib/image';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent, TimedAccordion } from "@/components/ui/accordion"; // Add Accordion imports
+import confetti from 'canvas-confetti';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 50 },
@@ -60,6 +62,29 @@ const marqueeAnimation = {
   },
 };
 
+const confettiConfig = {
+  particleCount: 100,
+  spread: 70,
+  origin: { y: 0 }
+};
+
+const starAnimation = {
+  rotate: 360,
+  scale: [1, 1.2, 1],
+  transition: {
+    rotate: {
+      duration: 4,
+      repeat: Infinity,
+      ease: "linear"
+    },
+    scale: {
+      duration: 2,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }
+  }
+};
+
 const ScrollAnimationWrapper = ({ children }: { children: React.ReactNode }) => {
   const controls = useAnimation();
   const ref = useRef(null);
@@ -84,6 +109,84 @@ const ScrollAnimationWrapper = ({ children }: { children: React.ReactNode }) => 
     </motion.div>
   );
 };
+
+// Update the Celebration component
+function Celebration({ children }: { children: React.ReactNode }) {
+  const elementRef = useRef<HTMLDivElement>(null);
+  const [hasTriggered, setHasTriggered] = useState(false);
+
+  const triggerConfetti = useCallback(() => {
+    if (elementRef.current) {
+      const rect = elementRef.current.getBoundingClientRect();
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: {
+          x: (rect.left + rect.width / 2) / window.innerWidth,
+          y: rect.top / window.innerHeight
+        },
+        colors: ['#FFD700', '#FFA500', '#FF6347', '#4169E1', '#32CD32']
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!hasTriggered) {
+      // Initial burst when component comes into view
+      triggerConfetti();
+      setHasTriggered(true);
+
+      // Set up interval for repeated confetti
+      const interval = setInterval(triggerConfetti, 1500);
+      return () => clearInterval(interval);
+    }
+  }, [hasTriggered, triggerConfetti]);
+
+  return (
+    <motion.div
+      ref={elementRef}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      onViewportEnter={() => setHasTriggered(true)}
+      onViewportLeave={() => setHasTriggered(false)}
+      viewport={{ once: false }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+// Update the NumberCounter component
+function NumberCounter({ n, suffix = '', duration = 3000 }: { n: string | number; suffix?: string; duration?: number }) {
+  const [isInView, setIsInView] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const targetNumber = typeof n === 'string' ? parseInt(n.replace(/,/g, '')) : n;
+  
+  const { number } = useSpring({
+    from: { number: 0 },
+    to: { number: isInView ? targetNumber : 0 },
+    config: {
+      duration: duration
+    },
+    reset: false // Prevent reset on re-render
+  });
+
+  return (
+    <motion.div
+      onViewportEnter={() => {
+        if (!hasAnimated) {
+          setIsInView(true);
+          setHasAnimated(true);
+        }
+      }}
+      viewport={{ once: true, amount: 0.5 }}
+    >
+      <animated.span>
+        {number.to((n) => `${Math.floor(n)}${suffix}`)}
+      </animated.span>
+    </motion.div>
+  );
+}
 
 interface FidasContentData {
   trustedByTitle: string;
@@ -392,6 +495,118 @@ export default function FidasContent() {
           </div>
         </section>
 
+        {/* Statistics Section */}
+        <section className="py-16">
+          <div className="max-w-7xl mx-auto px-4">
+            <ScrollAnimationWrapper>
+              <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
+                FIDAS
+              </h2>
+            </ScrollAnimationWrapper>
+            <div className="flex flex-col items-center space-y-8 md:space-y-12">
+              {/* First Row - 1 item */}
+              <div className="grid grid-cols-1 gap-8 w-full max-w-xs">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: false, amount: 0.5 }}
+                  className="flex flex-col items-center justify-center text-center p-6 md:p-8 bg-white/50 backdrop-blur-sm rounded-xl shadow-sm"
+                >
+                  <motion.div className="text-4xl md:text-6xl font-bold text-blue-600">
+                    <NumberCounter n={1} duration={3000} />
+                  </motion.div>
+                  <span className="text-lg md:text-xl text-gray-600 mt-2 font-medium">
+                    Data Collection
+                  </span>
+                </motion.div>
+              </div>
+
+              {/* Second Row - 2 items */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 w-full max-w-2xl">
+                {[
+                  { value: '5', label: 'Physical Connections' },
+                  { value: '16', label: 'Products' },
+                ].map((stat, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.5 }}
+                    transition={{ delay: 0.1 * (index + 1) }}
+                    className="flex flex-col items-center justify-center text-center p-6 md:p-8 bg-white/50 backdrop-blur-sm rounded-xl shadow-sm"
+                  >
+                    <motion.div className="text-4xl md:text-5xl font-bold text-blue-600">
+                      <NumberCounter n={stat.value} duration={3000} />
+                    </motion.div>
+                    <span className="text-lg md:text-xl text-gray-600 mt-2 font-medium">
+                      {stat.label}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Third Row - 3 items */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 w-full max-w-4xl">
+                {[
+                  { value: '130', label: 'Customers' },
+                  { value: '5170', label: 'Inspection Machines' },
+                  { value: '11632500', label: 'Meters/Day', suffix: '+' },
+                ].map((stat, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.5 }}
+                    transition={{ delay: 0.1 * (index + 3) }}
+                    className="flex flex-col items-center justify-center text-center p-6 md:p-8 bg-white/50 backdrop-blur-sm rounded-xl shadow-sm"
+                  >
+                    <motion.div className="text-3xl md:text-4xl font-bold text-blue-600">
+                      <NumberCounter n={stat.value} suffix={stat.suffix} duration={3000} />
+                    </motion.div>
+                    <span className="text-lg md:text-xl text-gray-600 mt-2 font-medium">
+                      {stat.label}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Bottom Row - Years of Expertise */}
+              <Celebration>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                  className="flex flex-row items-center justify-center gap-3 text-center p-6 md:p-8 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-xl shadow-lg w-full max-w-5xl relative overflow-hidden"
+                >
+                  <div className="flex items-center gap-6 relative z-10">
+                    <div className="relative">
+                      <motion.div
+                        className="absolute -left-12 -top-12"
+                        animate={starAnimation}
+                      >
+                        <Star className="w-12 h-12 text-yellow-400 opacity-75" fill="currentColor" />
+                      </motion.div>
+                      <motion.div className="text-4xl md:text-6xl font-bold inline-flex items-center bg-gradient-to-r from-yellow-400 to-yellow-200 bg-clip-text text-transparent px-4">
+                        <NumberCounter n={20} duration={3000} />
+                      </motion.div>
+                      <motion.div
+                        className="absolute -right-12 -bottom-12"
+                        animate={starAnimation}
+                      >
+                        <Star className="w-12 h-12 text-yellow-400 opacity-75" fill="currentColor" />
+                      </motion.div>
+                    </div>
+                    <span className="text-2xl md:text-4xl font-medium whitespace-nowrap">
+                      Years of Expertise
+                    </span>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600/50 to-blue-800/50 backdrop-blur-sm" />
+                </motion.div>
+              </Celebration>
+            </div>
+          </div>
+        </section>
+
         {/* About Section with Fixed Video */}
         <section className="relative py-16">
           {/* Title wrapper with padding */}
@@ -684,7 +899,7 @@ export default function FidasContent() {
                       <div key={index} className="flex items-start space-x-3 bg-white bg-opacity-60 p-4 rounded-lg">
                         <div className="flex-shrink-0 mt-1">
                           <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                           </svg>
                         </div>
                         <div>
