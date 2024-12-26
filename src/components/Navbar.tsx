@@ -109,6 +109,7 @@ export default function Navbar() {
 function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }: { isMobile?: boolean; pathname: string; isScrolled: boolean; setIsMenuOpen?: React.Dispatch<React.SetStateAction<boolean>> }) {
   const [active, setActive] = useState<string | null>(null);
   const [loading, setLoading] = useState<string | null>(null);
+  const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});  // Add this state
   const router = useRouter();
 
   const handleLinkClick = (href: string) => {
@@ -120,6 +121,13 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
         setIsMenuOpen(false);
       }
     }, 150);
+  };
+
+  const toggleMenu = (menuItem: string) => {
+    setOpenMenus(prev => ({
+      ...prev,
+      [menuItem]: !prev[menuItem]
+    }));
   };
 
   const textColorClass = pathname === '/' 
@@ -193,79 +201,77 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
     <div className={`flex justify-center ${isMobile ? 'flex-col w-full space-y-2' : 'flex-row items-center space-x-4'} ${textColorClass}`}>
       {isMobile ? (
         <div className="space-y-2">
-          {menuItems.map((menuItem, index) => {
-            const [isOpen, setIsOpen] = useState(false);
-            return (
-              <div key={index} className="space-y-2">
-                <button 
-                  onClick={() => setIsOpen(!isOpen)}
-                  className="w-full text-left text-lg py-1 flex items-center justify-between hover:text-blue-600 transition-colors focus:outline-none" // Added focus:outline-none
+          {menuItems.map((menuItem, index) => (
+            <div key={index} className="space-y-2">
+              <button 
+                onClick={() => toggleMenu(menuItem.item)}
+                className="w-full text-left text-lg py-1 flex items-center justify-between hover:text-blue-600 transition-colors focus:outline-none"
+              >
+                {menuItem.item}
+                <motion.div
+                  animate={{ rotate: openMenus[menuItem.item] ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="text-gray-400"
                 >
-                  {menuItem.item}
+                  <ChevronDown size={18} strokeWidth={2} className="focus:outline-none" />
+                </motion.div>
+              </button>
+              <AnimatePresence>
+                {openMenus[menuItem.item] && (
                   <motion.div
-                    animate={{ rotate: isOpen ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="text-gray-400"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="pl-4 space-y-2"
                   >
-                    <ChevronDown size={18} strokeWidth={2} className="focus:outline-none" /> {/* Added focus:outline-none */}
-                  </motion.div>
-                </button>
-                <AnimatePresence>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="pl-4 space-y-2"
-                    >
-                      {menuItem.links?.map((link, linkIndex) => (
+                    {/* Rest of the mobile menu content */}
+                    {menuItem.links?.map((link, linkIndex) => (
+                      <Link
+                        key={linkIndex}
+                        href={link.href}
+                        onClick={() => {
+                          handleLinkClick(link.href);
+                          toggleMenu(menuItem.item); // Changed from setIsOpen
+                        }}
+                        className="block py-1 text-sm"
+                      >
+                        {link.text}
+                      </Link>
+                    ))}
+                    {menuItem.columns?.map((column, colIndex) => (
+                      <div key={colIndex} className="space-y-2">
                         <Link
-                          key={linkIndex}
-                          href={link.href}
+                          href={column.href}
                           onClick={() => {
-                            handleLinkClick(link.href);
-                            setIsOpen(false);
+                            handleLinkClick(column.href);
+                            toggleMenu(menuItem.item); // Changed from setIsOpen
                           }}
-                          className="block py-1 text-sm"
+                          className="block font-semibold py-1"
                         >
-                          {link.text}
+                          {column.title}
                         </Link>
-                      ))}
-                      {menuItem.columns?.map((column, colIndex) => (
-                        <div key={colIndex} className="space-y-2">
-                          <Link
-                            href={column.href}
-                            onClick={() => {
-                              handleLinkClick(column.href);
-                              setIsOpen(false);
-                            }}
-                            className="block font-semibold py-1"
-                          >
-                            {column.title}
-                          </Link>
-                          <div className="pl-4 space-y-2">
-                            {(column.items as MenuLink[]).map((link, linkIndex) => (
-                              <Link
-                                key={linkIndex}
-                                href={link.href}
-                                onClick={() => {
-                                  handleLinkClick(link.href);
-                                  setIsOpen(false);
-                                }}
-                                className="block py-1 text-sm"
-                              >
-                                {link.text}
-                              </Link>
-                            ))}
-                          </div>
+                        <div className="pl-4 space-y-2">
+                          {(column.items as MenuLink[]).map((link, linkIndex) => (
+                            <Link
+                              key={linkIndex}
+                              href={link.href}
+                              onClick={() => {
+                                handleLinkClick(link.href);
+                                toggleMenu(menuItem.item); // Changed from setIsOpen
+                              }}
+                              className="block py-1 text-sm"
+                            >
+                              {link.text}
+                            </Link>
+                          ))}
                         </div>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          })}
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
         </div>
       ) : (
         <Menu setActive={setActive}>
