@@ -21,11 +21,5 @@ export const contactUsPageType = defineType({
       title: 'Email',
       type: 'string',
     }),
-    defineField({
-      name: 'mapUrl',
-      title: 'Google Maps Embed URL',
-      type: 'url',
-      description: 'Paste the Google Maps embed URL here',
-    }),
   ],
 })
