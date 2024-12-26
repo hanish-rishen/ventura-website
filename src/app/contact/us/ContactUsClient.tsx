@@ -80,14 +80,6 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
       const token = await executeRecaptcha('contact_form');
       
       if (token) {
-        // Optional: Verify token on your backend
-        // const response = await fetch('/api/verify-recaptcha', { 
-        //   method: 'POST', 
-        //   body: JSON.stringify({ token }) 
-        // });
-        // const data = await response.json();
-        // if (!data.success) throw new Error('Verification failed');
-
         if (contactUsData?.email) {
           const subject = encodeURIComponent('Contact Form Submission');
           const interestsText = selectedInterests.length > 0 
@@ -105,8 +97,7 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
           );
           window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${contactUsData.email}&su=${subject}&body=${body}`, '_blank');
           setIsSubmitting(false);
-          // Optional: Show success message
-          alert('Message sent successfully!');
+          // Removed the alert('Message sent successfully!')
         }
       }
     } catch (error) {
