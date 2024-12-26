@@ -310,10 +310,37 @@ interface FidasContentData {
       };
     }>;
   };
+  statistics: {
+    title: string;
+    topStat: {
+      value: string;
+      label: string;
+    };
+    middleStats: Array<{
+      value: string;
+      label: string;
+    }>;
+    bottomStats: Array<{
+      value: string;
+      label: string;
+      suffix?: string;
+    }>;
+    expertise: {
+      value: string;
+      label: string;
+    };
+  };
 }
 
 async function getFidasContentData(): Promise<FidasContentData> {
   const fidasContentData = await client.fetch(`*[_type == "fidasContentPage"][0]{
+    statistics{
+      title,
+      topStat,
+      middleStats,
+      bottomStats,
+      expertise
+    },
     trustedByTitle,
     trustedCompanies,
     aboutFidas{
@@ -444,7 +471,6 @@ export default function FidasContent() {
     <div className="w-full bg-gradient-to-br from-gray-50 to-blue-50 text-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0">
         
-
         {/* Trusted By Section */}
         <section className="py-16">
           <ScrollAnimationWrapper>
@@ -500,7 +526,7 @@ export default function FidasContent() {
           <div className="max-w-7xl mx-auto px-4">
             <ScrollAnimationWrapper>
               <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
-                FIDAS
+                {pageData.statistics.title}
               </h2>
             </ScrollAnimationWrapper>
             <div className="flex flex-col items-center space-y-8 md:space-y-12">
@@ -513,20 +539,17 @@ export default function FidasContent() {
                   className="flex flex-col items-center justify-center text-center p-6 md:p-8 bg-white/50 backdrop-blur-sm rounded-xl shadow-sm"
                 >
                   <motion.div className="text-4xl md:text-6xl font-bold text-blue-600">
-                    <NumberCounter n={1} duration={3000} />
+                    <NumberCounter n={pageData.statistics.topStat.value} duration={3000} />
                   </motion.div>
                   <span className="text-lg md:text-xl text-gray-600 mt-2 font-medium">
-                    Data Collection
+                    {pageData.statistics.topStat.label}
                   </span>
                 </motion.div>
               </div>
 
               {/* Second Row - 2 items */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 w-full max-w-2xl">
-                {[
-                  { value: '5', label: 'Physical Connections' },
-                  { value: '16', label: 'Products' },
-                ].map((stat, index) => (
+                {pageData.statistics.middleStats.map((stat, index) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
@@ -547,11 +570,7 @@ export default function FidasContent() {
 
               {/* Third Row - 3 items */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 w-full max-w-4xl">
-                {[
-                  { value: '130', label: 'Customers' },
-                  { value: '5170', label: 'Inspection Machines' },
-                  { value: '11632500', label: 'Meters/Day', suffix: '+' },
-                ].map((stat, index) => (
+                {pageData.statistics.bottomStats.map((stat, index) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
@@ -587,7 +606,7 @@ export default function FidasContent() {
                         <Star className="w-12 h-12 text-yellow-400 opacity-75" fill="currentColor" />
                       </motion.div>
                       <motion.div className="text-4xl md:text-6xl font-bold inline-flex items-center bg-gradient-to-r from-yellow-400 to-yellow-200 bg-clip-text text-transparent px-4">
-                        <NumberCounter n={20} duration={3000} />
+                        <NumberCounter n={pageData.statistics.expertise.value} duration={3000} />
                       </motion.div>
                       <motion.div
                         className="absolute -right-12 -bottom-12"
@@ -597,7 +616,7 @@ export default function FidasContent() {
                       </motion.div>
                     </div>
                     <span className="text-2xl md:text-4xl font-medium whitespace-nowrap">
-                      Years of Expertise
+                      {pageData.statistics.expertise.label}
                     </span>
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-600/50 to-blue-800/50 backdrop-blur-sm" />
@@ -923,6 +942,7 @@ export default function FidasContent() {
             </div>
           </div>
         </section>
+
         {/* Interface Section */}
         <section className="py-16">
           <div className="container mx-auto max-w-6xl px-4">

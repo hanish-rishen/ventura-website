@@ -29,6 +29,66 @@ export default defineType({
       }],
       validation: Rule => Rule.required()
     }),
+    // Add this near the top of your fields array, after trustedCompanies
+    defineField({
+      name: 'statistics',
+      title: 'Statistics Section',
+      type: 'object',
+      fields: [
+        {
+          name: 'title',
+          title: 'Section Title',
+          type: 'string',
+          validation: Rule => Rule.required()
+        },
+        {
+          name: 'topStat',
+          title: 'Top Statistic',
+          type: 'object',
+          fields: [
+            { name: 'value', type: 'string', title: 'Value' },
+            { name: 'label', type: 'string', title: 'Label' }
+          ]
+        },
+        {
+          name: 'middleStats',
+          title: 'Middle Row Statistics',
+          type: 'array',
+          of: [{
+            type: 'object',
+            fields: [
+              { name: 'value', type: 'string', title: 'Value' },
+              { name: 'label', type: 'string', title: 'Label' }
+            ]
+          }],
+          validation: Rule => Rule.length(2)
+        },
+        {
+          name: 'bottomStats',
+          title: 'Bottom Row Statistics',
+          type: 'array',
+          of: [{
+            type: 'object',
+            fields: [
+              { name: 'value', type: 'string', title: 'Value' },
+              { name: 'label', type: 'string', title: 'Label' },
+              { name: 'suffix', type: 'string', title: 'Suffix (optional)' }
+            ]
+          }],
+          validation: Rule => Rule.length(3)
+        },
+        {
+          name: 'expertise',
+          title: 'Years of Expertise',
+          type: 'object',
+          fields: [
+            { name: 'value', type: 'string', title: 'Value' },
+            { name: 'label', type: 'string', title: 'Label' }
+          ]
+        }
+      ],
+      validation: Rule => Rule.required()
+    }),
     // Add the About Fidas section
     defineField({
       name: 'aboutFidas',
