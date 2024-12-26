@@ -42,6 +42,8 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
   const [companyName, setCompanyName] = useState('');
   const [message, setMessage] = useState('');
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const { executeRecaptcha } = useGoogleReCaptcha();
 
@@ -65,18 +67,27 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitError(null);
     
     if (!executeRecaptcha) {
-      console.log('Execute recaptcha not available yet');
+      setSubmitError('reCAPTCHA not initialized');
+      setIsSubmitting(false);
       return;
     }
 
     try {
-      // This will trigger the reCAPTCHA v3 verification
       const token = await executeRecaptcha('contact_form');
       
       if (token) {
-        // Continue with form submission
+        // Optional: Verify token on your backend
+        // const response = await fetch('/api/verify-recaptcha', { 
+        //   method: 'POST', 
+        //   body: JSON.stringify({ token }) 
+        // });
+        // const data = await response.json();
+        // if (!data.success) throw new Error('Verification failed');
+
         if (contactUsData?.email) {
           const subject = encodeURIComponent('Contact Form Submission');
           const interestsText = selectedInterests.length > 0 
@@ -93,10 +104,15 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
             Message: ${message}${interestsText}`
           );
           window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${contactUsData.email}&su=${subject}&body=${body}`, '_blank');
+          setIsSubmitting(false);
+          // Optional: Show success message
+          alert('Message sent successfully!');
         }
       }
     } catch (error) {
-      console.error('Error executing reCAPTCHA:', error);
+      console.error('Error:', error);
+      setSubmitError('Failed to verify - please try again');
+      setIsSubmitting(false);
     }
   };
 
@@ -216,14 +232,31 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
         ></textarea>
       </div>
       
+      {submitError && (
+        <div className="text-red-600 text-sm">
+          {submitError}
+        </div>
+      )}
+
       <motion.button
         type="submit"
-        className="w-full px-6 py-3 rounded-lg text-lg font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-300"
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+        disabled={isSubmitting}
+        className={`w-full px-6 py-3 rounded-lg text-lg font-semibold transition-colors duration-300
+          ${isSubmitting 
+            ? 'bg-blue-400 cursor-not-allowed'
+            : 'bg-blue-600 hover:bg-blue-700'
+          } text-white`}
+        whileHover={!isSubmitting ? { scale: 1.05 } : {}}
+        whileTap={!isSubmitting ? { scale: 0.95 } : {}}
       >
-        Send Message
+        {isSubmitting ? 'Verifying...' : 'Send Message'}
       </motion.button>
+
+      <p className="text-xs text-gray-500 text-center mt-4">
+        This site is protected by reCAPTCHA and the Google{' '}
+        <a href="https://policies.google.com/privacy" className="text-blue-600 hover:underline">Privacy Policy</a> and{' '}
+        <a href="https://policies.google.com/terms" className="text-blue-600 hover:underline">Terms of Service</a> apply.
+      </p>
     </form>
   );
 }
