@@ -19,6 +19,10 @@ interface MenuColumn {
   href: string;
   doubleColumn?: boolean;
   items: MenuLink[] | [MenuLink[], MenuLink[]];
+  image?: {
+    src: string;
+    alt: string;
+  };
 }
 
 interface MenuItem {
@@ -135,11 +139,45 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
     : 'text-gray-800 dark:text-white';
 
   const menuItems: MenuItem[] = [
-    { item: "Solutions", href: "/services", links: [
-      { href: "/services/how-it-works", text: "How Does It Work" },
-      { href: "/services/implementation", text: "Implementation Methodology" },
-      { href: "/services/benefits", text: "Benefits of FIDAS" }
-    ]},
+    { 
+      item: "Solutions", 
+      href: "/services", 
+      columns: [
+        {
+          title: "How It Works",
+          href: "/services/how-it-works",
+          items: [
+            { href: "/services/how-it-works", text: "Discover Our Process" }
+          ],
+          image: {
+            src: "/images/how-it-works.png",
+            alt: "How FIDAS Works"
+          }
+        },
+        {
+          title: "Implementation",
+          href: "/services/implementation",
+          items: [
+            { href: "/services/implementation", text: "Implementation Process" }
+          ],
+          image: {
+            src: "/images/implementation.jpg",
+            alt: "Implementation Methodology"
+          }
+        },
+        {
+          title: "Benefits",
+          href: "/services/benefits",
+          items: [
+            { href: "/services/benefits", text: "Advantages of FIDAS" }
+          ],
+          image: {
+            src: "/images/benefits.jpg",
+            alt: "FIDAS Benefits"
+          }
+        }
+      ]
+    },
     { item: "Products", href: "/products", columns: [
       {
         title: "Hardware Products",
@@ -286,7 +324,7 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
               isMobile={isMobile}
             >
               {menuItem.columns ? (
-                <div className="grid grid-cols-3 gap-4 p-4 min-w-[900px] bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900">
+                <div className="relative left-1/2 transform -translate-x-1/2 grid grid-cols-3 gap-4 p-4 min-w-[900px] bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900">
                   {menuItem.columns.map((column, colIndex) => (
                     <motion.div
                       key={colIndex}
@@ -296,9 +334,20 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
                       className={cn(
                         "space-y-3",
                         colIndex === 2 ? "col-span-1" : "",
-                        "min-w-[260px] max-w-[280px]" // Reduced width constraints
+                        "w-full" // Changed from min/max width constraints
                       )}
                     >
+                      {/* Image container with proper aspect ratio */}
+                      {column.image && (
+                        <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-4">
+                          <Image
+                            src={column.image.src}
+                            alt={column.image.alt}
+                            fill
+                            className="object-fit transition-transform duration-300 hover:scale-105"
+                          />
+                        </div>
+                      )}
                       <h3 
                         onClick={() => handleLinkClick(column.href)}
                         className="font-semibold text-lg text-blue-600 dark:text-blue-400 border-b border-blue-100 dark:border-blue-800 pb-2 cursor-pointer hover:text-blue-700 dark:hover:text-blue-300 transition-colors truncate"

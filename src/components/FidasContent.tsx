@@ -88,13 +88,11 @@ const starAnimation = {
 const ScrollAnimationWrapper = ({ children }: { children: React.ReactNode }) => {
   const controls = useAnimation();
   const ref = useRef(null);
-  const inView = useInView(ref, { once: false, amount: 0.3 });
+  const inView = useInView(ref, { once: true, amount: 0.3 });
 
   useEffect(() => {
     if (inView) {
       controls.start("animate");
-    } else {
-      controls.start("initial");
     }
   }, [controls, inView]);
 
@@ -159,7 +157,6 @@ function Celebration({ children }: { children: React.ReactNode }) {
 // Update the NumberCounter component
 function NumberCounter({ n, suffix = '', duration = 3000 }: { n: string | number; suffix?: string; duration?: number }) {
   const [isInView, setIsInView] = useState(false);
-  const [hasAnimated, setHasAnimated] = useState(false);
   const targetNumber = typeof n === 'string' ? parseInt(n.replace(/,/g, '')) : n;
   
   const { number } = useSpring({
@@ -173,12 +170,7 @@ function NumberCounter({ n, suffix = '', duration = 3000 }: { n: string | number
 
   return (
     <motion.div
-      onViewportEnter={() => {
-        if (!hasAnimated) {
-          setIsInView(true);
-          setHasAnimated(true);
-        }
-      }}
+      onViewportEnter={() => setIsInView(true)}
       viewport={{ once: true, amount: 0.5 }}
     >
       <animated.span>
@@ -485,6 +477,7 @@ export default function FidasContent() {
                 className="flex space-x-12 whitespace-nowrap"
                 animate="animate"
                 variants={marqueeAnimation}
+                style={{ willChange: 'transform' }}
               >
                 {/* First set of images */}
                 {pageData.trustedCompanies.map((company, index) => (
@@ -522,67 +515,67 @@ export default function FidasContent() {
         </section>
 
         {/* Statistics Section */}
-        <section className="py-16">
+        <section className="py-8"> {/* reduced from py-12 */}
           <div className="max-w-7xl mx-auto px-4">
             <ScrollAnimationWrapper>
-              <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
+              <h2 className="text-3xl md:text-4xl font-bold text-center mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
                 {pageData.statistics.title}
               </h2>
             </ScrollAnimationWrapper>
-            <div className="flex flex-col items-center space-y-8 md:space-y-12">
-              {/* First Row - 1 item */}
-              <div className="grid grid-cols-1 gap-8 w-full max-w-xs">
+            <div className="flex flex-col items-center space-y-3"> {/* reduced spacing */}
+              {/* First Row - 1 item (smallest width) */}
+              <div className="grid grid-cols-1 gap-3 w-full max-w-md"> {/* Smallest max-width */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: false, amount: 0.5 }}
-                  className="flex flex-col items-center justify-center text-center p-6 md:p-8 bg-white/50 backdrop-blur-sm rounded-xl shadow-sm"
+                  viewport={{ once: true, amount: 0.5 }}
+                  className="flex flex-col items-center justify-center text-center p-3 md:p-4 bg-white/50 backdrop-blur-sm rounded-xl shadow-sm"
                 >
-                  <motion.div className="text-4xl md:text-6xl font-bold text-blue-600">
+                  <motion.div className="text-2xl md:text-4xl font-bold text-blue-600">
                     <NumberCounter n={pageData.statistics.topStat.value} duration={3000} />
                   </motion.div>
-                  <span className="text-lg md:text-xl text-gray-600 mt-2 font-medium">
+                  <span className="text-sm md:text-base text-gray-600 mt-1 font-medium">
                     {pageData.statistics.topStat.label}
                   </span>
                 </motion.div>
               </div>
 
-              {/* Second Row - 2 items */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 w-full max-w-2xl">
+              {/* Second Row - 2 items (medium width) */}
+              <div className="grid grid-cols-2 gap-3 w-full max-w-2xl"> {/* Medium max-width */}
                 {pageData.statistics.middleStats.map((stat, index) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, amount: 0.5 }}
+                    viewport={{ once: true }}
                     transition={{ delay: 0.1 * (index + 1) }}
-                    className="flex flex-col items-center justify-center text-center p-6 md:p-8 bg-white/50 backdrop-blur-sm rounded-xl shadow-sm"
+                    className="flex flex-col items-center justify-center text-center p-3 md:p-4 bg-white/50 backdrop-blur-sm rounded-xl shadow-sm"
                   >
-                    <motion.div className="text-4xl md:text-5xl font-bold text-blue-600">
+                    <motion.div className="text-2xl md:text-3xl font-bold text-blue-600">
                       <NumberCounter n={stat.value} duration={3000} />
                     </motion.div>
-                    <span className="text-lg md:text-xl text-gray-600 mt-2 font-medium">
+                    <span className="text-sm md:text-base text-gray-600 mt-1 font-medium">
                       {stat.label}
                     </span>
                   </motion.div>
                 ))}
               </div>
 
-              {/* Third Row - 3 items */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 w-full max-w-4xl">
+              {/* Third Row - 3 items (largest width) */}
+              <div className="grid grid-cols-3 gap-3 w-full max-w-4xl"> {/* Largest max-width */}
                 {pageData.statistics.bottomStats.map((stat, index) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, amount: 0.5 }}
+                    viewport={{ once: true }}
                     transition={{ delay: 0.1 * (index + 3) }}
-                    className="flex flex-col items-center justify-center text-center p-6 md:p-8 bg-white/50 backdrop-blur-sm rounded-xl shadow-sm"
+                    className="flex flex-col items-center justify-center text-center p-3 md:p-4 bg-white/50 backdrop-blur-sm rounded-xl shadow-sm"
                   >
-                    <motion.div className="text-3xl md:text-4xl font-bold text-blue-600">
+                    <motion.div className="text-xl md:text-3xl font-bold text-blue-600">
                       <NumberCounter n={stat.value} suffix={stat.suffix} duration={3000} />
                     </motion.div>
-                    <span className="text-lg md:text-xl text-gray-600 mt-2 font-medium">
+                    <span className="text-xs md:text-sm text-gray-600 mt-1 font-medium">
                       {stat.label}
                     </span>
                   </motion.div>
@@ -595,7 +588,7 @@ export default function FidasContent() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 }}
-                  className="flex flex-row items-center justify-center gap-3 text-center p-6 md:p-8 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-xl shadow-lg w-full max-w-5xl relative overflow-hidden"
+                  className="flex flex-row items-center justify-center gap-3 text-center p-4 md:p-6 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-xl shadow-lg w-full max-w-4xl relative overflow-hidden mt-2"
                 >
                   <div className="flex items-center gap-6 relative z-10">
                     <div className="relative">
@@ -628,31 +621,37 @@ export default function FidasContent() {
 
         {/* About Section with Fixed Video */}
         <section className="relative py-16">
-          {/* Title wrapper with padding */}
-          <div className="mb-16 pt-8">
-            <ScrollAnimationWrapper>
-              <h2 className="text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
-                {pageData.aboutFidas.title}
-              </h2>
-            </ScrollAnimationWrapper>
-          </div>
-
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Video Column */}
-            <div className="relative lg:sticky lg:top-[120px] self-start h-[300px] lg:h-[calc(100vh-180px)] rounded-2xl overflow-hidden mb-8 lg:mb-0">
-              <video
-                ref={videoRef}
-                className="w-full h-full object-cover"
-                src={pageData.aboutFidas.video.asset.url}
-                autoPlay
-                muted
-                loop
-                playsInline
-              />
+            {/* Left Column - Fixed Title and Video */}
+            <div className="relative">
+              {/* Fixed Title and Video Container */}
+              <div className="lg:sticky lg:top-[20px] space-y-4">
+                {/* Title - Now left-aligned */}
+                <div className="bg-gradient-to-br from-gray-50/80 to-blue-50/80 backdrop-blur-sm py-6 rounded-lg">
+                  <ScrollAnimationWrapper>
+                    <h2 className="text-3xl font-bold text-left px-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
+                      {pageData.aboutFidas.title}
+                    </h2>
+                  </ScrollAnimationWrapper>
+                </div>
+
+                {/* Video */}
+                <div className="relative h-[300px] lg:h-[calc(100vh-180px)] rounded-2xl overflow-hidden">
+                  <video
+                    ref={videoRef}
+                    className="w-full h-full object-cover"
+                    src={pageData.aboutFidas.video.asset.url}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                  />
+                </div>
+              </div>
             </div>
 
-            {/* Points Column */}
-            <div className="space-y-8 pt-4">
+            {/* Right Column - Points - Removed top spacing */}
+            <div className="lg:pt-[76px]"> {/* Added padding-top to align with video start */}
               {/* Desktop Points */}
               <div className="hidden lg:block space-y-8">
                 {pageData.aboutFidas.points.map((point, index) => (

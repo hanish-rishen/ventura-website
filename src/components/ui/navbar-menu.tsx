@@ -57,7 +57,11 @@ export const MenuItem = ({
   return (
     <div 
       ref={menuRef}
-      className="w-full relative" 
+      className={cn(
+        "relative",
+        // Add positioning class for Solutions menu
+        item === "Solutions" ? "static" : "w-full"
+      )}
       onMouseEnter={handleMouseEnter} 
       onMouseLeave={handleMouseLeave}
     >
