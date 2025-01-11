@@ -3,14 +3,11 @@
 import React, { useState } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaTimes } from 'react-icons/fa';
-import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
-// Remove this import since we're not using it anymore
-// import { useForm, ValidationError } from '@formspree/react';
 
 const fadeInUp: Variants = {
   initial: { 
-    opacity: 1, // Changed from 0
-    y: 0 // Changed from 60
+    opacity: 1, 
+    y: 0 
   },
   animate: { 
     opacity: 1, 
@@ -60,9 +57,6 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
   const [otherInterest, setOtherInterest] = useState('');
   const [hoveredInterest, setHoveredInterest] = useState<string | null>(null);
 
-  const { executeRecaptcha } = useGoogleReCaptcha();
-
-  // Sample interests (you can move this to Sanity schema later)
   const availableInterests = [
     { 
       name: 'FIDAS Software', 
@@ -114,60 +108,49 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
     setSubmitError(null);
     setIsSubmitting(true);
 
-    if (!executeRecaptcha) {
-      setSubmitError('reCAPTCHA not initialized');
-      setIsSubmitting(false);
-      return;
-    }
-
     try {
-      const token = await executeRecaptcha('contact_form');
-      
-      if (token) {
-        const formData = {
-          firstName,
-          lastName,
-          email: workEmail,
-          phoneNumber,
-          jobTitle,
-          companyName,
-          message,
-          interests: selectedInterests.join(', '),
-          ...(selectedInterests.includes('others') && { otherInterest }),
-          "g-recaptcha-response": token
-        };
+      const formData = {
+        firstName,
+        lastName,
+        email: workEmail,
+        phoneNumber,
+        jobTitle,
+        companyName,
+        message,
+        interests: selectedInterests.join(', '),
+        ...(selectedInterests.includes('others') && { otherInterest }),
+        _subject: `New contact form submission from ${firstName} ${lastName}`
+      };
 
-        const response = await fetch('https://formspree.io/f/xwppwzlq', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify(formData)
-        });
+      const response = await fetch('https://formspree.io/f/xwppwzlq', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
 
+      if (response.ok) {
+        setIsSubmitted(true);
+        // Reset form fields
+        setFirstName('');
+        setLastName('');
+        setWorkEmail('');
+        setPhoneNumber('');
+        setJobTitle('');
+        setCompanyName('');
+        setMessage('');
+        setSelectedInterests([]);
+        setOtherInterest('');
+      } else {
         const result = await response.json();
-
-        if (response.ok) {
-          setIsSubmitted(true);
-          // Reset form fields
-          setFirstName('');
-          setLastName('');
-          setWorkEmail('');
-          setPhoneNumber('');
-          setJobTitle('');
-          setCompanyName('');
-          setMessage('');
-          setSelectedInterests([]);
-          setOtherInterest('');
-        } else {
-          console.error('Formspree error:', result);
-          setSubmitError(result.error || 'Failed to submit form - please try again');
-        }
+        console.error('Formspree error:', result);
+        setSubmitError('Failed to submit form. Please try again or contact us directly.');
       }
     } catch (error) {
       console.error('Submission error:', error);
-      setSubmitError('An unexpected error occurred. Please try again.');
+      setSubmitError('An unexpected error occurred. Please try again or contact us directly.');
     } finally {
       setIsSubmitting(false);
     }
@@ -190,7 +173,6 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit}>
-      {/* Interested In Section */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Interested In
@@ -216,8 +198,6 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
                   <FaTimes className="inline-block ml-2 w-3 h-3" />
                 )}
               </motion.button>
-              
-              {/* Updated Tooltip */}
               {hoveredInterest === interest.tag && (
                 <motion.div
                   initial={{ opacity: 0, y: 5 }}
@@ -233,8 +213,6 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
             </div>
           ))}
         </div>
-
-        {/* Others Input Field */}
         {selectedInterests.includes('others') && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
@@ -339,7 +317,6 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
         ></textarea>
       </div>
       
-      {/* Replace ValidationError component with simple error display */}
       {submitError && (
         <div className="text-red-600 text-sm">
           {submitError}
@@ -359,94 +336,79 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
       >
         {isSubmitting ? 'Sending...' : 'Send Message'}
       </motion.button>
-
-      <p className="text-xs text-gray-500 text-center mt-4">
-        This site is protected by reCAPTCHA and the Google{' '}
-        <a href="https://policies.google.com/privacy" className="text-blue-600 hover:underline">Privacy Policy</a> and{' '}
-        <a href="https://policies.google.com/terms" className="text-blue-600 hover:underline">Terms of Service</a> apply.
-      </p>
     </form>
   );
 }
 
-// Wrap the main component with the ReCAPTCHA provider
 export function ContactUsClient({ contactUsData }: { contactUsData: ContactUsData | null }) {
   return (
-    <GoogleReCaptchaProvider
-      reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
-    >
-      <div className="w-full bg-gradient-to-br from-gray-50 to-blue-50 text-gray-800 min-h-screen">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          {/* Title Section - No ScrollAnimationWrapper */}
-          <div className="relative mb-12 overflow-hidden">
-            <motion.h1 
-              className="text-5xl font-bold mb-8 text-center tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
-              initial={{ opacity: 1, y: 0 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              Contact Us
-            </motion.h1>
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent"
-              animate={{
-                x: ['-200%', '200%'],
-                transition: { repeat: Infinity, duration: 10, ease: "linear" },
-              }}
-            />
-          </div>
-
-          {/* Content Section - No ScrollAnimationWrapper */}
-          <motion.div
-            initial="initial"
-            animate="animate"
-            className="grid grid-cols-1 lg:grid-cols-2 gap-12"
+    <div className="w-full bg-gradient-to-br from-gray-50 to-blue-50 text-gray-800 min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="relative mb-12 overflow-hidden">
+          <motion.h1 
+            className="text-5xl font-bold mb-8 text-center tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400"
+            initial={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            {/* Left Column - Form */}
-            <motion.div
-              variants={fadeInUp}
-              className="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg p-10 rounded-2xl border border-gray-200 shadow-xl"
-            >
-              <h2 className="text-3xl font-semibold mb-8 text-blue-600">Get in Touch</h2>
-              <ContactUsFormWithReCaptcha contactUsData={contactUsData} />
-            </motion.div>
-
-            {/* Right Column - Contact Info */}
-            <motion.div
-              variants={fadeInUp}
-              className="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg p-10 rounded-2xl border border-gray-200 shadow-xl h-fit"
-            >
-              <h2 className="text-3xl font-semibold mb-8 text-blue-600">Contact Information</h2>
-              <div className="space-y-6">
-                {contactUsData?.address && (
-                  <div className="flex items-center">
-                    <motion.div variants={floatingIcon} animate="animate">
-                      <FaMapMarkerAlt className="text-blue-600 mr-4 text-2xl" />
-                    </motion.div>
-                    <p className="text-lg"><strong>Address:</strong> {contactUsData.address}</p>
-                  </div>
-                )}
-                {contactUsData?.phone && (
-                  <div className="flex items-center">
-                    <motion.div variants={floatingIcon} animate="animate">
-                      <FaPhoneAlt className="text-blue-600 mr-4 text-2xl" />
-                    </motion.div>
-                    <p className="text-lg"><strong>Phone:</strong> {contactUsData.phone}</p>
-                  </div>
-                )}
-                {contactUsData?.email && (
-                  <div className="flex items-center">
-                    <motion.div variants={floatingIcon} animate="animate">
-                      <FaEnvelope className="text-blue-600 mr-4 text-2xl" />
-                    </motion.div>
-                    <p className="text-lg"><strong>Email:</strong> {contactUsData.email}</p>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
+            Contact Us
+          </motion.h1>
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent"
+            animate={{
+              x: ['-200%', '200%'],
+              transition: { repeat: Infinity, duration: 10, ease: "linear" },
+            }}
+          />
         </div>
+
+        <motion.div
+          initial="initial"
+          animate="animate"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-12"
+        >
+          <motion.div
+            variants={fadeInUp}
+            className="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg p-10 rounded-2xl border border-gray-200 shadow-xl"
+          >
+            <h2 className="text-3xl font-semibold mb-8 text-blue-600">Get in Touch</h2>
+            <ContactUsFormWithReCaptcha contactUsData={contactUsData} />
+          </motion.div>
+
+          <motion.div
+            variants={fadeInUp}
+            className="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg p-10 rounded-2xl border border-gray-200 shadow-xl h-fit"
+          >
+            <h2 className="text-3xl font-semibold mb-8 text-blue-600">Contact Information</h2>
+            <div className="space-y-6">
+              {contactUsData?.address && (
+                <div className="flex items-center">
+                  <motion.div variants={floatingIcon} animate="animate">
+                    <FaMapMarkerAlt className="text-blue-600 mr-4 text-2xl" />
+                  </motion.div>
+                  <p className="text-lg"><strong>Address:</strong> {contactUsData.address}</p>
+                </div>
+              )}
+              {contactUsData?.phone && (
+                <div className="flex items-center">
+                  <motion.div variants={floatingIcon} animate="animate">
+                    <FaPhoneAlt className="text-blue-600 mr-4 text-2xl" />
+                  </motion.div>
+                  <p className="text-lg"><strong>Phone:</strong> {contactUsData.phone}</p>
+                </div>
+              )}
+              {contactUsData?.email && (
+                <div className="flex items-center">
+                  <motion.div variants={floatingIcon} animate="animate">
+                    <FaEnvelope className="text-blue-600 mr-4 text-2xl" />
+                  </motion.div>
+                  <p className="text-lg"><strong>Email:</strong> {contactUsData.email}</p>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </motion.div>
       </div>
-    </GoogleReCaptchaProvider>
+    </div>
   );
 }
