@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaTimes } from 'react-icons/fa';
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+// Remove this import since we're not using it anymore
+// import { useForm, ValidationError } from '@formspree/react';
 
 const fadeInUp: Variants = {
   initial: { 
@@ -33,7 +35,20 @@ interface ContactUsData {
   email: string;
 }
 
+interface FormspreeResponse {
+  ok: boolean;
+  errors?: Array<{
+    code: string;
+    field?: string;
+    message: string;
+  }>;
+}
+
 export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: ContactUsData | null }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [workEmail, setWorkEmail] = useState('');
@@ -42,19 +57,48 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
   const [companyName, setCompanyName] = useState('');
   const [message, setMessage] = useState('');
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [otherInterest, setOtherInterest] = useState('');
+  const [hoveredInterest, setHoveredInterest] = useState<string | null>(null);
 
   const { executeRecaptcha } = useGoogleReCaptcha();
 
   // Sample interests (you can move this to Sanity schema later)
   const availableInterests = [
-    { name: 'FIDAS Software', tag: 'software' },
-    { name: 'Hardware Solutions', tag: 'hardware' },
-    { name: 'Technical Support', tag: 'support' },
-    { name: 'Business Inquiry', tag: 'business' },
-    { name: 'Partnership', tag: 'partnership' },
-    { name: 'Product Demo', tag: 'demo' },
+    { 
+      name: 'FIDAS Software', 
+      tag: 'software',
+      description: 'Our flagship fabric inspection and data analysis solution'
+    },
+    { 
+      name: 'Hardware Solutions', 
+      tag: 'hardware',
+      description: 'Cutting-edge hardware for fabric inspection systems'
+    },
+    { 
+      name: 'Technical Support', 
+      tag: 'support',
+      description: '24/7 technical assistance and customer support'
+    },
+    { 
+      name: 'Business Inquiry', 
+      tag: 'business',
+      description: 'Partnership opportunities and business collaboration'
+    },
+    { 
+      name: 'Partnership', 
+      tag: 'partnership',
+      description: 'Strategic alliances and integration possibilities'
+    },
+    { 
+      name: 'Product Demo', 
+      tag: 'demo',
+      description: 'Live demonstration of our products and solutions'
+    },
+    { 
+      name: 'Others', 
+      tag: 'others',
+      description: 'Custom requirements or specific inquiries'
+    }
   ];
 
   const toggleInterest = (tag: string) => {
@@ -67,9 +111,9 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setSubmitError(null);
-    
+    setIsSubmitting(true);
+
     if (!executeRecaptcha) {
       setSubmitError('reCAPTCHA not initialized');
       setIsSubmitting(false);
@@ -80,32 +124,69 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
       const token = await executeRecaptcha('contact_form');
       
       if (token) {
-        if (contactUsData?.email) {
-          const subject = encodeURIComponent('Contact Form Submission');
-          const interestsText = selectedInterests.length > 0 
-            ? `\n\nInterested in: ${selectedInterests.join(', ')}`
-            : '';
-          const body = encodeURIComponent(
-            `First Name: ${firstName}
-            Last Name: ${lastName}
-            Work Email: ${workEmail}
-            Phone Number: ${phoneNumber}
-            Job Title: ${jobTitle}
-            Company: ${companyName}
-            
-            Message: ${message}${interestsText}`
-          );
-          window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${contactUsData.email}&su=${subject}&body=${body}`, '_blank');
-          setIsSubmitting(false);
-          // Removed the alert('Message sent successfully!')
+        const formData = {
+          firstName,
+          lastName,
+          email: workEmail,
+          phoneNumber,
+          jobTitle,
+          companyName,
+          message,
+          interests: selectedInterests.join(', '),
+          ...(selectedInterests.includes('others') && { otherInterest }),
+          "g-recaptcha-response": token
+        };
+
+        const response = await fetch('https://formspree.io/f/xwppwzlq', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          setIsSubmitted(true);
+          // Reset form fields
+          setFirstName('');
+          setLastName('');
+          setWorkEmail('');
+          setPhoneNumber('');
+          setJobTitle('');
+          setCompanyName('');
+          setMessage('');
+          setSelectedInterests([]);
+          setOtherInterest('');
+        } else {
+          console.error('Formspree error:', result);
+          setSubmitError(result.error || 'Failed to submit form - please try again');
         }
       }
     } catch (error) {
-      console.error('Error:', error);
-      setSubmitError('Failed to verify - please try again');
+      console.error('Submission error:', error);
+      setSubmitError('An unexpected error occurred. Please try again.');
+    } finally {
       setIsSubmitting(false);
     }
   };
+
+  if (isSubmitted) {
+    return (
+      <div className="text-center py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-green-50 p-6 rounded-xl"
+        >
+          <h3 className="text-2xl font-semibold text-green-600 mb-2">Thank You!</h3>
+          <p className="text-green-700">Your message has been sent successfully.</p>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit}>
@@ -114,27 +195,62 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Interested In
         </label>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 mb-2">
           {availableInterests.map((interest) => (
-            <motion.button
-              key={interest.tag}
-              type="button"
-              onClick={() => toggleInterest(interest.tag)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                selectedInterests.includes(interest.tag)
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {interest.name}
-              {selectedInterests.includes(interest.tag) && (
-                <FaTimes className="inline-block ml-2 w-3 h-3" />
+            <div key={interest.tag} className="relative inline-flex flex-col items-center">
+              <motion.button
+                type="button"
+                onClick={() => toggleInterest(interest.tag)}
+                onMouseEnter={() => setHoveredInterest(interest.tag)}
+                onMouseLeave={() => setHoveredInterest(null)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                  selectedInterests.includes(interest.tag)
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {interest.name}
+                {selectedInterests.includes(interest.tag) && (
+                  <FaTimes className="inline-block ml-2 w-3 h-3" />
+                )}
+              </motion.button>
+              
+              {/* Updated Tooltip */}
+              {hoveredInterest === interest.tag && (
+                <motion.div
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute z-10 w-48 p-2 text-sm text-white bg-gray-800 rounded-md shadow-lg bottom-full mb-2"
+                >
+                  {interest.description}
+                  <div className="absolute left-1/2 bottom-0 transform -translate-x-1/2 translate-y-full">
+                    <div className="border-[6px] border-transparent border-t-gray-800"></div>
+                  </div>
+                </motion.div>
               )}
-            </motion.button>
+            </div>
           ))}
         </div>
+
+        {/* Others Input Field */}
+        {selectedInterests.includes('others') && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mt-2"
+          >
+            <input
+              type="text"
+              placeholder="Please specify your interest"
+              value={otherInterest}
+              onChange={(e) => setOtherInterest(e.target.value)}
+              className="w-full px-4 py-2 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300"
+            />
+          </motion.div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -223,6 +339,7 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
         ></textarea>
       </div>
       
+      {/* Replace ValidationError component with simple error display */}
       {submitError && (
         <div className="text-red-600 text-sm">
           {submitError}
@@ -240,7 +357,7 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
         whileHover={!isSubmitting ? { scale: 1.05 } : {}}
         whileTap={!isSubmitting ? { scale: 0.95 } : {}}
       >
-        {isSubmitting ? 'Verifying...' : 'Send Message'}
+        {isSubmitting ? 'Sending...' : 'Send Message'}
       </motion.button>
 
       <p className="text-xs text-gray-500 text-center mt-4">
