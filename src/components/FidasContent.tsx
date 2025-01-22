@@ -116,37 +116,60 @@ function Celebration({ children }: { children: React.ReactNode }) {
   const triggerConfetti = useCallback(() => {
     if (elementRef.current) {
       const rect = elementRef.current.getBoundingClientRect();
+      const elementCenterX = rect.left + rect.width / 2;
+      const elementY = rect.top;
+      
       confetti({
         particleCount: 100,
         spread: 70,
         origin: {
-          x: (rect.left + rect.width / 2) / window.innerWidth,
-          y: rect.top / window.innerHeight
+          x: elementCenterX / window.innerWidth,
+          y: elementY / window.innerHeight
         },
-        colors: ['#FFD700', '#FFA500', '#FF6347', '#4169E1', '#32CD32']
+        colors: ['#FFD700', '#FFA500', '#FF6347', '#4169E1', '#32CD32'],
+        gravity: 1.5,
+        scalar: 0.7,
+        drift: 0,
+        ticks: 200
       });
     }
-  }, []);
+  }, []); // No dependencies needed as it only uses ref
 
   useEffect(() => {
-    if (!hasTriggered) {
-      // Initial burst when component comes into view
-      triggerConfetti();
-      setHasTriggered(true);
+    const currentRef = elementRef.current; // Store ref in a variable
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasTriggered) {
+            triggerConfetti();
+            setHasTriggered(true);
+            
+            setTimeout(() => {
+              setHasTriggered(false);
+            }, 1000);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
 
-      // Set up interval for repeated confetti
-      const interval = setInterval(triggerConfetti, 1500);
-      return () => clearInterval(interval);
+    if (currentRef) {
+      observer.observe(currentRef);
     }
-  }, [hasTriggered, triggerConfetti]);
+
+    return () => {
+      if (currentRef) { // Use stored ref value
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [hasTriggered, triggerConfetti]); // Add triggerConfetti to dependencies
 
   return (
     <motion.div
       ref={elementRef}
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
-      onViewportEnter={() => setHasTriggered(true)}
-      onViewportLeave={() => setHasTriggered(false)}
       viewport={{ once: false }}
     >
       {children}
@@ -290,15 +313,17 @@ interface FidasContentData {
       link: string;
     }>;
   };
-  customerList: {
+  testimonials: {
     sectionTitle: string;
-    customers: Array<{
-      name: string;
-      logo: {
+    testimonialsList: Array<{
+      quote: string;
+      author: string;
+      position: string;
+      company: string;
+      image?: {
         asset: {
           _ref: string;
         };
-        alt: string;
       };
     }>;
   };
@@ -355,7 +380,7 @@ async function getFidasContentData(): Promise<FidasContentData> {
     industryVerticalsIframeSrc,
     twentyReasons{
       sectionTitle,
-      reasons[]{
+      reasons[] {
         title,
         points,
         image{
@@ -369,7 +394,7 @@ async function getFidasContentData(): Promise<FidasContentData> {
     optimizeSection{
       title,
       subtitle,
-      features[]{
+      features[] {
         title,
         image{
           asset->,
@@ -387,7 +412,7 @@ async function getFidasContentData(): Promise<FidasContentData> {
     },
     interfaceSection{
       title,
-      devices[]{
+      devices[] {
         title,
         description,
         image{
@@ -399,7 +424,7 @@ async function getFidasContentData(): Promise<FidasContentData> {
     },
     softwareProducts{
       title,
-      products[]{
+      products[] {
         title,
         description,
         image{
@@ -409,13 +434,15 @@ async function getFidasContentData(): Promise<FidasContentData> {
         link
       }
     },
-    customerList{
+    testimonials{
       sectionTitle,
-      customers[]{
-        name,
-        logo{
-          asset->,
-          alt
+      testimonialsList[] {
+        quote,
+        author,
+        position,
+        company,
+        image{
+          asset->
         }
       }
     }
@@ -718,11 +745,10 @@ export default function FidasContent() {
           </ScrollAnimationWrapper>
 
           {pageData.twentyReasons?.reasons?.map((reason, index) => (
-            <div key={index} className={`grid grid-cols-1 lg:grid-cols-2 gap-8 mb-24 ${
-              index % 2 === 1 ? 'lg:grid-flow-col' : ''
-            }`}>
+            <div key={index} className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-24">
+              {/* Image column */}
               <div className={`relative h-[400px] rounded-2xl overflow-hidden shadow-lg ${
-                index % 2 === 1 ? 'order-1 lg:order-2' : ''
+                index % 2 === 1 ? 'lg:order-2' : ''
               }`}>
                 <Image
                   src={urlForImage(reason.image)?.url() || '/fallback-image.jpg'}
@@ -731,10 +757,12 @@ export default function FidasContent() {
                   className="object-cover"
                 />
               </div>
-              <div className={`space-y-6 flex flex-col justify-center ${
-                index % 2 === 1 ? 'order-2 lg:order-1' : ''
+              
+              {/* Content column - Removed flex justify-center to align from top */}
+              <div className={`space-y-6 ${
+                index % 2 === 1 ? 'lg:order-1' : ''
               }`}>
-                <h3 className="text-2xl font-bold text-blue-600">{reason.title}</h3>
+                <h3 className="text-2xl font-bold text-blue-600 pt-2">{reason.title}</h3>
                 <div className="grid grid-cols-1 gap-4">
                   {reason.points?.map((point, pointIndex) => (
                     <div key={pointIndex} className="flex items-start gap-3">
@@ -1096,47 +1124,58 @@ export default function FidasContent() {
           </div>
         </section>        
 
-        {/* Customer List Section */}
-        <section className="py-16 bg-white/50 backdrop-blur-sm">
+        {/* Testimonials Section */}
+        <section className="py-16 bg-gradient-to-br from-blue-50 to-white">
           <div className="container mx-auto max-w-6xl px-4">
             <ScrollAnimationWrapper>
               <h2 className="text-3xl font-bold text-center mb-16 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
-                {pageData.customerList?.sectionTitle || "Our Customers"}
+                {pageData.testimonials?.sectionTitle || 'What Our Clients Say'}
               </h2>
             </ScrollAnimationWrapper>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-              {pageData.customerList?.customers?.map((customer, index) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {pageData.testimonials?.testimonialsList?.map((testimonial, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="relative aspect-[4/3] group"
+                  className="bg-white rounded-xl shadow-sm p-6 relative"
                 >
-                  <div className="absolute inset-4 bg-white rounded-lg shadow-sm p-4 transition-all duration-300 group-hover:shadow-md group-hover:scale-105">
-                    <div className="relative w-full h-full">
-                      <Image
-                        src={urlForImage(customer.logo)?.url() || '/fallback-image.jpg'}
-                        alt={customer.logo.alt}
-                        fill
-                        className="object-contain p-2"
-                      />
+                  {/* Quote Icon */}
+                  <div className="absolute -top-4 left-6 text-blue-500 bg-white rounded-full p-2">
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                    </svg>
+                  </div>
+
+                  <div className="mb-6 text-gray-700 italic pt-6">
+                    &lsquo;{testimonial.quote}&rsquo;
+                  </div>
+                  
+                  <div className="flex items-center gap-4">
+                    {testimonial.image && (
+                      <div className="relative w-12 h-12 rounded-full overflow-hidden">
+                        <Image
+                          src={urlForImage(testimonial.image)?.url() || '/fallback-avatar.jpg'}
+                          alt={testimonial.author}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    )}
+                    <div>
+                      <div className="font-semibold text-blue-600">{testimonial.author}</div>
+                      <div className="text-sm text-gray-600">
+                        {testimonial.position} at {testimonial.company}
+                      </div>
                     </div>
                   </div>
                 </motion.div>
               ))}
             </div>
-
-            {/* View All Button */}
-            <div className="mt-12 text-center">
-              <Link href="/customers/list">
-                <button className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors">
-                  <span>View All Customers</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </Link>
-            </div>
+            
+            {/* ...rest of section... */}
           </div>
         </section>
 

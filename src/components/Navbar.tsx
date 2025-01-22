@@ -14,11 +14,12 @@ interface MenuLink {
   text: string;
 }
 
+// Update the MenuColumn interface
 interface MenuColumn {
   title: string;
   href: string;
   doubleColumn?: boolean;
-  items: MenuLink[] | [MenuLink[], MenuLink[]];
+  items: MenuLink[]; // Changed from MenuLink[] | [MenuLink[], MenuLink[]] to just MenuLink[]
   image?: {
     src: string;
     alt: string;
@@ -146,20 +147,16 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
         {
           title: "How It Works",
           href: "/services/how-it-works",
-          items: [
-            { href: "/services/how-it-works", text: "Discover Our Process" }
-          ],
+          items: [],  // Remove bullet points by leaving items empty
           image: {
-            src: "/images/how-it-works.png",
+            src: "/images/how-it-works.jpg",
             alt: "How FIDAS Works"
           }
         },
         {
           title: "Implementation",
           href: "/services/implementation",
-          items: [
-            { href: "/services/implementation", text: "Implementation Process" }
-          ],
+          items: [],  // Remove bullet points by leaving items empty
           image: {
             src: "/images/implementation.jpg",
             alt: "Implementation Methodology"
@@ -168,9 +165,7 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
         {
           title: "Benefits",
           href: "/services/benefits",
-          items: [
-            { href: "/services/benefits", text: "Advantages of FIDAS" }
-          ],
+          items: [],  // Remove bullet points by leaving items empty
           image: {
             src: "/images/benefits.jpg",
             alt: "FIDAS Benefits"
@@ -214,14 +209,12 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
         ]
       }
     ]},
-    { item: "Customers", href: "/customers", links: [
-      { href: "/customers/success", text: "Customer Success" },
-      { href: "/customers/list", text: "Customer List" }
-    ]},
     { item: "Resources", href: "/resources", links: [
       { href: "/resources/blogs", text: "Blogs" },
       { href: "/resources/faq", text: "FAQ / Q & A" },
-      { href: "/resources/downloads", text: "Downloads" }
+      { href: "/resources/downloads", text: "Downloads" },
+      { href: "/resources/customers", text: "Customer List" },
+      { href: "/resources/success", text: "Success Stories" }
     ]},
     { item: "About", href: "/about", links: [
       { href: "/about/fidas", text: "What is FIDAS" },
@@ -337,44 +330,55 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
                         "w-full" // Changed from min/max width constraints
                       )}
                     >
-                      {/* Image container with proper aspect ratio */}
-                      {column.image && (
-                        <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-4">
-                          <Image
-                            src={column.image.src}
-                            alt={column.image.alt}
-                            fill
-                            className="object-fit transition-transform duration-300 hover:scale-105"
-                          />
-                        </div>
+                      {menuItem.item === "Solutions" ? (
+                        // Solutions menu - image and title only
+                        <Link 
+                          href={column.href}
+                          className="block space-y-3 hover:opacity-90 transition-opacity"
+                        >
+                          {column.image && (
+                            <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-4">
+                              <Image
+                                src={column.image.src}
+                                alt={column.image.alt}
+                                fill
+                                className="object-fit transition-transform duration-300 group-hover:scale-105"
+                              />
+                            </div>
+                          )}
+                          <div className="font-semibold text-lg text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors truncate">
+                            {column.title}
+                          </div>
+                        </Link>
+                      ) : (
+                        // Products menu - title and bullet points
+                        <>
+                          <h3 className="font-semibold text-lg text-blue-600 dark:text-blue-400 border-b border-blue-100 dark:border-blue-800 pb-2">
+                            {column.title}
+                          </h3>
+                          <div className="space-y-2">
+                            {column.items?.map((link: MenuLink, linkIndex: number) => ( // Add type annotation here
+                              <motion.div
+                                key={linkIndex}
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.2, delay: linkIndex * 0.05 }}
+                                className="group relative flex items-center whitespace-nowrap pr-2"
+                              >
+                                <HoveredLink 
+                                  href={link.href} 
+                                  onClick={() => handleLinkClick(link.href)}
+                                >
+                                  <div className="flex items-center space-x-2">
+                                    <span className="w-1 h-1 rounded-full bg-blue-200 dark:bg-blue-700 group-hover:bg-blue-500 dark:group-hover:bg-blue-400 transition-colors"></span>
+                                    <span className="text-[13px] pr-2">{link.text}</span>
+                                  </div>
+                                </HoveredLink>
+                              </motion.div>
+                            ))}
+                          </div>
+                        </>
                       )}
-                      <h3 
-                        onClick={() => handleLinkClick(column.href)}
-                        className="font-semibold text-lg text-blue-600 dark:text-blue-400 border-b border-blue-100 dark:border-blue-800 pb-2 cursor-pointer hover:text-blue-700 dark:hover:text-blue-300 transition-colors truncate"
-                      >
-                        {column.title}
-                      </h3>
-                      <div className="space-y-2">
-                        {(column.items as MenuLink[]).map((link, linkIndex) => (
-                          <motion.div
-                            key={linkIndex}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.2, delay: linkIndex * 0.05 }}
-                            className="group relative flex items-center whitespace-nowrap pr-2" // Reduced right padding
-                          >
-                            <HoveredLink 
-                              href={link.href} 
-                              onClick={() => handleLinkClick(link.href)}
-                            >
-                              <div className="flex items-center space-x-2">
-                                <span className="w-1 h-1 rounded-full bg-blue-200 dark:bg-blue-700 group-hover:bg-blue-500 dark:group-hover:bg-blue-400 transition-colors"></span>
-                                <span className="text-[13px] pr-2">{link.text}</span>
-                              </div>
-                            </HoveredLink>
-                          </motion.div>
-                        ))}
-                      </div>
                     </motion.div>
                   ))}
                 </div>

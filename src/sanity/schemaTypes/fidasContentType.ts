@@ -474,10 +474,10 @@ export default defineType({
       type: 'url'
     }),
 
-    // Add this new field for Customer List section
+    // Replace customerList field with this:
     defineField({
-      name: 'customerList',
-      title: 'Customer List Section',
+      name: 'testimonials',
+      title: 'Testimonials Section',
       type: 'object',
       fields: [
         {
@@ -487,34 +487,43 @@ export default defineType({
           validation: Rule => Rule.required()
         },
         {
-          name: 'customers',
-          title: 'Customers',
+          name: 'testimonialsList',
+          title: 'Testimonials',
           type: 'array',
           of: [{
             type: 'object',
             fields: [
               {
-                name: 'name',
-                title: 'Customer Name',
+                name: 'quote',
+                title: 'Quote',
+                type: 'text',
+                validation: Rule => Rule.required()
+              },
+              {
+                name: 'author',
+                title: 'Author Name',
                 type: 'string',
                 validation: Rule => Rule.required()
               },
               {
-                name: 'logo',
-                title: 'Customer Logo',
+                name: 'position',
+                title: 'Position',
+                type: 'string',
+                validation: Rule => Rule.required()
+              },
+              {
+                name: 'company',
+                title: 'Company',
+                type: 'string',
+                validation: Rule => Rule.required()
+              },
+              {
+                name: 'image',
+                title: 'Author Image',
                 type: 'image',
                 options: {
                   hotspot: true
-                },
-                fields: [
-                  {
-                    name: 'alt',
-                    title: 'Alternative Text',
-                    type: 'string',
-                    validation: Rule => Rule.required()
-                  }
-                ],
-                validation: Rule => Rule.required()
+                }
               }
             ]
           }],
