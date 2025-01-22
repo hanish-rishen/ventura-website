@@ -207,7 +207,7 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
       },
       {
         title: "Other Solutions",
-        href: "/products/solutions",
+        href: "/products/technologies",
         items: [
           { href: "/products/technologies", text: "Technologies" },
           { href: "/products/sap-integration", text: "SAP Integration" },

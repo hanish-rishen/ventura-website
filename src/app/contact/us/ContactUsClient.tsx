@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, Variants } from 'framer-motion';
-import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaTimes } from 'react-icons/fa';
+import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaTimes, FaCheck } from 'react-icons/fa';
 
 const fadeInUp: Variants = {
   initial: { 
@@ -156,26 +156,21 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
     }
   };
 
-  if (isSubmitted) {
-    return (
-      <div className="text-center py-16">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-green-50 p-6 rounded-xl"
-        >
-          <h3 className="text-2xl font-semibold text-green-600 mb-2">Thank You!</h3>
-          <p className="text-green-700">Your message has been sent successfully.</p>
-        </motion.div>
-      </div>
-    );
-  }
+  // Add timeout to reset success state
+  useEffect(() => {
+    if (isSubmitted) {
+      const timer = setTimeout(() => {
+        setIsSubmitted(false);
+      }, 5000); // Reset after 5 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [isSubmitted]);
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit}>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Interested In
+          Interested In <span className="text-red-600">*</span>
         </label>
         <div className="flex flex-wrap gap-2 mb-2">
           {availableInterests.map((interest) => (
@@ -233,7 +228,9 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+          <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
+            First Name <span className="text-red-600">*</span>
+          </label>
           <input 
             type="text" 
             id="firstName" 
@@ -244,7 +241,9 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
           />
         </div>
         <div>
-          <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+          <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
+            Last Name <span className="text-red-600">*</span>
+          </label>
           <input 
             type="text" 
             id="lastName" 
@@ -257,7 +256,9 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
       </div>
 
       <div>
-        <label htmlFor="workEmail" className="block text-sm font-medium text-gray-700 mb-1">Work Email</label>
+        <label htmlFor="workEmail" className="block text-sm font-medium text-gray-700 mb-1">
+          Work Email <span className="text-red-600">*</span>
+        </label>
         <input 
           type="email" 
           id="workEmail" 
@@ -269,7 +270,9 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
       </div>
 
       <div>
-        <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-1">Mobile Phone Number</label>
+        <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-1">
+          Mobile Phone Number <span className="text-red-600">*</span>
+        </label>
         <input 
           type="tel" 
           id="phoneNumber" 
@@ -282,7 +285,9 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="jobTitle" className="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
+          <label htmlFor="jobTitle" className="block text-sm font-medium text-gray-700 mb-1">
+            Job Title <span className="text-red-600">*</span>
+          </label>
           <input 
             type="text" 
             id="jobTitle" 
@@ -293,7 +298,9 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
           />
         </div>
         <div>
-          <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
+          <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-1">
+            Company Name <span className="text-red-600">*</span>
+          </label>
           <input 
             type="text" 
             id="companyName" 
@@ -306,7 +313,9 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
       </div>
 
       <div>
-        <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+        <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+          Message <span className="text-red-600">*</span>
+        </label>
         <textarea 
           id="message" 
           name="message" 
@@ -316,7 +325,6 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
           className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition duration-300"
         ></textarea>
       </div>
-      
       {submitError && (
         <div className="text-red-600 text-sm">
           {submitError}
@@ -325,16 +333,27 @@ export function ContactUsFormWithReCaptcha({ contactUsData }: { contactUsData: C
 
       <motion.button
         type="submit"
-        disabled={isSubmitting}
-        className={`w-full px-6 py-3 rounded-lg text-lg font-semibold transition-colors duration-300
+        disabled={isSubmitting || isSubmitted}
+        className={`w-full px-6 py-3 rounded-lg text-lg font-semibold transition-colors duration-300 flex items-center justify-center
           ${isSubmitting 
             ? 'bg-blue-400 cursor-not-allowed'
-            : 'bg-blue-600 hover:bg-blue-700'
+            : isSubmitted
+              ? 'bg-green-500 hover:bg-green-600'
+              : 'bg-blue-600 hover:bg-blue-700'
           } text-white`}
-        whileHover={!isSubmitting ? { scale: 1.05 } : {}}
-        whileTap={!isSubmitting ? { scale: 0.95 } : {}}
+        whileHover={!isSubmitting && !isSubmitted ? { scale: 1.05 } : {}}
+        whileTap={!isSubmitting && !isSubmitted ? { scale: 0.95 } : {}}
       >
-        {isSubmitting ? 'Sending...' : 'Send Message'}
+        {isSubmitting ? (
+          'Sending...'
+        ) : isSubmitted ? (
+          <>
+            <FaCheck className="mr-2" />
+            Message Sent!
+          </>
+        ) : (
+          'Send Message'
+        )}
       </motion.button>
     </form>
   );
