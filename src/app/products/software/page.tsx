@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { client } from '@/lib/sanity';
 import { SoftwareProductsClient } from './SoftwareProductsClient';
 import type { SoftwareProduct } from './SoftwareProductsClient'; // Import the type
@@ -65,7 +65,9 @@ export default async function SoftwareProducts() {
         <h1 className="text-5xl font-bold mb-16 text-center tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
           Associated Software Products
         </h1>
-        <SoftwareProductsClient products={products} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <SoftwareProductsClient products={products} />
+        </Suspense>
       </div>
     </div>
   );
