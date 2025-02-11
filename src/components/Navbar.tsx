@@ -192,12 +192,12 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
         title: "Software Products",
         href: "/products/software",
         items: [
-          { href: "/products/software", text: "Knitted Fabric Inspection" },
-          { href: "/products/software", text: "Greige Fabric Inspection" },
-          { href: "/products/software", text: "Denim Fabric Inspection" },
-          { href: "/products/software", text: "Automotive Fabric Inspection" },
-          { href: "/products/software", text: "Home Furnishing Inspection" },
-          { href: "/products/software", text: "Garment Units Inspection" },
+          { href: "/products/software?product=knitted-fabric-inspection", text: "Knitted Fabric Inspection" },
+          { href: "/products/software?product=greige-fabric-inspection", text: "Greige Fabric Inspection" },
+          { href: "/products/software?product=denim-fabric-inspection", text: "Denim Fabric Inspection" },
+          { href: "/products/software?product=automotive-fabric-inspection", text: "Automotive Fabric Inspection" },
+          { href: "/products/software?product=home-furnishing-inspection", text: "Home Furnishing Inspection" },
+          { href: "/products/software?product=garment-units-inspection", text: "Garment Units Inspection" },
         ]
       },
       {
