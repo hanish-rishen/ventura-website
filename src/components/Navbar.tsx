@@ -213,8 +213,8 @@ function NavbarContent({ isMobile = false, pathname, isScrolled, setIsMenuOpen }
       { href: "/resources/blogs", text: "Blogs" },
       { href: "/resources/faq", text: "FAQ / Q & A" },
       { href: "/resources/downloads", text: "Downloads" },
-      { href: "/resources/customers", text: "Customer List" },
-      { href: "/resources/success", text: "Success Stories" }
+      { href: "/customers/list", text: "Customer List" },
+      { href: "/customers/success", text: "Success Stories" }
     ]},
     { item: "About", href: "/about", links: [
       { href: "/about/fidas", text: "What is FIDAS" },
